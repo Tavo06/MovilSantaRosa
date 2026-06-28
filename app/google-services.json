@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "365500329508",
+    "firebase_url": "https://localhost-2df15-default-rtdb.firebaseio.com",
+    "project_id": "localhost-2df15",
+    "storage_bucket": "localhost-2df15.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:365500329508:android:5872da199b2ff878e472b1",
+        "android_client_info": {
+          "package_name": "com.upsjb.movilsantarosa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOtN7UgJkml47Z5uCNBaK_a0VZDxTJuOM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:365500329508:android:3b3b0d5467d95c81e472b1",
+        "android_client_info": {
+          "package_name": "com.upsjb.sesion11"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOtN7UgJkml47Z5uCNBaK_a0VZDxTJuOM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
