@@ -4,9 +4,9 @@ import com.upsjb.movilsantarosa.domain.authentic.model.User
 import com.upsjb.movilsantarosa.domain.authentic.repository.AuthRepository
 import javax.inject.Inject
 
-class CurrentUserUseCase@Inject constructor(
-private val repository: AuthRepository)
-{
+class CurrentUserUseCase @Inject constructor(
+    private val repository: AuthRepository
+) {
     operator fun invoke(): User? {
         return repository.currentUser
     }
