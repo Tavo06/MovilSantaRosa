@@ -8,10 +8,11 @@ import com.upsjb.movilsantarosa.domain.authentic.model.User
 import com.upsjb.movilsantarosa.domain.authentic.repository.AuthRepository
 import com.upsjb.movilsantarosa.domain.authentic.request.RegisterRequest
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
 const val USER_DATABASE = "user_database"
 
-class AuthRepositoryImpl(
+class AuthRepositoryImpl @Inject constructor(
     val auth: FirebaseAuth,
     val database: FirebaseDatabase
 ) : AuthRepository {

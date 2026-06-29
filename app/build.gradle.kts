@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -59,13 +62,17 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.firebase.auth)
 
-    //Room
+    // Room
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.runtime)
 
-    //Hilt
-//    implementation(libs.hilt.android)
-//    kapt(libs.hilt.android.compiler)
-//    kapt(libs.hilt.compiler)
-//    implementation(libs.hilt.navigation.compose)
+    // Hilt
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    // Kotlin Serialization
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
