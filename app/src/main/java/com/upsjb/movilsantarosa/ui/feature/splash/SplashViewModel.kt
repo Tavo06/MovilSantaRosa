@@ -25,7 +25,7 @@ class SplashViewModel @Inject constructor(
 
     private fun validateSession() {
         viewModelScope.launch {
-            delay(500L.milliseconds)
+            delay(1000L.milliseconds)
             val user = currentUserUseCase()
 
             _destination.value =

@@ -77,11 +77,9 @@ fun AppNavHost() {
             entry<MainNavKey.Register> {
 
                 RegisterRoute(
-
-                    onBack = {
-                        pop()
-                    }
-
+                    onLoginNavigate = {
+                        navigate(MainNavKey.Login)
+                    },
                 )
 
             }

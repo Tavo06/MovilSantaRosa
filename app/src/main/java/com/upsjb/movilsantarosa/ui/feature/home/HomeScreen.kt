@@ -1,4 +1,3 @@
-// ui/feature/home/HomeScreen.kt
 package com.upsjb.movilsantarosa.ui.feature.home
 
 import androidx.compose.foundation.background
