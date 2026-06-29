@@ -5,7 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.upsjb.movilsantarosa.ui.feature.home.HomeScreen
 import com.upsjb.movilsantarosa.ui.feature.login.LoginRoute
+import com.upsjb.movilsantarosa.ui.feature.register.RegisterScreen
 
 @Composable
 fun AppNavHost() {
@@ -27,7 +29,8 @@ fun AppNavHost() {
                         backStack.add(HomeDestination)
                     },
                     onRegisterClick = {
-
+                        backStack.clear()
+                        backStack.add(RegisterDestination)
                     }
 
                 )
@@ -36,17 +39,18 @@ fun AppNavHost() {
 
             entry<HomeDestination> {
 
-                HomeRoute()
+                HomeScreen()
 
             }
+            entry<RegisterDestination> {
+
+                RegisterScreen()
+
+            }
+
 
         }
 
     )
 
-}
-
-@Composable
-fun HomeRoute() {
-    Text("HOME")
 }
