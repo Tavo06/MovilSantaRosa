@@ -36,17 +36,15 @@ fun LoginRoute(
 
         when (uiState) {
 
-            LoginUIState.Loading -> {
-                ProgressIndicatorOverlay()
-            }
-
             is LoginUIState.Error -> {
 
                 ErrorDialog(
                     message = (uiState as LoginUIState.Error).message,
                     onAccept = viewModel::reset
                 )
-
+            }
+            is LoginUIState.Success -> {
+                onLoginSuccess()
             }
 
             else -> Unit
