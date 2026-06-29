@@ -1,12 +1,13 @@
 // ui/feature/register/RegisterUIState.kt
 package com.upsjb.movilsantarosa.ui.feature.register
 
+import com.upsjb.movilsantarosa.domain.authentic.model.User
 import com.upsjb.movilsantarosa.domain.authentic.request.RolUser
 
 sealed class RegisterUIState {
     object Idle : RegisterUIState()
     object Loading : RegisterUIState()
-    data class Success(val message: String) : RegisterUIState()
+    data class Success(val message: User) : RegisterUIState()
     data class Error(val message: String) : RegisterUIState()
 }
 

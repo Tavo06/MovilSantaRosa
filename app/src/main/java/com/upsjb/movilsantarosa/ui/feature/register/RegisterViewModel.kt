@@ -5,14 +5,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.upsjb.movilsantarosa.domain.authentic.request.RegisterRequest
 import com.upsjb.movilsantarosa.domain.authentic.request.RolUser
-import kotlinx.coroutines.delay
+import com.upsjb.movilsantarosa.domain.authentic.usecase.RegisterUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Locale
+import javax.inject.Inject
 
-class RegisterViewModel : ViewModel() {
+@HiltViewModel
+class RegisterViewModel @Inject constructor(
+    private val registerUseCase: RegisterUseCase  // Cambiado a minúscula por convención
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow<RegisterUIState>(RegisterUIState.Idle)
     val uiState: StateFlow<RegisterUIState> = _uiState.asStateFlow()
@@ -53,7 +58,7 @@ class RegisterViewModel : ViewModel() {
         )
     }
 
-    // 🆕 Función helper para actualizar un solo campo (más simple)
+    // Función helper para actualizar un solo campo
     fun updateSingleField(
         email: String? = null,
         password: String? = null,
@@ -84,7 +89,7 @@ class RegisterViewModel : ViewModel() {
         )
     }
 
-    // 🆕 Función para actualizar campos específicos con menos parámetros
+    // Funciones para actualizar campos específicos
     fun updateEmail(email: String) = updateSingleField(email = email)
     fun updatePassword(password: String) = updateSingleField(password = password)
     fun updateConfirmPassword(confirmPassword: String) = updateSingleField(confirmPassword = confirmPassword)
@@ -166,28 +171,28 @@ class RegisterViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = RegisterUIState.Loading
 
-            try {
-                delay(2000)
+            val request = RegisterRequest(
+                email = current.email,
+                password = current.password,
+                firstname = current.firstName,
+                lastname = current.lastName,
+                dniNumber = current.dniNumber,
+                birthdate = current.birthdate,
+                phone = current.phone,
+                plateNumber = current.plateNumber,
+                licenceNumber = current.licenceNumber,
+                vehicleColor = current.vehicleColor,
+                rolUser = current.rolUser
+            )
 
-                val request = RegisterRequest(
-                    email = current.email,
-                    password = current.password,
-                    firstname = current.firstName,
-                    lastname = current.lastName,
-                    dniNumber = current.dniNumber,
-                    birthdate = current.birthdate,
-                    phone = current.phone,
-                    plateNumber = current.plateNumber,
-                    licenceNumber = current.licenceNumber,
-                    vehicleColor = current.vehicleColor,
-                    rolUser = current.rolUser
-                )
-
-                _uiState.value = RegisterUIState.Success("Registro exitoso")
-
-            } catch (e: Exception) {
-                _uiState.value = RegisterUIState.Error(e.message ?: "Error al registrar")
-            }
+            // ✅ Usar el RegisterUseCase en lugar de delay()
+            registerUseCase(request)
+                .onSuccess { message ->
+                    _uiState.value = RegisterUIState.Success(message)
+                }
+                .onFailure { error ->
+                    _uiState.value = RegisterUIState.Error(error.message.orEmpty())
+                }
         }
     }
 
