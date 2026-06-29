@@ -1,174 +1,197 @@
-
+// ui/feature/register/RegisterViewModel.kt
 package com.upsjb.movilsantarosa.ui.feature.register
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.upsjb.movilsantarosa.domain.authentic.request.RegisterRequest
 import com.upsjb.movilsantarosa.domain.authentic.request.RolUser
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-data class RegisterState(
-    val email: String = "",
-    val password: String = "",
-    val confirmPassword: String = "",
-    val firstName: String = "",
-    val lastName: String = "",
-    val dniNumber: String = "",
-    val birthdate: String = "",
-    val phone: String = "",
-    val plateNumber: String = "",
-    val licenceNumber: String = "",
-    val vehicleColor: String = "",
-    val rolUser: RolUser = RolUser.PARTNER,
-    val rolUserDisplayName: String = RolUser.PARTNER.displayName,
-    val isLoading: Boolean = false,
-    val errors: Map<String, String> = emptyMap()
-)
-
 class RegisterViewModel : ViewModel() {
-    var state by mutableStateOf(RegisterState())
-        private set
 
-    fun updateEmail(value: String) {
-        state = state.copy(email = value)
-    }
+    private val _uiState = MutableStateFlow<RegisterUIState>(RegisterUIState.Idle)
+    val uiState: StateFlow<RegisterUIState> = _uiState.asStateFlow()
 
-    fun updatePassword(value: String) {
-        state = state.copy(password = value)
-    }
+    private val _formState = MutableStateFlow(RegisterFormState())
+    val formState: StateFlow<RegisterFormState> = _formState.asStateFlow()
 
-    fun updateConfirmPassword(value: String) {
-        state = state.copy(confirmPassword = value)
-    }
-
-    fun updateFirstName(value: String) {
-        state = state.copy(firstName = value)
-    }
-
-    fun updateLastName(value: String) {
-        state = state.copy(lastName = value)
-    }
-
-    fun updateDni(value: String) {
-        if (value.length <= 8) {
-            state = state.copy(dniNumber = value)
-        }
-    }
-
-    fun updateBirthdate(value: String) {
-        state = state.copy(birthdate = value)
-    }
-
-    fun updatePhone(value: String) {
-        state = state.copy(phone = value)
-    }
-
-    fun updatePlateNumber(value: String) {
-        state = state.copy(plateNumber = value.uppercase(Locale.getDefault()))
-    }
-
-    fun updateLicenceNumber(value: String) {
-        state = state.copy(licenceNumber = value)
-    }
-
-    fun updateVehicleColor(value: String) {
-        state = state.copy(vehicleColor = value)
-    }
-
-    fun updateRolUser(rol: RolUser) {
-        state = state.copy(
-            rolUser = rol,
-            rolUserDisplayName = rol.displayName
+    // Función genérica para actualizar cualquier campo
+    fun updateField(
+        email: String? = null,
+        password: String? = null,
+        confirmPassword: String? = null,
+        firstName: String? = null,
+        lastName: String? = null,
+        dniNumber: String? = null,
+        birthdate: String? = null,
+        phone: String? = null,
+        plateNumber: String? = null,
+        licenceNumber: String? = null,
+        vehicleColor: String? = null,
+        rolUser: RolUser? = null
+    ) {
+        val current = _formState.value
+        _formState.value = current.copy(
+            email = email ?: current.email,
+            password = password ?: current.password,
+            confirmPassword = confirmPassword ?: current.confirmPassword,
+            firstName = firstName ?: current.firstName,
+            lastName = lastName ?: current.lastName,
+            dniNumber = dniNumber ?: current.dniNumber,
+            birthdate = birthdate ?: current.birthdate,
+            phone = phone ?: current.phone,
+            plateNumber = plateNumber ?: current.plateNumber,
+            licenceNumber = licenceNumber ?: current.licenceNumber,
+            vehicleColor = vehicleColor ?: current.vehicleColor,
+            rolUser = rolUser ?: current.rolUser,
+            rolUserDisplayName = (rolUser ?: current.rolUser).displayName
         )
     }
 
+    // 🆕 Función helper para actualizar un solo campo (más simple)
+    fun updateSingleField(
+        email: String? = null,
+        password: String? = null,
+        confirmPassword: String? = null,
+        firstName: String? = null,
+        lastName: String? = null,
+        dniNumber: String? = null,
+        birthdate: String? = null,
+        phone: String? = null,
+        plateNumber: String? = null,
+        licenceNumber: String? = null,
+        vehicleColor: String? = null,
+        rolUser: RolUser? = null
+    ) {
+        updateField(
+            email = email,
+            password = password,
+            confirmPassword = confirmPassword,
+            firstName = firstName,
+            lastName = lastName,
+            dniNumber = dniNumber,
+            birthdate = birthdate,
+            phone = phone,
+            plateNumber = plateNumber,
+            licenceNumber = licenceNumber,
+            vehicleColor = vehicleColor,
+            rolUser = rolUser
+        )
+    }
+
+    // 🆕 Función para actualizar campos específicos con menos parámetros
+    fun updateEmail(email: String) = updateSingleField(email = email)
+    fun updatePassword(password: String) = updateSingleField(password = password)
+    fun updateConfirmPassword(confirmPassword: String) = updateSingleField(confirmPassword = confirmPassword)
+    fun updateFirstName(firstName: String) = updateSingleField(firstName = firstName)
+    fun updateLastName(lastName: String) = updateSingleField(lastName = lastName)
+    fun updateDni(dniNumber: String) {
+        if (dniNumber.length <= 8) {
+            updateSingleField(dniNumber = dniNumber)
+        }
+    }
+    fun updateBirthdate(birthdate: String) = updateSingleField(birthdate = birthdate)
+    fun updatePhone(phone: String) = updateSingleField(phone = phone)
+    fun updatePlateNumber(plateNumber: String) {
+        updateSingleField(plateNumber = plateNumber.uppercase(Locale.getDefault()))
+    }
+    fun updateLicenceNumber(licenceNumber: String) = updateSingleField(licenceNumber = licenceNumber)
+    fun updateVehicleColor(vehicleColor: String) = updateSingleField(vehicleColor = vehicleColor)
+    fun updateRolUser(rolUser: RolUser) = updateSingleField(rolUser = rolUser)
+
     fun validateForm(): Boolean {
+        val current = _formState.value
         val errors = mutableMapOf<String, String>()
 
-        if (state.firstName.isBlank()) {
+        if (current.firstName.isBlank()) {
             errors["firstname"] = "Los nombres son requeridos"
         }
 
-        if (state.lastName.isBlank()) {
+        if (current.lastName.isBlank()) {
             errors["lastname"] = "Los apellidos son requeridos"
         }
 
-        if (state.dniNumber.length != 8) {
+        if (current.dniNumber.length != 8) {
             errors["dniNumber"] = "El DNI debe tener 8 dígitos"
         }
 
-        if (state.birthdate.isBlank()) {
+        if (current.birthdate.isBlank()) {
             errors["birthdate"] = "La fecha de nacimiento es requerida"
         }
 
-        if (state.email.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(state.email).matches()) {
+        if (current.email.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(current.email).matches()) {
             errors["email"] = "Ingresa un correo válido"
         }
 
-        if (state.phone.isBlank() || state.phone.length < 9) {
+        if (current.phone.isBlank() || current.phone.length < 9) {
             errors["phone"] = "Ingresa un número de teléfono válido"
         }
 
-        if (state.plateNumber.length < 6) {
+        if (current.plateNumber.length < 6) {
             errors["plateNumber"] = "Ingresa una placa válida"
         }
 
-        if (state.vehicleColor.isBlank()) {
+        if (current.vehicleColor.isBlank()) {
             errors["vehicleColor"] = "El color del vehículo es requerido"
         }
 
-        if (state.licenceNumber.isBlank()) {
+        if (current.licenceNumber.isBlank()) {
             errors["licenceNumber"] = "El número de licencia es requerido"
         }
 
-        if (state.password.length < 6) {
+        if (current.password.length < 6) {
             errors["password"] = "La contraseña debe tener al menos 6 caracteres"
         }
 
-        if (state.password != state.confirmPassword) {
+        if (current.password != current.confirmPassword) {
             errors["confirmPassword"] = "Las contraseñas no coinciden"
         }
 
-        state = state.copy(errors = errors)
+        _formState.value = current.copy(errors = errors)
         return errors.isEmpty()
     }
 
     fun register() {
+        val current = _formState.value
+
+        if (!validateForm()) {
+            return
+        }
+
         viewModelScope.launch {
-            state = state.copy(isLoading = true)
+            _uiState.value = RegisterUIState.Loading
 
             try {
+                delay(2000)
+
                 val request = RegisterRequest(
-                    email = state.email,
-                    password = state.password,
-                    firstname = state.firstName,
-                    lastname = state.lastName,
-                    dniNumber = state.dniNumber,
-                    birthdate = state.birthdate,
-                    phone = state.phone,
-                    plateNumber = state.plateNumber,
-                    licenceNumber = state.licenceNumber,
-                    vehicleColor = state.vehicleColor,
-                    rolUser = state.rolUser
+                    email = current.email,
+                    password = current.password,
+                    firstname = current.firstName,
+                    lastname = current.lastName,
+                    dniNumber = current.dniNumber,
+                    birthdate = current.birthdate,
+                    phone = current.phone,
+                    plateNumber = current.plateNumber,
+                    licenceNumber = current.licenceNumber,
+                    vehicleColor = current.vehicleColor,
+                    rolUser = current.rolUser
                 )
 
-                // Aquí iría la llamada a la API
-                // val response = registerUseCase.execute(request)
-
-                // Simulación de registro exitoso
-                // Si falla, mostrar error
-                state = state.copy(
-                    isLoading = false,
-                    errors = mapOf("general" to "Registro exitoso")
-                )
+                _uiState.value = RegisterUIState.Success("Registro exitoso")
 
             } catch (e: Exception) {
-
+                _uiState.value = RegisterUIState.Error(e.message ?: "Error al registrar")
             }
         }
+    }
+
+    fun reset() {
+        _uiState.value = RegisterUIState.Idle
     }
 }

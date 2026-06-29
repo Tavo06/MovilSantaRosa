@@ -7,6 +7,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.upsjb.movilsantarosa.ui.feature.home.HomeScreen
 import com.upsjb.movilsantarosa.ui.feature.login.LoginRoute
+import com.upsjb.movilsantarosa.ui.feature.register.RegisterRoute
 import com.upsjb.movilsantarosa.ui.feature.register.RegisterScreen
 
 @Composable
@@ -44,7 +45,12 @@ fun AppNavHost() {
             }
             entry<RegisterDestination> {
 
-                RegisterScreen()
+                RegisterRoute(
+                    onLoginNavigate = {
+                        backStack.clear()
+                        backStack.add(LoginDestination)
+                    },
+                )
 
             }
 
