@@ -1,4 +1,4 @@
-package com.upsjb.movilsantarosa.navigation
+package com.upsjb.movilsantarosa.core.navigation
 
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable

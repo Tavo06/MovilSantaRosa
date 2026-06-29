@@ -1,4 +1,4 @@
-package com.upsjb.movilsantarosa.ui.theme
+package com.upsjb.movilsantarosa.core.theme
 
 import androidx.compose.ui.graphics.Color
 

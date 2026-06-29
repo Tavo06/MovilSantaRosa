@@ -1,6 +1,5 @@
-package com.upsjb.movilsantarosa.ui.theme
+package com.upsjb.movilsantarosa.core.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

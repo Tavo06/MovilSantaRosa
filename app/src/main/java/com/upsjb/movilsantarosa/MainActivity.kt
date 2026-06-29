@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.upsjb.movilsantarosa.navigation.AppNavHost
-import com.upsjb.movilsantarosa.ui.theme.MovilSantaRosaTheme
+import com.upsjb.movilsantarosa.core.navigation.AppNavHost
+import com.upsjb.movilsantarosa.core.theme.MovilSantaRosaTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
