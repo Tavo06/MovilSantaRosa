@@ -1,9 +1,10 @@
 package com.upsjb.movilsantarosa.domain.authentic.usecase
 
 import com.upsjb.movilsantarosa.domain.authentic.repository.AuthRepository
+import javax.inject.Inject
 
-class LogoutUseCase (private val repository: AuthRepository){
-    suspend operator fun invoke(): Result<Unit>{
+class LogoutUseCase @Inject constructor(private val repository: AuthRepository) {
+    suspend operator fun invoke(): Result<Unit> {
         return repository.logout()
     }
 }
