@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,4 +64,15 @@ fun FormDropdown(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FormDropdownPreview() {
+    FormDropdown(
+        value = "Administrador",
+        onValueChange = {},
+        label = "Rol",
+        options = listOf("Administrador", "Secretario", "Residente")
+    )
 }
