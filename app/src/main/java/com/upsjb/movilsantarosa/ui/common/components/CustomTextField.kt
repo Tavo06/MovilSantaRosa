@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun FormTextField(
@@ -20,7 +21,7 @@ fun FormTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Next,
     readOnly: Boolean = false,
-    trailingIcon: @Composable (() -> Unit)? = null
+    trailingIcon: (@Composable () -> Unit)? = null
 ) {
     OutlinedTextField(
         value = value,
@@ -35,6 +36,17 @@ fun FormTextField(
             imeAction = imeAction
         ),
         trailingIcon = trailingIcon,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FormTextFieldPreview() {
+    FormTextField(
+        value = "",
+        onValueChange = {},
+        label = "Nombre",
+        placeholder = "Ingrese su nombre"
     )
 }

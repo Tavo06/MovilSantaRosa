@@ -27,6 +27,7 @@ class LoginViewModel @Inject constructor(
             loginUseCase(email, password)
                 .onSuccess {
                     _uiState.value = LoginUIState.Success(it)
+
                 }
                 .onFailure {
                     _uiState.value = LoginUIState.Error(it.message.orEmpty())
