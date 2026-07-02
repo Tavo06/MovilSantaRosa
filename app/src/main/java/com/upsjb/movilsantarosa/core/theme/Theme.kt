@@ -8,28 +8,63 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = Color(0xFF9FA8DA),
+    onPrimary = Color(0xFF0D1448),
+    primaryContainer = Color(0xFF1A237E),
+    onPrimaryContainer = Color(0xFFE8EAF6),
+
+    secondary = Color(0xFFB0BEC5),
+    onSecondary = Color(0xFF263238),
+    secondaryContainer = Color(0xFF37474F),
+    onSecondaryContainer = Color(0xFFECEFF1),
+
+    tertiary = Color(0xFF4DB6AC),
+    onTertiary = Color(0xFF00332E),
+    tertiaryContainer = Color(0xFF00574B),
+    onTertiaryContainer = Color(0xFFB2DFDB),
+
+    background = Color(0xFF111318),
+    onBackground = Color(0xFFE4E6EB),
+
+    surface = Color(0xFF181A20),
+    onSurface = Color(0xFFE4E6EB),
+
+    surfaceVariant = Color(0xFF2A2E39),
+    onSurfaceVariant = Color(0xFFC4C7CF),
+
+    outline = Color(0xFF90939C)
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = Color(0xFF1A237E),
+    onPrimary = Color(0xFFFFFFFF),
+    primaryContainer = Color(0xFFC5CAE9),
+    onPrimaryContainer = Color(0xFF0D1448),
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    secondary = Color(0xFF546E7A),
+    onSecondary = Color(0xFFFFFFFF),
+    secondaryContainer = Color(0xFFDCE4E8),
+    onSecondaryContainer = Color(0xFF253238),
+
+    tertiary = Color(0xFF00897B),
+    onTertiary = Color(0xFFFFFFFF),
+    tertiaryContainer = Color(0xFFB2DFDB),
+    onTertiaryContainer = Color(0xFF003D37),
+
+    background = Color(0xFFF8F9FC),
+    onBackground = Color(0xFF1A1C1E),
+
+    surface = Color(0xFFFFFFFF),
+    onSurface = Color(0xFF1A1C1E),
+
+    surfaceVariant = Color(0xFFE7EAF3),
+    onSurfaceVariant = Color(0xFF45474F),
+
+    outline = Color(0xFF7A7D87)
 )
 
 @Composable

@@ -25,8 +25,9 @@ import androidx.compose.ui.unit.dp
 import com.upsjb.movilsantarosa.ui.common.components.FormDatePicker
 import com.upsjb.movilsantarosa.ui.common.components.FormSection
 import com.upsjb.movilsantarosa.ui.common.components.FormTextField
-import com.upsjb.movilsantarosa.domain.authentic.request.RolUser
-import com.upsjb.movilsantarosa.ui.common.components.FormDropdown
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun PersonalInfoSection(
@@ -39,13 +40,18 @@ fun PersonalInfoSection(
     onDniChange: (String) -> Unit,
     onBirthdateChange: (String) -> Unit,
 ) {
+    val formatter = remember {
+        SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    }
     FormSection(title = "Información Personal") {
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Column {
             FormTextField(
                 value = firstName,
                 onValueChange = onFirstNameChange,
                 label = "Nombres",
                 placeholder = "Ingresa tus nombres",
+                maxLength = 50,
+                singleLine = true,
             )
 
             FormTextField(
@@ -53,6 +59,8 @@ fun PersonalInfoSection(
                 onValueChange = onLastNameChange,
                 label = "Apellidos",
                 placeholder = "Ingresa tus apellidos",
+                maxLength = 50,
+                singleLine = true,
             )
 
             FormTextField(
@@ -61,13 +69,19 @@ fun PersonalInfoSection(
                 label = "DNI",
                 placeholder = "Ingresa tu número de DNI",
                 keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
+                maxLength = 8,
+                singleLine = true,
             )
 
             FormDatePicker(
                 value = birthdate,
-                onValueChange = onBirthdateChange,
-                label = "Fecha de Nacimiento",
+                label = "Fecha de nacimiento",
+                onDateSelected = { millis ->
+                    millis?.let {
+                        onBirthdateChange(formatter.format(Date(it)))
+                    }
+                }
             )
         }
 
@@ -108,7 +122,7 @@ fun ContactInfoSection(
     onPhoneChange: (String) -> Unit,
 ) {
     FormSection(title = "Información de Contacto") {
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Column {
             FormTextField(
                 value = email,
                 onValueChange = onEmailChange,
@@ -116,15 +130,19 @@ fun ContactInfoSection(
                 placeholder = "correo@ejemplo.com",
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next,
+                maxLength = 50,
+                singleLine = true,
             )
 
             FormTextField(
                 value = phone,
                 onValueChange = onPhoneChange,
-                label = "Teléfono",
-                placeholder = "Ingresa tu número de teléfono",
+                label = "Número Celular",
+                placeholder = "Ingresa tu número de celular",
                 keyboardType = KeyboardType.Phone,
                 imeAction = ImeAction.Next,
+                maxLength = 9,
+                singleLine = true,
             )
         }
 
@@ -160,15 +178,17 @@ fun VehicleInfoSection(
     onColorChange: (String) -> Unit,
     onLicenceChange: (String) -> Unit,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column {
         FormSection(title = "Información del Vehículo") {
             FormTextField(
                 value = plateNumber,
                 onValueChange = onPlateChange,
                 label = "Placa",
-                placeholder = "ABC-123",
+                placeholder = "ABC123",
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next,
+                maxLength = 6,
+                singleLine = true,
             )
 
             FormTextField(
@@ -176,6 +196,8 @@ fun VehicleInfoSection(
                 onValueChange = onColorChange,
                 label = "Color del Vehículo",
                 placeholder = "Rojo, Azul, etc.",
+                maxLength = 20,
+                singleLine = true,
             )
 
             FormTextField(
@@ -183,6 +205,8 @@ fun VehicleInfoSection(
                 onValueChange = onLicenceChange,
                 label = "Número de Licencia",
                 placeholder = "Ingresa tu número de licencia",
+                maxLength = 12,
+                singleLine = true,
             )
         }
     }
@@ -210,18 +234,14 @@ fun PreviewVehicleInfoSection() {
         }
     }
 }
+
 @Composable
 fun SecurityInfoSection(
     password: String,
-    confirmPassword: String,
-    rolUser: String,
     onPasswordChange: (String) -> Unit,
-    onConfirmPasswordChange: (String) -> Unit,
-    onRolChange: (String) -> Unit,
 ) {
-    val rolOptions = RolUser.values().map { it.displayName }
 
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column {
         FormSection(title = "Seguridad") {
             FormTextField(
                 value = password,
@@ -230,22 +250,9 @@ fun SecurityInfoSection(
                 placeholder = "••••••••",
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Next,
-            )
-
-            FormTextField(
-                value = confirmPassword,
-                onValueChange = onConfirmPasswordChange,
-                label = "Confirmar Contraseña",
-                placeholder = "••••••••",
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Next,
-            )
-
-            FormDropdown(
-                value = rolUser,
-                onValueChange = onRolChange,
-                label = "Tipo de Rol",
-                options = rolOptions,
+                maxLength = 20,
+                singleLine = true,
+                isPassword = true
             )
         }
     }
@@ -257,22 +264,17 @@ fun PreviewSecurityInfoSection() {
     MaterialTheme {
         Surface {
             var password by remember { mutableStateOf("") }
-            var confirmPassword by remember { mutableStateOf("") }
-            var rol by remember { mutableStateOf("Socio") }
 
             Box(modifier = Modifier.padding(16.dp)) {
                 SecurityInfoSection(
                     password = password,
-                    confirmPassword = confirmPassword,
-                    rolUser = rol,
                     onPasswordChange = { password = it },
-                    onConfirmPasswordChange = { confirmPassword = it },
-                    onRolChange = { rol = it }
                 )
             }
         }
     }
 }
+
 @Composable
 fun RegisterActions(
     onRegisterClick: () -> Unit,
