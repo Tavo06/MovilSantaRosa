@@ -1,7 +1,9 @@
 package com.upsjb.movilsantarosa.ui.feature.login.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,12 +22,16 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.upsjb.movilsantarosa.R
+import com.upsjb.movilsantarosa.ui.common.components.FormTextField
 
 @Composable
 fun LoginIdleContent(
@@ -40,73 +46,116 @@ fun LoginIdleContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Image(
-            painter = painterResource(id = R.drawable.logo_app),
-            contentDescription = "Logo",
-            modifier = Modifier.size(140.dp)
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .padding(vertical = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        Spacer(modifier = Modifier.height(24.dp))
+            Image(
+                painter = painterResource(id = R.drawable.logo_app),
+                contentDescription = "Logo",
+                modifier = Modifier.size(100.dp)
+            )
 
-        Text(
-            text = "Iniciar sesión",
-            style = MaterialTheme.typography.headlineMedium
-        )
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "Santa Rosa de Lima",
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold
+            )
 
-        OutlinedTextField(
-            value = email,
-            onValueChange = onEmailChange,
-            label = { Text("Correo electrónico") },
-            placeholder = { Text("correo@ejemplo.com") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Text(
+                text = "San Clemente - Pisco",
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = 18.sp
+            )
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            Text(
+                text = "Honradez, Seguridad y Confianza",
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = 18.sp
+            )
+        }
+
+        // Contenido (NO se modifica)
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Text(
+                text = "Iniciar sesión",
+                style = MaterialTheme.typography.headlineMedium
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            FormTextField(
+                value = email,
+                onValueChange = onEmailChange,
+                label = "Correo electrónico",
+                placeholder = "correo@ejemplo.com",
+                singleLine = true,
                 keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
+                imeAction = ImeAction.Next,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-        Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-        OutlinedTextField(
-            value = password,
-            onValueChange = onPasswordChange,
-            label = { Text("Contraseña") },
-            placeholder = { Text("••••••••") },
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(
+            FormTextField(
+                value = password,
+                onValueChange = onPasswordChange,
+                label = "Contraseña",
+                placeholder = "••••••••",
+                singleLine = true,
+                isPassword = true,
                 keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
-            ),
-            modifier = Modifier.fillMaxWidth()
+                imeAction = ImeAction.Done,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                onClick = onLoginClick,
+                enabled = email.isNotBlank() && password.isNotBlank(),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Ingresar")
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedButton(
+                onClick = onRegisterClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Registrarse")
+            }
+        }
+
+        // Pie azul
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp)
+                .background(MaterialTheme.colorScheme.primary)
         )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = onLoginClick,
-            enabled = email.isNotBlank() && password.isNotBlank(),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Ingresar")
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        OutlinedButton(
-            onClick = onRegisterClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Registrarse")
-        }
     }
 }
 @Composable
