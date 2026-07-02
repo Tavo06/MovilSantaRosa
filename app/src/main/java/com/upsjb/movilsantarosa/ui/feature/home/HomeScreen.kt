@@ -23,7 +23,8 @@ import com.upsjb.movilsantarosa.ui.feature.home.components.WelcomeSection
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    uiState: HomeUIState
+    uiState: HomeUIState,
+    onLogout: () -> Unit
 ) {
     var selectedTab by remember { mutableStateOf(HomeTab.HOME) }
 
@@ -33,7 +34,7 @@ fun HomeScreen(
             .background(Color(0xFFF5F5F5))
     ) {
         // Header fijo en la parte superior
-        HomeHeader()
+        HomeHeader(  onLogout = onLogout )
 
         // Contenido con scroll
         Column(
@@ -75,10 +76,6 @@ fun HomeScreen(
                 }
             }
 
-            // Espacio adicional al final
-            androidx.compose.foundation.layout.Spacer(
-                modifier = Modifier.fillMaxWidth().background(Color(0xFFF5F5F5))
-            )
         }
 
     }
@@ -106,7 +103,9 @@ fun PreviewHomeScreenSmallContent() {
             .fillMaxSize()
             .background(Color(0xFFF5F5F5))
     ) {
-        HomeHeader()
+        HomeHeader(  onLogout = {
+            // Cerrar sesión
+        })
 
         Column(
             modifier = Modifier

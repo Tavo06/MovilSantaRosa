@@ -125,7 +125,7 @@ fun HomeNavHost(
 
                     HomeRoute(
 
-                        onLogout = onLogout
+                        navigateToSplash = onLogout
 
                     )
 
