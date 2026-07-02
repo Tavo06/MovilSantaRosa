@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +34,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.upsjb.movilsantarosa.R
+import com.upsjb.movilsantarosa.ui.common.components.AppOutlinedButton
+import com.upsjb.movilsantarosa.ui.common.components.AppPrimaryButton
 import com.upsjb.movilsantarosa.ui.common.components.FormTextField
 
 @Composable
@@ -43,115 +48,122 @@ fun LoginIdleContent(
     onRegisterClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
     ) {
 
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)
-                .padding(vertical = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .imePadding()
         ) {
 
-            Image(
-                painter = painterResource(id = R.drawable.logo_app),
-                contentDescription = "Logo",
-                modifier = Modifier.size(100.dp)
-            )
+            // Encabezado
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.primary)
+                    .padding(vertical = 32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Image(
+                    painter = painterResource(R.drawable.logo_app),
+                    contentDescription = null,
+                    modifier = Modifier.size(100.dp)
+                )
 
-            Text(
-                text = "Santa Rosa de Lima",
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold
-            )
+                Spacer(Modifier.height(16.dp))
 
-            Spacer(modifier = Modifier.height(6.dp))
+                Text(
+                    text = "Santa Rosa de Lima",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold
+                )
 
-            Text(
-                text = "San Clemente - Pisco",
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 18.sp
-            )
+                Spacer(Modifier.height(6.dp))
 
-            Spacer(modifier = Modifier.height(18.dp))
+                Text(
+                    text = "San Clemente - Pisco",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 18.sp
+                )
 
-            Text(
-                text = "Honradez, Seguridad y Confianza",
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 18.sp
-            )
+                Spacer(Modifier.height(18.dp))
+
+                Text(
+                    text = "Honradez, Seguridad y Confianza",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 18.sp
+                )
+            }
+            
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                Text(
+                    text = "Iniciar sesión",
+                    style = MaterialTheme.typography.headlineMedium
+                )
+
+                Spacer(Modifier.height(24.dp))
+
+                FormTextField(
+                    value = email,
+                    onValueChange = onEmailChange,
+                    label = "Correo electrónico",
+                    placeholder = "correo@ejemplo.com",
+                    singleLine = true,
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                FormTextField(
+                    value = password,
+                    onValueChange = onPasswordChange,
+                    label = "Contraseña",
+                    placeholder = "••••••••",
+                    singleLine = true,
+                    isPassword = true,
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(Modifier.height(24.dp))
+
+                AppPrimaryButton(
+                    text = "Ingresar",
+                    onClick = onLoginClick,
+                    enabled = email.isNotBlank() && password.isNotBlank(),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                AppOutlinedButton(
+                    text = "Registrarse",
+                    onClick = onRegisterClick,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(Modifier.height(40.dp))
+            }
         }
 
-        // Contenido (NO se modifica)
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-            Text(
-                text = "Iniciar sesión",
-                style = MaterialTheme.typography.headlineMedium
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            FormTextField(
-                value = email,
-                onValueChange = onEmailChange,
-                label = "Correo electrónico",
-                placeholder = "correo@ejemplo.com",
-                singleLine = true,
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            FormTextField(
-                value = password,
-                onValueChange = onPasswordChange,
-                label = "Contraseña",
-                placeholder = "••••••••",
-                singleLine = true,
-                isPassword = true,
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Button(
-                onClick = onLoginClick,
-                enabled = email.isNotBlank() && password.isNotBlank(),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Ingresar")
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            OutlinedButton(
-                onClick = onRegisterClick,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Registrarse")
-            }
-        }
-
-        // Pie azul
         Box(
             modifier = Modifier
+                .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .height(30.dp)
                 .background(MaterialTheme.colorScheme.primary)

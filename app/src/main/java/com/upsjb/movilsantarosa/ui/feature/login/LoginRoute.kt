@@ -2,6 +2,9 @@ package com.upsjb.movilsantarosa.ui.feature.login
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -17,38 +20,41 @@ fun LoginRoute(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    Scaffold(
+        modifier = Modifier.safeDrawingPadding()
+    ) { padding ->
+        Box(
+            modifier = Modifier.fillMaxSize().padding(padding)) {
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
+            LoginScreen(
+                uiState = uiState,
 
-        LoginScreen(
-            uiState = uiState,
+                onLoginClick = { email, password ->
+                    viewModel.login(email, password)
+                },
 
-            onLoginClick = { email, password ->
-                viewModel.login(email, password)
-            },
+                onRegisterClick = onRegisterClick,
 
-            onRegisterClick = onRegisterClick,
+                modifier = Modifier.fillMaxSize()
+            )
 
-            modifier = Modifier.fillMaxSize()
-        )
+            when (uiState) {
 
-        when (uiState) {
+                is LoginUIState.Error -> {
 
-            is LoginUIState.Error -> {
+                    ErrorDialog(
+                        message = (uiState as LoginUIState.Error).message,
+                        onAccept = viewModel::reset
+                    )
+                }
 
-                ErrorDialog(
-                    message = (uiState as LoginUIState.Error).message,
-                    onAccept = viewModel::reset
-                )
+                is LoginUIState.Success -> {
+                    onLoginSuccess()
+                }
+
+                else -> Unit
             }
-            is LoginUIState.Success -> {
-                onLoginSuccess()
-            }
-
-            else -> Unit
         }
-    }
 
+    }
 }
