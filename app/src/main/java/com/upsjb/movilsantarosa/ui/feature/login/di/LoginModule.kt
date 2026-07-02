@@ -4,7 +4,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.upsjb.movilsantarosa.data.authentic.repository.AuthRepositoryImpl
 import com.upsjb.movilsantarosa.domain.authentic.repository.AuthRepository
-import com.upsjb.movilsantarosa.domain.authentic.usecase.LoginUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,10 +33,4 @@ object LoginModule {
     ): AuthRepository =
         AuthRepositoryImpl(auth, database)
 
-    @Provides
-    @Singleton
-    fun provideLoginUseCase(
-        repository: AuthRepository
-    ): LoginUseCase =
-        LoginUseCase(repository)
 }

@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,7 +32,8 @@ fun HomeHeader(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "9:30",
+            text = "'Honradez, Seguridad y Confianza'",
+            fontStyle = FontStyle.Italic,
             color = Color.White,
             fontSize = 14.sp,
             textAlign = TextAlign.Center

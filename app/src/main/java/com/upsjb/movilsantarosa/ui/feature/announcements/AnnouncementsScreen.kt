@@ -69,31 +69,12 @@ fun AnnouncementsScreen(
     ) {
         // Header fijo
         AnnouncementsHeader()
+        // Descripción
+        AnnouncementsDescription()
 
-        // Contenido con scroll
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-        ) {
-            // Descripción
-            AnnouncementsDescription()
+        // Lista de anuncios
+        AnnouncementList(announcements = announcements)
 
-            // Lista de anuncios
-            AnnouncementList(announcements = announcements)
-
-            // Espacio adicional
-            androidx.compose.foundation.layout.Spacer(
-                modifier = Modifier.fillMaxWidth().height(16.dp)
-            )
-        }
-
-        // Bottom Navigation
-        AnnouncementsBottomNavigation(
-            currentTab = selectedTab,
-            onTabSelected = { selectedTab = it }
-        )
     }
 }
 

@@ -22,7 +22,8 @@ import com.upsjb.movilsantarosa.ui.feature.home.components.WelcomeSection
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    uiState: HomeUIState
 ) {
     var selectedTab by remember { mutableStateOf(HomeTab.HOME) }
 
@@ -41,10 +42,12 @@ fun HomeScreen(
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
         ) {
-            WelcomeSection(
-                userName = "Jorge",
-                userRole = "Presidente"
-            )
+           if (uiState is HomeUIState.Success){
+               WelcomeSection(
+                   userName = uiState.user.firstname,
+                   userRole = uiState.user.rol
+               )
+           }
 
             SummaryStatsSection(
                 activeMembers = 20,
@@ -78,27 +81,22 @@ fun HomeScreen(
             )
         }
 
-        // Bottom Navigation fijo en la parte inferior
-        HomeBottomNavigation(
-            currentTab = selectedTab,
-            onTabSelected = { selectedTab = it }
-        )
     }
 }
 
-@Preview(showBackground = true, name = "Home Screen - Full")
-@Composable
-fun PreviewHomeScreen() {
-    HomeScreen()
-}
-
-@Preview(showBackground = true, name = "Home Screen - Members Tab")
-@Composable
-fun PreviewHomeScreenMembers() {
-    HomeScreen()
-    // Nota: En la preview no podemos cambiar el estado fácilmente,
-    // pero en la implementación real se cambiaría con onTabSelected
-}
+//@Preview(showBackground = true, name = "Home Screen - Full")
+//@Composable
+//fun PreviewHomeScreen() {
+//    HomeScreen(uiState = uiState)
+//}
+//
+//@Preview(showBackground = true, name = "Home Screen - Members Tab")
+//@Composable
+//fun PreviewHomeScreenMembers() {
+//    HomeScreen(uiState = uiState)
+//    // Nota: En la preview no podemos cambiar el estado fácilmente,
+//    // pero en la implementación real se cambiaría con onTabSelected
+//}
 
 @Preview(showBackground = true, name = "Home Screen - Small Content")
 @Composable

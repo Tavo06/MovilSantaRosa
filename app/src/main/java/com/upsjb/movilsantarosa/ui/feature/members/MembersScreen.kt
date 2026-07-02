@@ -3,6 +3,7 @@ package com.upsjb.movilsantarosa.ui.feature.members
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -66,27 +67,9 @@ fun MembersScreen(
         )
 
         // Lista de socios con scroll
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-        ) {
-            MemberList(
-                members = filteredMembers,
-                onMemberClick = { /* Acción al seleccionar un socio */ }
-            )
-
-            // Espacio adicional
-            androidx.compose.foundation.layout.Spacer(
-                modifier = Modifier.fillMaxWidth().height(16.dp)
-            )
-        }
-
-        // Bottom Navigation
-        MembersBottomNavigation(
-            currentTab = selectedTab,
-            onTabSelected = { selectedTab = it }
+        MemberList(
+            members = filteredMembers,
+            onMemberClick = { /* Acción al seleccionar un socio */ }
         )
     }
 }

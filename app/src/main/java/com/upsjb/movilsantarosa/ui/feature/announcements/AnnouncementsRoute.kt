@@ -6,5 +6,5 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun AnnouncementsRoute(modifier: Modifier = Modifier) {
-    Text("ANNOUCEMENTS")
+    AnnouncementsScreen()
 }

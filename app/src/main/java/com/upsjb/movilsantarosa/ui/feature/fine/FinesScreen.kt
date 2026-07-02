@@ -45,31 +45,12 @@ fun FinesScreen(
     ) {
         // Header fijo
         FinesHeader()
+        // Descripción
+        FinesDescription()
 
-        // Contenido con scroll
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-        ) {
-            // Descripción
-            FinesDescription()
+        // Lista de multas
+        FineList(fines = fines)
 
-            // Lista de multas
-            FineList(fines = fines)
-
-            // Espacio adicional
-            androidx.compose.foundation.layout.Spacer(
-                modifier = Modifier.fillMaxWidth().height(16.dp)
-            )
-        }
-
-        // Bottom Navigation
-        FinesBottomNavigation(
-            currentTab = selectedTab,
-            onTabSelected = { selectedTab = it }
-        )
     }
 }
 
