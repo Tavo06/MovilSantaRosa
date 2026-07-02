@@ -18,10 +18,10 @@ fun AppNavHost() {
         backStack.add(key)
     }
 
-    fun pop() {
-        backStack.removeLastOrNull()
+    fun resetNavigation(key: MainNavKey) {
+        backStack.clear()
+        backStack.add(key)
     }
-
     NavDisplay(
 
         backStack = backStack,
@@ -33,19 +33,12 @@ fun AppNavHost() {
                 SplashRoute(
 
                     onLoggedIn = {
-
-                        pop()
-
-                        navigate(MainNavKey.Home)
-
-                    },
+                        resetNavigation(MainNavKey.Home)
+                    }
+                    ,
 
                     onLoggedOut = {
-
-                        pop()
-
-                        navigate(MainNavKey.Login)
-
+                        resetNavigation(MainNavKey.Login)
                     }
 
                 )
@@ -57,11 +50,7 @@ fun AppNavHost() {
                 LoginRoute(
 
                     onLoginSuccess = {
-
-                        pop()
-
-                        navigate(MainNavKey.Home)
-
+                        resetNavigation(MainNavKey.Home)
                     },
 
                     onRegisterClick = {
@@ -89,11 +78,7 @@ fun AppNavHost() {
                 HomeNavHost(
 
                     onLogout = {
-
-                        pop()
-
-                        navigate(MainNavKey.Login)
-
+                        resetNavigation(MainNavKey.Splash)
                     }
 
                 )
