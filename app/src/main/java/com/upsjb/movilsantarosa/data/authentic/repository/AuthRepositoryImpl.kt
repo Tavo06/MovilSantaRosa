@@ -89,7 +89,7 @@ class AuthRepositoryImpl @Inject constructor(
                 database.reference
                     .child(USER_DATABASE)
                     .child(currentUser.uid)
-                    .setValue(registerRequest)
+                    .setValue(registerRequest.copy(password = ""))
                     .await()
 
                 Result.success(user)

@@ -1,61 +1,158 @@
 package com.upsjb.movilsantarosa.ui.common.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 
-@Composable
-fun AppActionButton(
-    text: String,
-    onClick: () -> Unit,
-    backgroundColor: Color = Color(0xFFFF5722),
-    modifier: Modifier = Modifier
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = backgroundColor,
-            contentColor = Color.White
-        )
-    ) {
-        Text(text = text)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun AppActionButtonPreview() {
-    AppActionButton(
-        text = "Registrar Pago",
-        onClick = {}
-    )
-}
 @Composable
 fun AppPrimaryButton(
     text: String,
     onClick: () -> Unit,
-    isLoading: Boolean = false,
+    modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    modifier: Modifier = Modifier
+    isLoading: Boolean = false
 ) {
+    val safeOnClick = rememberClearFocusAndHideKeyboard(onClick)
+
     Button(
-        onClick = onClick,
+        onClick = safeOnClick,
         enabled = enabled && !isLoading,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        )
     ) {
         if (isLoading) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(
+                modifier = Modifier.size(20.dp),
+                strokeWidth = 2.dp,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         } else {
             Text(text)
         }
+    }
+}
+
+@Composable
+fun AppSecondaryButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    isLoading: Boolean = false
+) {
+    val safeOnClick = rememberClearFocusAndHideKeyboard(onClick)
+
+    FilledTonalButton(
+        onClick = safeOnClick,
+        enabled = enabled && !isLoading,
+        modifier = modifier.fillMaxWidth(),
+        colors = ButtonDefaults.filledTonalButtonColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+        )
+    ) {
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(20.dp),
+                strokeWidth = 2.dp,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+        } else {
+            Text(text)
+        }
+    }
+}
+
+@Composable
+fun AppTertiaryButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    isLoading: Boolean = false
+) {
+    val safeOnClick = rememberClearFocusAndHideKeyboard(onClick)
+
+    Button(
+        onClick = safeOnClick,
+        enabled = enabled && !isLoading,
+        modifier = modifier.fillMaxWidth(),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.onTertiary
+        )
+    ) {
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(20.dp),
+                strokeWidth = 2.dp,
+                color = MaterialTheme.colorScheme.onTertiary
+            )
+        } else {
+            Text(text)
+        }
+    }
+}
+
+@Composable
+fun AppOutlinedButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    isLoading: Boolean = false
+) {
+    val safeOnClick = rememberClearFocusAndHideKeyboard(onClick)
+
+    OutlinedButton(
+        onClick = safeOnClick,
+        enabled = enabled && !isLoading,
+        modifier = modifier.fillMaxWidth(),
+        colors = ButtonDefaults.outlinedButtonColors(
+            contentColor = MaterialTheme.colorScheme.primary
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.outline
+        )
+    ) {
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(20.dp),
+                strokeWidth = 2.dp,
+                color = MaterialTheme.colorScheme.primary
+            )
+        } else {
+            Text(text)
+        }
+    }
+}
+
+@Composable
+private fun rememberClearFocusAndHideKeyboard(onClick: () -> Unit): () -> Unit {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
+    return {
+        keyboardController?.hide()
+        focusManager.clearFocus(force = true)
+        onClick()
     }
 }
 
@@ -68,26 +165,28 @@ fun AppPrimaryButtonPreview() {
     )
 }
 
-@Composable
-fun AppSecondaryButton(
-    text: String,
-    onClick: () -> Unit,
-    enabled: Boolean = true,
-    modifier: Modifier = Modifier
-) {
-    OutlinedButton(
-        onClick = onClick,
-        enabled = enabled,
-        modifier = modifier.fillMaxWidth()
-    ) {
-        Text(text)
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 fun AppSecondaryButtonPreview() {
     AppSecondaryButton(
+        text = "Cancelar",
+        onClick = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AppTertiaryButtonPreview() {
+    AppTertiaryButton(
+        text = "Continuar",
+        onClick = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AppOutlinedButtonPreview() {
+    AppOutlinedButton(
         text = "Cancelar",
         onClick = {}
     )

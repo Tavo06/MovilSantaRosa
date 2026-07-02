@@ -22,6 +22,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.upsjb.movilsantarosa.ui.common.components.AppOutlinedButton
+import com.upsjb.movilsantarosa.ui.common.components.AppPrimaryButton
 import com.upsjb.movilsantarosa.ui.common.components.FormDatePicker
 import com.upsjb.movilsantarosa.ui.common.components.FormSection
 import com.upsjb.movilsantarosa.ui.common.components.FormTextField
@@ -283,23 +285,21 @@ fun RegisterActions(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        Button(
+        AppPrimaryButton(
+            text = if (isLoading) "Registrando..." else "Registrarse",
             onClick = onRegisterClick,
             enabled = !isLoading,
             modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(if (isLoading) "Registrando..." else "Registrarse")
-        }
+        )
 
         Spacer(Modifier.width(12.dp))
 
-        OutlinedButton(
+        AppOutlinedButton(
+            text = "¿Ya tienes cuenta? Iniciar Sesión",
             onClick = onLoginClick,
             enabled = !isLoading,
             modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("¿Ya tienes cuenta? Iniciar Sesión")
-        }
+        )
     }
 }
 

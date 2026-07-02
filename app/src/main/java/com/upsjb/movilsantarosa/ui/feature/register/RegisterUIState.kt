@@ -10,7 +10,6 @@ data class RegisterUiState(
 data class RegisterFormState(
     val email: String = "",
     val password: String = "",
-    val confirmPassword: String = "",
     val firstName: String = "",
     val lastName: String = "",
     val dniNumber: String = "",

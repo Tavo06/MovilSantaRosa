@@ -133,8 +133,6 @@ class RegisterViewModel @Inject constructor(
                     "Ingrese el número de licencia."
                 } else if (form.password.length < 6) {
                     "La contraseña debe tener al menos 6 caracteres."
-                } else if (form.password != form.confirmPassword) {
-                    "Las contraseñas no coinciden."
                 } else {
                     null
                 }
