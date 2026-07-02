@@ -7,15 +7,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.upsjb.movilsantarosa.domain.models.HomeTab
-import com.upsjb.movilsantarosa.ui.feature.home.components.HomeBottomNavigation
 import com.upsjb.movilsantarosa.ui.feature.home.components.HomeHeader
 import com.upsjb.movilsantarosa.ui.feature.home.components.SummaryStatsSection
 import com.upsjb.movilsantarosa.ui.feature.home.components.WelcomeSection
@@ -26,29 +20,25 @@ fun HomeScreen(
     uiState: HomeUIState,
     onLogout: () -> Unit
 ) {
-    var selectedTab by remember { mutableStateOf(HomeTab.HOME) }
-
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFFF5F5F5))
     ) {
-        // Header fijo en la parte superior
-        HomeHeader(  onLogout = onLogout )
+        HomeHeader(onLogout = onLogout)
 
-        // Contenido con scroll
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
         ) {
-           if (uiState is HomeUIState.Success){
-               WelcomeSection(
-                   userName = uiState.user.firstname,
-                   userRole = uiState.user.rol
-               )
-           }
+            if (uiState is HomeUIState.Success) {
+                WelcomeSection(
+                    userName = uiState.user.firstname,
+                    userRole = uiState.user.rol
+                )
+            }
 
             SummaryStatsSection(
                 activeMembers = 20,
@@ -56,44 +46,10 @@ fun HomeScreen(
                 paymentsOnTime = 15,
                 pendingFines = 3
             )
-
-            // Aquí iría el contenido dinámico según la pestaña seleccionada
-            when (selectedTab) {
-                HomeTab.HOME -> {
-                    // Ya mostramos el contenido principal
-                }
-                HomeTab.MEMBERS -> {
-                    // Contenido de socios
-                }
-                HomeTab.PAYMENTS -> {
-                    // Contenido de pagos
-                }
-                HomeTab.FINES -> {
-                    // Contenido de multas
-                }
-                HomeTab.ANNOUNCEMENTS -> {
-                    // Contenido de anuncios
-                }
-            }
-
         }
 
     }
 }
-
-//@Preview(showBackground = true, name = "Home Screen - Full")
-//@Composable
-//fun PreviewHomeScreen() {
-//    HomeScreen(uiState = uiState)
-//}
-//
-//@Preview(showBackground = true, name = "Home Screen - Members Tab")
-//@Composable
-//fun PreviewHomeScreenMembers() {
-//    HomeScreen(uiState = uiState)
-//    // Nota: En la preview no podemos cambiar el estado fácilmente,
-//    // pero en la implementación real se cambiaría con onTabSelected
-//}
 
 @Preview(showBackground = true, name = "Home Screen - Small Content")
 @Composable
@@ -103,7 +59,7 @@ fun PreviewHomeScreenSmallContent() {
             .fillMaxSize()
             .background(Color(0xFFF5F5F5))
     ) {
-        HomeHeader(  onLogout = {
+        HomeHeader(onLogout = {
             // Cerrar sesión
         })
 
@@ -125,7 +81,5 @@ fun PreviewHomeScreenSmallContent() {
                 pendingFines = 3
             )
         }
-
-        HomeBottomNavigation(currentTab = HomeTab.HOME)
     }
 }
