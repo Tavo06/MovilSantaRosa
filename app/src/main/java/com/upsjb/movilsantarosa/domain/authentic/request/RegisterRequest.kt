@@ -11,10 +11,17 @@ data class RegisterRequest(
     val plateNumber: String,
     val licenceNumber: String,
     val vehicleColor: String,
-    val rolUser: RolUser
+    val rolUser: String,
+    val status: String,
 )
 
 enum class RolUser(val displayName: String) {
     ADMIN("Administrador"),
     PARTNER("Socio")
+}
+
+enum class StatusUser(val displayName: String) {
+    ACTIVE("Activo"),
+    PENDING("Pendiente"),
+    INACTIVE("Inactivo")
 }
