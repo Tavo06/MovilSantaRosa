@@ -21,7 +21,7 @@ import com.upsjb.movilsantarosa.core.navigation.component.BottomNavKey
 import com.upsjb.movilsantarosa.ui.feature.announcements.AnnouncementsRoute
 import com.upsjb.movilsantarosa.ui.feature.fine.FinesRoute
 import com.upsjb.movilsantarosa.ui.feature.home.HomeRoute
-import com.upsjb.movilsantarosa.ui.feature.members.MembersRoute
+import com.upsjb.movilsantarosa.ui.feature.members.MemberRoute
 
 @Composable
 fun HomeNavHost(
@@ -133,14 +133,7 @@ fun HomeNavHost(
 
                 entry<BottomNavKey.MembersDestination> {
 
-                    MembersRoute(
-
-                        onOpenMember = {
-
-
-                        }
-
-                    )
+                    MemberRoute()
 
                 }
 

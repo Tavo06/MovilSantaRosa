@@ -33,7 +33,6 @@ import com.upsjb.movilsantarosa.R
 fun MemberSearchBar(
     searchText: String,
     onSearchChange: (String) -> Unit,
-    onAddMember: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -58,22 +57,6 @@ fun MemberSearchBar(
                 )
             }
         )
-
-        IconButton(
-            onClick = onAddMember,
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(Color(0xFF1A237E))
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Agregar socio",
-                tint = Color.White,
-                modifier = Modifier.size(24.dp)
-            )
-
-        }
     }
 }
 
@@ -84,7 +67,6 @@ fun PreviewMemberSearchBar() {
     MemberSearchBar(
         searchText = searchText,
         onSearchChange = { searchText = it },
-        onAddMember = {}
     )
 }
 
@@ -95,6 +77,5 @@ fun PreviewMemberSearchBarWithText() {
     MemberSearchBar(
         searchText = searchText,
         onSearchChange = { searchText = it },
-        onAddMember = {}
     )
 }
