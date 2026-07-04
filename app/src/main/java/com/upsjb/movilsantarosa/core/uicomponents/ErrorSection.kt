@@ -18,11 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.upsjb.movilsantarosa.R
 import com.upsjb.movilsantarosa.ui.common.components.AppPrimaryButton
 
 enum class ErrorSectionType {
@@ -57,8 +59,8 @@ private val ErrorSectionType.buttonHeight: Dp
 @Composable
 fun ErrorSection(
     title: String,
-    description: String,
-    image: Painter,
+    description: String = "¿Le damos otra oportunidad?",
+    image: Painter = painterResource(R.drawable.logo_app),
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
     buttonText: String = "Reintentar",

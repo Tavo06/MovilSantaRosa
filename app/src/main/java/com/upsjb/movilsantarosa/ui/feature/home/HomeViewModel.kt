@@ -35,7 +35,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             val user = currentUserUseCase()
             if (user != null) {
-                delay(2_000.milliseconds)
                 getUserUseCase(user.uid).onSuccess { data ->
                     _uiState.update {
                         it.copy(userUiState = UserUiState.Success(data))
@@ -62,8 +61,6 @@ class HomeViewModel @Inject constructor(
             _uiState.update {
                 it.copy(statsUiState = StatsUiState.Loading)
             }
-
-            delay(2_000.milliseconds)
 
             _uiState.update {
                 it.copy(

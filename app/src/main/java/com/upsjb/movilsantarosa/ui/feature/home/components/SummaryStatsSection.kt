@@ -38,9 +38,7 @@ fun SummaryStatsSection(
     when (statsUiState) {
         is StatsUiState.Error -> {
             ErrorSection(
-                "Error al cargar resumen general",
-                "¿Le damos otra oportunidad?",
-                image = painterResource(R.drawable.logo_app),
+                title = statsUiState.message,
                 onRetry = onRetry
             )
         }

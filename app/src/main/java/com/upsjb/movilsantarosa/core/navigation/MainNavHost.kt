@@ -23,7 +23,7 @@ import com.upsjb.movilsantarosa.core.uicomponents.AppTopBar
 import com.upsjb.movilsantarosa.ui.feature.announcements.AnnouncementsRoute
 import com.upsjb.movilsantarosa.ui.feature.fine.FinesRoute
 import com.upsjb.movilsantarosa.ui.feature.home.HomeScreen
-import com.upsjb.movilsantarosa.ui.feature.members.MemberRoute
+import com.upsjb.movilsantarosa.ui.feature.members.MembersScreen
 import com.upsjb.movilsantarosa.ui.feature.payments.PaymentsRoute
 
 @Composable
@@ -46,7 +46,9 @@ fun MainNavHost(
         }
 
         entry<MembersDestination> {
-            MemberRoute()
+            MembersScreen(
+                onMemberClick = {}
+            )
         }
 
         entry<FinesDestination> {

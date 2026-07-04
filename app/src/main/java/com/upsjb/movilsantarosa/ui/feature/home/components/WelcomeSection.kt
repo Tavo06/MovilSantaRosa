@@ -40,8 +40,6 @@ fun WelcomeSection(
             ErrorSection(
                 modifier = modifier,
                 title = userUiState.message,
-                description = "¿Le damos otra oportunidad?",
-                image = painterResource(R.drawable.logo_app),
                 onRetry = onRetry,
                 type = ErrorSectionType.ROW
             )

@@ -3,7 +3,7 @@ package com.upsjb.movilsantarosa.domain.member.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Members(
+data class Member(
     val birthdate: String = "",
     val dniNumber: String = "",
     val email: String = "",

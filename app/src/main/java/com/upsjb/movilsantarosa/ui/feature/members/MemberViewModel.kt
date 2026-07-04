@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,7 +32,7 @@ class MemberViewModel @Inject constructor(
 
             getAllMembersUseCase()
                 .onSuccess {
-                    _uiState.value = MemberUIState.Success(it)
+                    _uiState.value = MemberUIState.Success(members = it)
                 }
                 .onFailure {
                     _uiState.value = MemberUIState.Error(
@@ -40,4 +41,17 @@ class MemberViewModel @Inject constructor(
                 }
         }
     }
+
+    fun updateQuery(query: String) {
+        _uiState.update { state ->
+
+            when (state) {
+                is MemberUIState.Success ->
+                    state.copy(query = query)
+
+                else -> state
+            }
+        }
+    }
+
 }
