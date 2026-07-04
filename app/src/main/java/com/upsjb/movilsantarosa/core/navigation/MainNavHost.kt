@@ -86,7 +86,7 @@ fun MainNavHost(
             },
             modifier = Modifier
                 .padding(padding)
-                .background(MaterialTheme.colorScheme.onPrimary)
+                .background(MaterialTheme.colorScheme.surface)
         )
     }
 }
