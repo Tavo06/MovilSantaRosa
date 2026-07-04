@@ -51,6 +51,8 @@ dependencies {
     //Nav3
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
+    implementation(libs.lifecycle.viewmodel.nav3)
+    implementation(libs.lifecycle.viewmodel)
 
     //Icons
     implementation(libs.androidx.compose.material.icons.extended)

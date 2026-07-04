@@ -1,4 +1,3 @@
-
 package com.upsjb.movilsantarosa.ui.feature.home.components
 
 import androidx.compose.foundation.background
@@ -12,13 +11,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,14 +23,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.upsjb.movilsantarosa.ui.common.components.MessageDialog
 
 @Composable
 fun HomeHeader(
@@ -46,7 +41,7 @@ fun HomeHeader(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(Color(0xFF1A237E))
+            .background(MaterialTheme.colorScheme.primary)
             .padding(16.dp)
     ) {
 
@@ -58,12 +53,12 @@ fun HomeHeader(
                 .align(Alignment.TopEnd)
                 .size(30.dp)
                 .clip(CircleShape)
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.onPrimary)
         ) {
             Icon(
-                imageVector = Icons.Default.Logout,
+                imageVector = Icons.AutoMirrored.Filled.Logout,
                 contentDescription = "Cerrar sesión",
-                tint = Color.Blue
+                tint = MaterialTheme.colorScheme.primary
             )
         }
 
@@ -76,7 +71,7 @@ fun HomeHeader(
             Text(
                 text = "'Honradez, Seguridad y Confianza'",
                 fontStyle = FontStyle.Italic,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center
             )
@@ -85,7 +80,7 @@ fun HomeHeader(
 
             Text(
                 text = "ASOCIACIÓN DE MOTOTAXIS",
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
@@ -95,49 +90,29 @@ fun HomeHeader(
 
             Text(
                 text = "Santa Rosa de Lima",
-                color = Color.White.copy(alpha = 0.9f),
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center
             )
 
             Text(
                 text = "San Clemente - Pisco",
-                color = Color.White.copy(alpha = 0.8f),
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 12.sp,
                 textAlign = TextAlign.Center
             )
         }
     }
     if (showLogoutDialog) {
-        AlertDialog(
-            onDismissRequest = {
+        MessageDialog(
+            title = "Cerrar sesión",
+            message = "¿Desea realmente cerrar la sesión?",
+            confirmButtonText = "Sí, cerrar",
+            onConfirmClick = {
                 showLogoutDialog = false
+                onLogout()
             },
-            title = {
-                Text("Cerrar sesión")
-            },
-            text = {
-                Text("¿Desea realmente cerrar la sesión?")
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showLogoutDialog = false
-                        onLogout()
-                    }
-                ) {
-                    Text("Sí")
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showLogoutDialog = false
-                    }
-                ) {
-                    Text("Cancelar")
-                }
-            }
+            cancelButtonText = "Cancelar"
         )
     }
 }

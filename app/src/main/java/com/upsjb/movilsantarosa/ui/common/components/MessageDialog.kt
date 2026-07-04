@@ -11,13 +11,15 @@ import androidx.compose.ui.tooling.preview.Preview
 fun MessageDialog(
     title: String,
     message: String,
-    textButtonAccept: String,
+    onConfirmClick: () -> Unit,
+    confirmButtonText: String,
     modifier: Modifier = Modifier,
-    onAccept: () -> Unit,
+    cancelButtonText: String? = null,
+    onDismiss: () -> Unit = {},
 ) {
     AlertDialog(
         modifier = modifier,
-        onDismissRequest = onAccept,
+        onDismissRequest = onDismiss,
         title = {
             Text(title)
         },
@@ -25,8 +27,15 @@ fun MessageDialog(
             Text(message)
         },
         confirmButton = {
-            TextButton(onClick = onAccept) {
-                Text(textButtonAccept)
+            TextButton(onClick = onConfirmClick) {
+                Text(confirmButtonText)
+            }
+        },
+        dismissButton = {
+            if (cancelButtonText != null) {
+                TextButton(onClick = onDismiss) {
+                    Text(cancelButtonText)
+                }
             }
         }
     )
@@ -38,7 +47,8 @@ fun PreviewRegisterErrorDialog() {
     MessageDialog(
         message = "Error al registrar el usuario",
         title = "Aviso",
-        textButtonAccept = "Aceptar",
-        onAccept = {}
+        confirmButtonText = "Aceptar",
+        onConfirmClick = {},
+        onDismiss = {}
     )
 }

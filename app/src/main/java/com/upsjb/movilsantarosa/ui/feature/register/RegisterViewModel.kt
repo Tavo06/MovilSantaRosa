@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.upsjb.movilsantarosa.domain.authentic.request.RegisterRequest
 import com.upsjb.movilsantarosa.domain.authentic.request.RolUser
+import com.upsjb.movilsantarosa.domain.authentic.request.StatusUser
 import com.upsjb.movilsantarosa.domain.authentic.usecase.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,7 +65,8 @@ class RegisterViewModel @Inject constructor(
                 plateNumber = form.plateNumber,
                 licenceNumber = form.licenceNumber,
                 vehicleColor = form.vehicleColor,
-                rolUser = RolUser.PARTNER
+                rolUser = RolUser.PARTNER.displayName,
+                status = StatusUser.PENDING.displayName,
             )
 
             registerUseCase(request)

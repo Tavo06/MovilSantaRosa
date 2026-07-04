@@ -56,9 +56,9 @@ fun RegisterRoute(
                 is RegisterActionUiState.Error -> {
                     MessageDialog(
                         title = "Aviso",
-                        textButtonAccept = "Aceptar",
+                        confirmButtonText = "Aceptar",
                         message = action.message,
-                        onAccept = viewModel::reset
+                        onConfirmClick = viewModel::reset,
                     )
                 }
 
