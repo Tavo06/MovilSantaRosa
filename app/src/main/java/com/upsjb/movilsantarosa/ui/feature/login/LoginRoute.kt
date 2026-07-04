@@ -21,23 +21,17 @@ fun LoginRoute(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-
         LoginScreen(
             uiState = uiState,
-
             onLoginClick = { email, password ->
                 viewModel.login(email, password)
             },
-
             onRegisterClick = onRegisterClick,
-
             modifier = Modifier.fillMaxSize()
         )
 
         when (uiState) {
-
             is LoginUIState.Error -> {
-
                 ErrorDialog(
                     message = (uiState as LoginUIState.Error).message,
                     onAccept = viewModel::reset

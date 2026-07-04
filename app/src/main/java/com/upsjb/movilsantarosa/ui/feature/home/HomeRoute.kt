@@ -8,16 +8,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun HomeRoute(
-    modifier: Modifier = Modifier, navigateToSplash: () -> Unit,
+    modifier: Modifier = Modifier, onLogout: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     HomeScreen(
         modifier = modifier,
         uiState = uiState,
-        onLogout = {
-            viewModel.logoutSesion {
-               navigateToSplash()
-            }
-        })
+        onLogout = onLogout)
 }
