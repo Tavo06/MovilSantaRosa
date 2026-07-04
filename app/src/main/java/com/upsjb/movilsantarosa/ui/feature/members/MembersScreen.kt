@@ -9,7 +9,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.upsjb.movilsantarosa.ui.feature.members.components.MemberList
 import com.upsjb.movilsantarosa.ui.feature.members.components.MemberSearchBar
-import com.upsjb.movilsantarosa.ui.feature.members.components.MembersHeader
 
 @Composable
 fun MembersScreen(
@@ -35,8 +33,6 @@ fun MembersScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.onPrimary)
     ) {
-
-        MembersHeader()
 
         MemberSearchBar(
             searchText = searchText,

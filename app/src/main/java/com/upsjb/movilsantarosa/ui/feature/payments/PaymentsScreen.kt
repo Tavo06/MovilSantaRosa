@@ -1,4 +1,3 @@
-// ui/feature/payments/PaymentsScreen.kt
 package com.upsjb.movilsantarosa.ui.feature.payments
 
 import androidx.compose.foundation.background
@@ -54,10 +53,6 @@ fun PaymentsScreen(
             .fillMaxSize()
             .background(Color(0xFFF5F5F5))
     ) {
-        // Header fijo
-        PaymentsHeader()
-
-        // Contenido con scroll
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -83,12 +78,6 @@ fun PaymentsScreen(
                 modifier = Modifier.fillMaxWidth().height(16.dp)
             )
         }
-
-        // Bottom Navigation
-        PaymentsBottomNavigation(
-            currentTab = selectedTab,
-            onTabSelected = { selectedTab = it }
-        )
     }
 }
 
@@ -134,7 +123,5 @@ fun PreviewPaymentsScreenNoDebt() {
                 onRegisterClick = {}
             )
         }
-
-        PaymentsBottomNavigation(currentTab = PaymentTab.PAYMENTS)
     }
 }

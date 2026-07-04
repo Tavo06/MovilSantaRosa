@@ -1,18 +1,16 @@
 package com.upsjb.movilsantarosa.core.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.upsjb.movilsantarosa.core.navigation.component.AnnoucementsDestination
-import com.upsjb.movilsantarosa.core.navigation.component.BOTTOM_BAR_ITEMS
 import com.upsjb.movilsantarosa.core.navigation.component.FinesDestination
 import com.upsjb.movilsantarosa.core.navigation.component.HomeDestination
 import com.upsjb.movilsantarosa.core.navigation.component.MAIN_ROUTES
@@ -20,9 +18,11 @@ import com.upsjb.movilsantarosa.core.navigation.component.MembersDestination
 import com.upsjb.movilsantarosa.core.navigation.component.Navigator
 import com.upsjb.movilsantarosa.core.navigation.component.PaymentsDestination
 import com.upsjb.movilsantarosa.core.navigation.component.rememberNavigationState
+import com.upsjb.movilsantarosa.core.uicomponents.AppBottomBar
+import com.upsjb.movilsantarosa.core.uicomponents.AppTopBar
 import com.upsjb.movilsantarosa.ui.feature.announcements.AnnouncementsRoute
 import com.upsjb.movilsantarosa.ui.feature.fine.FinesRoute
-import com.upsjb.movilsantarosa.ui.feature.home.HomeRoute
+import com.upsjb.movilsantarosa.ui.feature.home.HomeScreen
 import com.upsjb.movilsantarosa.ui.feature.members.MemberRoute
 import com.upsjb.movilsantarosa.ui.feature.payments.PaymentsRoute
 
@@ -42,9 +42,7 @@ fun MainNavHost(
 
     val entryProvider = entryProvider {
         entry<HomeDestination> {
-            HomeRoute(
-                onLogout = onLogout
-            )
+            HomeScreen()
         }
 
         entry<MembersDestination> {
@@ -65,35 +63,28 @@ fun MainNavHost(
     }
 
     Scaffold(
+        modifier = Modifier.safeDrawingPadding(),
+        topBar = {
+            AppTopBar(
+                currentDestination = navigationState.topLevelRoute,
+                onLogout = onLogout
+            )
+        },
         bottomBar = {
-            NavigationBar {
-                BOTTOM_BAR_ITEMS.forEach { (key, item) ->
-                    NavigationBarItem(
-                        selected = navigationState.topLevelRoute == key,
-                        onClick = {
-                            navigator.navigate(key)
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = item.description
-                            )
-                        },
-                        label = {
-                            Text(item.description)
-                        }
-                    )
-                }
-            }
+            AppBottomBar(
+                currentDestination = navigationState.topLevelRoute,
+                onDestinationSelected = navigator::navigate
+            )
         }
-
     ) { padding ->
         NavDisplay(
             entries = navigationState.toDecoratedEntries(entryProvider),
             onBack = {
                 navigator.goBack()
             },
-            modifier = Modifier.padding(padding)
+            modifier = Modifier
+                .padding(padding)
+                .background(MaterialTheme.colorScheme.onPrimary)
         )
     }
 }

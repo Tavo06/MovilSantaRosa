@@ -1,11 +1,9 @@
-// ui/feature/fines/FinesScreen.kt
-package com.upsjb.movilsantarosa.ui.feature.fines
+package com.upsjb.movilsantarosa.ui.feature.fine
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -16,7 +14,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.upsjb.movilsantarosa.domain.models.Fine
 import com.upsjb.movilsantarosa.domain.models.FineTab
 import com.upsjb.movilsantarosa.ui.feature.fines.components.FineList
@@ -43,8 +40,6 @@ fun FinesScreen(
             .fillMaxSize()
             .background(Color(0xFFF5F5F5))
     ) {
-        // Header fijo
-        FinesHeader()
         // Descripción
         FinesDescription()
 

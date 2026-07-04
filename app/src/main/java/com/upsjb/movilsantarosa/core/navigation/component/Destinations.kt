@@ -1,9 +1,11 @@
 package com.upsjb.movilsantarosa.core.navigation.component
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Camera
-import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.AssistantPhoto
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Payments
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.TaxiAlert
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
@@ -28,10 +30,10 @@ data object AnnoucementsDestination : NavKey
 
 val BOTTOM_BAR_ITEMS = mapOf(
     HomeDestination to NavBarItem(Icons.Default.Home, "Home"),
-    MembersDestination to NavBarItem(Icons.Default.Face, "Miembros"),
-    FinesDestination to NavBarItem(Icons.Default.Camera, "Multas"),
-    PaymentsDestination to NavBarItem(Icons.Default.Camera, "Pagos"),
-    AnnoucementsDestination to NavBarItem(Icons.Default.Camera, "Anuncios"),
+    MembersDestination to NavBarItem(Icons.Default.Person, "Socios"),
+    FinesDestination to NavBarItem(Icons.Default.AssistantPhoto, "Multas"),
+    PaymentsDestination to NavBarItem(Icons.Default.Payments, "Pagos"),
+    AnnoucementsDestination to NavBarItem(Icons.Default.TaxiAlert, "Anuncios"),
 )
 
 val AUTH_ROUTES = setOf(

@@ -1,4 +1,3 @@
-// ui/feature/home/components/WelcomeSection.kt
 package com.upsjb.movilsantarosa.ui.feature.home.components
 
 import androidx.compose.foundation.background
@@ -6,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -18,24 +18,59 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.upsjb.movilsantarosa.R
+import com.upsjb.movilsantarosa.core.uicomponents.BoxShimmer
+import com.upsjb.movilsantarosa.core.uicomponents.ErrorSection
+import com.upsjb.movilsantarosa.core.uicomponents.ErrorSectionType
+import com.upsjb.movilsantarosa.domain.authentic.model.User
+import com.upsjb.movilsantarosa.ui.feature.home.UserUiState
 
 @Composable
 fun WelcomeSection(
-    userName: String = "Jorge",
-    userRole: String = "Presidente",
+    userUiState: UserUiState,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    when (userUiState) {
+        is UserUiState.Error -> {
+            ErrorSection(
+                modifier = modifier,
+                title = userUiState.message,
+                description = "¿Le damos otra oportunidad?",
+                image = painterResource(R.drawable.logo_app),
+                onRetry = onRetry,
+                type = ErrorSectionType.ROW
+            )
+        }
+
+        UserUiState.Loading -> {
+            BoxShimmer(
+                modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+            )
+        }
+
+        is UserUiState.Success -> {
+            UserSectionSuccess(
+                modifier = modifier,
+                user = userUiState.user,
+            )
+        }
+    }
+}
+
+@Composable
+fun UserSectionSuccess(user: User, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = MaterialTheme.colorScheme.onPrimary
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 2.dp
@@ -52,48 +87,32 @@ fun WelcomeSection(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = "Bienvenido, $userName",
-                    style = MaterialTheme.typography.titleMedium,
+                    text = "Bienvenido ${user.firstname}!",
+                    style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1A237E)
+                    color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = userRole,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
+                    text = user.rol,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.outline
                 )
             }
 
-            // Avatar
             Box(
                 modifier = Modifier
                     .size(50.dp)
                     .clip(CircleShape)
-                    .background(Color(0xFF1A237E)),
+                    .background(MaterialTheme.colorScheme.primary),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = userName.take(2).uppercase(),
-                    color = Color.White,
+                    text = user.firstname.take(2).uppercase(),
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
             }
         }
     }
-}
-
-@Preview(showBackground = true, name = "Welcome Section")
-@Composable
-fun PreviewWelcomeSection() {
-    WelcomeSection()
-}
-
-@Preview(showBackground = true, name = "Welcome Section - Other User")
-@Composable
-fun PreviewWelcomeSectionOther() {
-    WelcomeSection(
-        userName = "Maria",
-        userRole = "Secretaria"
-    )
 }

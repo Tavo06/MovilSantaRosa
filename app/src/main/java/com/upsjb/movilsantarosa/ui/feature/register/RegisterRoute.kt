@@ -59,6 +59,7 @@ fun RegisterRoute(
                         confirmButtonText = "Aceptar",
                         message = action.message,
                         onConfirmClick = viewModel::reset,
+                        onDismiss = {}
                     )
                 }
 

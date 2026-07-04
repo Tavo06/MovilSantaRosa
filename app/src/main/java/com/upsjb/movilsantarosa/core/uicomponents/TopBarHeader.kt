@@ -1,11 +1,10 @@
-package com.upsjb.movilsantarosa.ui.feature.home.components
+package com.upsjb.movilsantarosa.core.uicomponents
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -32,6 +31,42 @@ import androidx.compose.ui.unit.sp
 import com.upsjb.movilsantarosa.ui.common.components.MessageDialog
 
 @Composable
+fun TopBarHeader(
+    title: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.primary)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Text(
+            text = "'Honradez, Seguridad y Confianza'",
+            fontStyle = FontStyle.Italic,
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontSize = 14.sp,
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = title,
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Members Header")
+@Composable
+fun TopBarHeaderPreview() {
+    TopBarHeader("Socios")
+}
+
+@Composable
 fun HomeHeader(
     onLogout: () -> Unit,
     modifier: Modifier = Modifier
@@ -42,7 +77,6 @@ fun HomeHeader(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primary)
-            .padding(16.dp)
     ) {
 
         IconButton(
@@ -50,6 +84,7 @@ fun HomeHeader(
                 showLogoutDialog = true
             },
             modifier = Modifier
+                .padding(16.dp)
                 .align(Alignment.TopEnd)
                 .size(30.dp)
                 .clip(CircleShape)
@@ -65,8 +100,9 @@ fun HomeHeader(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
                 text = "'Honradez, Seguridad y Confianza'",
@@ -75,9 +111,6 @@ fun HomeHeader(
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center
             )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = "ASOCIACIÓN DE MOTOTAXIS",
                 color = MaterialTheme.colorScheme.onPrimary,
@@ -85,16 +118,12 @@ fun HomeHeader(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
             Text(
                 text = "Santa Rosa de Lima",
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center
             )
-
             Text(
                 text = "San Clemente - Pisco",
                 color = MaterialTheme.colorScheme.onPrimary,
@@ -111,6 +140,9 @@ fun HomeHeader(
             onConfirmClick = {
                 showLogoutDialog = false
                 onLogout()
+            },
+            onDismiss = {
+                showLogoutDialog = false
             },
             cancelButtonText = "Cancelar"
         )

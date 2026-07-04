@@ -1,4 +1,3 @@
-// ui/feature/home/components/SummaryStatsSection.kt
 package com.upsjb.movilsantarosa.ui.feature.home.components
 
 import androidx.compose.foundation.layout.Arrangement
@@ -11,176 +10,181 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.upsjb.movilsantarosa.R
+import com.upsjb.movilsantarosa.core.uicomponents.BoxShimmer
+import com.upsjb.movilsantarosa.core.uicomponents.ErrorSection
+import com.upsjb.movilsantarosa.ui.feature.home.StatsUiState
 
 @Composable
 fun SummaryStatsSection(
-    activeMembers: Int = 20,
-    debtors: Int = 5,
-    paymentsOnTime: Int = 15,
-    pendingFines: Int = 3,
+    statsUiState: StatsUiState,
+    onRetry: () -> Unit,
+    onClick: (TypeStat) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-    ) {
-        Text(
-            text = "Resumen general",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF1A237E)
-        )
+    when (statsUiState) {
+        is StatsUiState.Error -> {
+            ErrorSection(
+                "Error al cargar resumen general",
+                "¿Le damos otra oportunidad?",
+                image = painterResource(R.drawable.logo_app),
+                onRetry = onRetry
+            )
+        }
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = Color(0xFFE8EAF6)
-            ),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Column(
-                modifier = Modifier
+        StatsUiState.Loading -> {
+            BoxShimmer(
+                modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
+                    .height(350.dp)
+            )
+        }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 14.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Socios activos",
-                        fontSize = 19.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF1A237E)
+        is StatsUiState.Success -> {
+            HomeStats(
+                modifier = modifier,
+                stats = listOf(
+                    HomeStat(
+                        title = "Socios activos",
+                        value = statsUiState.activeMembers.toString(),
+                        valueColor = Color(0xFF4CAF50),
+                        type = TypeStat.ACTIVE_MEMBERS
+                    ),
+                    HomeStat(
+                        title = "Deudores",
+                        value = statsUiState.debtors.toString(),
+                        valueColor = Color(0xFFF44336),
+                        type = TypeStat.DEBTORS
+                    ),
+                    HomeStat(
+                        title = "Socios al día",
+                        value = statsUiState.paymentsOnTime.toString(),
+                        valueColor = Color(0xFF2196F3),
+                        type = TypeStat.PAYMENTS_ON_TIME
+                    ),
+                    HomeStat(
+                        title = "Multas pendientes",
+                        value = statsUiState.pendingFines.toString(),
+                        valueColor = Color(0xFFFF9800),
+                        type = TypeStat.PENDING_FINES
                     )
-
-                    Text(
-                        text = activeMembers.toString(),
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF4CAF50)
-                    )
-                }
-
-                HorizontalDivider()
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 14.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Deudores",
-                        fontSize = 19.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF1A237E)
-                    )
-
-                    Text(
-                        text = debtors.toString(),
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFF44336)
-                    )
-                }
-
-                HorizontalDivider()
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 14.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Socios al dia",
-                        fontSize = 19.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF1A237E)
-                    )
-
-                    Text(
-                        text = paymentsOnTime.toString(),
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF2196F3)
-                    )
-                }
-
-                HorizontalDivider()
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 14.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Anuncios",
-                        fontSize = 19.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF1A237E)
-                    )
-
-                    Text(
-                        text = pendingFines.toString(),
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFFF9800)
-                    )
-                }
-            }
+                ),
+                onClick = onClick
+            )
         }
     }
 }
 
-@Preview(showBackground = true, name = "Summary Stats Section")
-@Composable
-fun PreviewSummaryStatsSection() {
-    SummaryStatsSection()
+data class HomeStat(
+    val title: String,
+    val value: String,
+    val valueColor: Color,
+    val type: TypeStat,
+)
+
+enum class TypeStat {
+    ACTIVE_MEMBERS,
+    DEBTORS,
+    PAYMENTS_ON_TIME,
+    PENDING_FINES,
 }
 
-@Preview(showBackground = true, name = "Summary Stats - All Zero")
 @Composable
-fun PreviewSummaryStatsAllZero() {
-    SummaryStatsSection(
-        activeMembers = 0,
-        debtors = 0,
-        paymentsOnTime = 0,
-        pendingFines = 0
-    )
+fun HomeStatItem(
+    stat: HomeStat,
+    modifier: Modifier = Modifier,
+    showDivider: Boolean = true,
+    enabled: Boolean = true,
+    onClick: (TypeStat) -> Unit,
+) {
+    Column(modifier = modifier) {
+
+        Surface(
+            onClick = { onClick(stat.type) },
+            enabled = enabled,
+            color = Color.Transparent
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 14.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Text(
+                    text = stat.title,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                Text(
+                    text = stat.value,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = stat.valueColor
+                )
+            }
+        }
+
+        if (showDivider) {
+            HorizontalDivider()
+        }
+    }
 }
 
-@Preview(showBackground = true, name = "Summary Stats - Different Values")
 @Composable
-fun PreviewSummaryStatsDifferent() {
-    SummaryStatsSection(
-        activeMembers = 45,
-        debtors = 12,
-        paymentsOnTime = 33,
-        pendingFines = 8
-    )
+fun HomeStats(
+    stats: List<HomeStat>,
+    modifier: Modifier = Modifier,
+    onClick: (TypeStat) -> Unit,
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+        ) {
+            Text(
+                text = "Resumen general",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.outline,
+                modifier = Modifier.padding(horizontal = 20.dp)
+            )
+
+            stats.forEachIndexed { index, stat ->
+
+                HomeStatItem(
+                    stat = stat,
+                    showDivider = index != stats.lastIndex,
+                    onClick = onClick
+                )
+            }
+        }
+    }
 }

@@ -15,7 +15,7 @@ fun MessageDialog(
     confirmButtonText: String,
     modifier: Modifier = Modifier,
     cancelButtonText: String? = null,
-    onDismiss: () -> Unit = {},
+    onDismiss: () -> Unit,
 ) {
     AlertDialog(
         modifier = modifier,
