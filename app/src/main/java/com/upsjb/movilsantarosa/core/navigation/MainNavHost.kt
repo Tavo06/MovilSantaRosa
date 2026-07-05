@@ -103,7 +103,7 @@ fun MainNavHost(
 
         entry<FineFormDestination> {
             val viewModel: FineFormViewModel = hiltViewModel()
-            
+
             ResultEffect<Member> { member ->
                 viewModel.selectMember(member)
             }
