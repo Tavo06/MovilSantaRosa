@@ -29,9 +29,15 @@ class RegisterViewModel @Inject constructor(
     fun updateForm(
         transform: RegisterFormState.() -> RegisterFormState
     ) {
-        _uiState.update {
-            it.copy(
-                form = it.form.transform()
+        _uiState.update { state ->
+
+            val form = state.form.transform()
+
+            state.copy(
+                form = form.copy(
+                    firstName = form.firstName.onlyLetters(),
+                    lastName = form.lastName.onlyLetters()
+                )
             )
         }
     }
@@ -95,11 +101,18 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
+    private fun String.onlyLetters(): String {
+        return filter {
+            it.isLetter() || it == ' '
+        }
+    }
+
     private fun validateForm(form: RegisterFormState): String? {
 
         val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
         return when {
+
             form.firstName.isBlank() ->
                 "Ingrese sus nombres."
 
@@ -113,6 +126,7 @@ class RegisterViewModel @Inject constructor(
                 "Seleccione su fecha de nacimiento."
 
             else -> {
+
                 val birthDate = try {
                     LocalDate.parse(form.birthDate, formatter)
                 } catch (_: Exception) {

@@ -24,9 +24,6 @@ import com.upsjb.movilsantarosa.core.uicomponents.FormDatePicker
 import com.upsjb.movilsantarosa.core.uicomponents.FormSection
 import com.upsjb.movilsantarosa.core.uicomponents.FormTextField
 import com.upsjb.movilsantarosa.core.utils.toDateString
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun PersonalInfoSection(
@@ -42,9 +39,15 @@ fun PersonalInfoSection(
 
     FormSection(title = "Información Personal") {
         Column {
+
             FormTextField(
                 value = firstName,
-                onValueChange = onFirstNameChange,
+                onValueChange = {
+                    val texto = it.filter { c ->
+                        c.isLetter() || c == ' '
+                    }
+                    onFirstNameChange(texto)
+                },
                 label = "Nombres",
                 placeholder = "Ingresa tus nombres",
                 maxLength = 50,
@@ -53,7 +56,12 @@ fun PersonalInfoSection(
 
             FormTextField(
                 value = lastName,
-                onValueChange = onLastNameChange,
+                onValueChange = {
+                    val texto = it.filter { c ->
+                        c.isLetter() || c == ' '
+                    }
+                    onLastNameChange(texto)
+                },
                 label = "Apellidos",
                 placeholder = "Ingresa tus apellidos",
                 maxLength = 50,
@@ -81,7 +89,6 @@ fun PersonalInfoSection(
                 }
             )
         }
-
     }
 }
 
@@ -142,7 +149,6 @@ fun ContactInfoSection(
                 singleLine = true,
             )
         }
-
     }
 }
 
@@ -177,6 +183,7 @@ fun VehicleInfoSection(
 ) {
     Column {
         FormSection(title = "Información del Vehículo") {
+
             FormTextField(
                 value = plateNumber,
                 onValueChange = onPlateChange,
@@ -237,7 +244,6 @@ fun SecurityInfoSection(
     password: String,
     onPasswordChange: (String) -> Unit,
 ) {
-
     Column {
         FormSection(title = "Seguridad") {
             FormTextField(
@@ -280,6 +286,7 @@ fun RegisterActions(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
+
         AppPrimaryButton(
             text = if (isLoading) "Registrando..." else "Registrarse",
             onClick = onRegisterClick,
