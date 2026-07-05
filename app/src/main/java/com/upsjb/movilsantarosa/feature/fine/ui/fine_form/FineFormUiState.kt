@@ -15,6 +15,7 @@ data class FineFormUiState(
 data class FineFormState(
     val memberEmail: String = "",
     val memberName: String = "",
+    val memberDniNumber: String = "",
     val reason: FineReason = FineReason.OTHER,
     val customReason: String = "",
     val amount: String = "",

@@ -7,6 +7,7 @@ data class FineModel(
     val id: String = "",
     val memberEmail: String = "",
     val memberName: String = "",
+    val memberDniNumber: String = "",
     val reason: FineReason = FineReason.OTHER,
     val customReason: String = "",
     val amount: Double = 0.0,
