@@ -28,6 +28,7 @@ fun FormDatePicker(
     onDateSelected: (Long?) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     isError: Boolean = false,
     allowFutureDates: Boolean = false
 ) {
@@ -84,6 +85,7 @@ fun FormDatePicker(
         value = value,
         onValueChange = {},
         readOnly = true,
+        enabled = enabled,
         label = { Text(label) },
         isError = isError,
         modifier = modifier.fillMaxWidth(),

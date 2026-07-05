@@ -1,5 +1,6 @@
 package com.upsjb.movilsantarosa.feature.fine.ui.fine_form
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,12 +35,17 @@ fun FineFormScreen(
     )
 
     FineFormContent(
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxSize(),
         state = state,
         member = state.selectedMember,
         updateForm = viewModel::updateForm,
-        onSave = {
+        onSaveClick = {
             showRegisterDialog = true
+        },
+        onEditClick = {
+            viewModel.setMode(FineFormMode.EDIT)
         },
         onBackClick = onBackClick,
         openMemberPicker = openMemberPicker,
@@ -90,7 +96,8 @@ private fun FineFormPreview() {
         member = null,
         state = state,
         updateForm = {},
-        onSave = {},
+        onSaveClick = {},
+        onEditClick = {},
         onBackClick = {},
         openMemberPicker = {},
         onMemberChange = {}

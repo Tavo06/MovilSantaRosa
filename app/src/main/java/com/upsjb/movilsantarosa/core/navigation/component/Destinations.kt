@@ -24,7 +24,7 @@ data object MemberPickerDestination : NavKey
 @Serializable
 data object FinesDestination : NavKey
 @Serializable
-data object FineFormDestination : NavKey
+data class FineFormDestination(val fineId: String? = null) : NavKey
 
 @Serializable
 data object PaymentsDestination : NavKey

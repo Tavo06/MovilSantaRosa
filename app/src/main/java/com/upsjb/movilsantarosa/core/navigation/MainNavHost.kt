@@ -37,6 +37,7 @@ import com.upsjb.movilsantarosa.feature.home.ui.HomeScreen
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.fine.ui.fine.FineViewModel
 import com.upsjb.movilsantarosa.feature.fine.ui.fine.FinesScreen
+import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormMode
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormScreen
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormViewModel
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
@@ -95,17 +96,30 @@ fun MainNavHost(
             }
 
             FinesScreen(
-                onFineClick = {}
+                onFineClick = { fine ->
+                    navigator.navigate(
+                        FineFormDestination(fine.id)
+                    )
+                }
             )
         }
 
-        entry<FineFormDestination> {
+        entry<FineFormDestination> { destination ->
             val viewModel: FineFormViewModel = hiltViewModel()
 
             ResultEffect<Member> { member ->
                 viewModel.selectMember(member)
             }
             val resultBus = LocalResultEventBus.current
+
+            LaunchedEffect(destination.fineId) {
+
+                if (destination.fineId == null) {
+                    viewModel.setMode(FineFormMode.CREATE)
+                } else {
+                    viewModel.loadFine(destination.fineId)
+                }
+            }
 
             FineFormScreen(
                 viewModel = viewModel,
@@ -154,7 +168,7 @@ fun MainNavHost(
                 onClick = {
                     when (navigationState.topLevelRoute) {
                         FinesDestination -> {
-                            navigator.navigate(FineFormDestination)
+                            navigator.navigate(FineFormDestination())
                         }
 
                         PaymentsDestination -> {

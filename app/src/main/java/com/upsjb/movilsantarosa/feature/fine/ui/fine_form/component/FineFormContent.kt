@@ -1,16 +1,19 @@
 package com.upsjb.movilsantarosa.feature.fine.ui.fine_form.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PersonSearch
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,7 +50,8 @@ fun FineFormContent(
     member: Member?,
     onMemberChange: (Member?) -> Unit,
     updateForm: (FineFormState.() -> FineFormState) -> Unit,
-    onSave: () -> Unit,
+    onSaveClick: () -> Unit,
+    onEditClick: () -> Unit,
     onBackClick: () -> Unit,
     openMemberPicker: () -> Unit,
 ) {
@@ -62,12 +66,23 @@ fun FineFormContent(
 
         AppHeader(
             modifier = Modifier.padding(top = 16.dp),
-            title = when (state.mode) {
-                FineFormMode.CREATE -> "Registrar multa"
-                FineFormMode.EDIT -> "Editar multa"
-                FineFormMode.READ_ONLY -> "Detalle de multa"
-            },
-            onBackClick = onBackClick
+            title = state.mode.displayName,
+            onBackClick = onBackClick,
+            actions = {
+                IconButton(
+                    onClick = onEditClick,
+                    modifier = Modifier.background(
+                        MaterialTheme.colorScheme.primary,
+                        CircleShape
+                    )
+                ) {
+                    Icon(
+                        Icons.Default.Edit,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
         )
 
         Spacer(Modifier.height(16.dp))
@@ -160,6 +175,7 @@ fun FineFormContent(
         )
         FormDatePicker(
             value = form.dueDate,
+            enabled = !isReadOnly,
             onDateSelected = { updateForm { copy(dueDate = it.toDateString()) } },
             label = "Fecha de vencimiento",
             allowFutureDates = true
@@ -167,12 +183,18 @@ fun FineFormContent(
 
         Spacer(Modifier.height(24.dp))
 
-        if (!isReadOnly) {
-            AppPrimaryButton(
-                text = if (state.mode == FineFormMode.EDIT) "Actualizar" else "Guardar",
-                onClick = onSave,
-                modifier = Modifier.fillMaxWidth()
-            )
+        when (state.mode) {
+
+            FineFormMode.CREATE,
+            FineFormMode.EDIT -> {
+                AppPrimaryButton(
+                    text = state.mode.displayButton,
+                    onClick = onSaveClick,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            FineFormMode.READ_ONLY -> Unit
         }
     }
 }
@@ -207,10 +229,13 @@ fun FineFormContentPreview() {
                         form = state.form.transform()
                     )
                 },
-                onSave = {
+                onSaveClick = {
                     state = state.copy(
                         mode = FineFormMode.READ_ONLY
                     )
+                },
+                onEditClick = {
+
                 },
                 onBackClick = {},
                 openMemberPicker = {},

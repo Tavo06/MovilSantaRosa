@@ -1,11 +1,8 @@
 package com.upsjb.movilsantarosa.feature.fine.ui.fine_form
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
-import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
-import com.upsjb.movilsantarosa.feature.fine.domain.model.Fine
 import com.upsjb.movilsantarosa.feature.fine.domain.model.toDomain
 import com.upsjb.movilsantarosa.feature.fine.domain.model.toForm
 import com.upsjb.movilsantarosa.feature.fine.domain.usecase.GetFineByIdUseCase
@@ -15,7 +12,6 @@ import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -47,7 +43,10 @@ class FineFormViewModel @Inject constructor(
         viewModelScope.launch {
 
             _uiState.update {
-                it.copy(actionState = FineFormActionState.Loading)
+                it.copy(
+                    mode = FineFormMode.READ_ONLY,
+                    actionState = FineFormActionState.Loading
+                )
             }
 
             getFineByIdUseCase(id)
@@ -91,7 +90,6 @@ class FineFormViewModel @Inject constructor(
                 it.copy(actionState = FineFormActionState.Loading)
             }
 
-            delay(3000L)
             val result = when (state.mode) {
 
                 FineFormMode.CREATE -> registerFineUseCase(fine)

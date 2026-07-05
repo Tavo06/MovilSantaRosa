@@ -35,5 +35,18 @@ sealed interface FineFormActionState {
 enum class FineFormMode {
     CREATE,
     EDIT,
-    READ_ONLY
+    READ_ONLY;
+
+    val displayName: String
+        get() = when (this) {
+            CREATE -> "Registrar multa"
+            EDIT -> "Editar multa"
+            READ_ONLY -> "Detalle de multa"
+        }
+    val displayButton: String
+        get() = when (this) {
+            CREATE -> "Registrar"
+            EDIT -> "Actualizar"
+            READ_ONLY -> ""
+        }
 }
