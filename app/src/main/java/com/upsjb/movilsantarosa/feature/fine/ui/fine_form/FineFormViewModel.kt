@@ -10,6 +10,7 @@ import com.upsjb.movilsantarosa.feature.fine.domain.model.toForm
 import com.upsjb.movilsantarosa.feature.fine.domain.usecase.GetFineByIdUseCase
 import com.upsjb.movilsantarosa.feature.fine.domain.usecase.RegisterFineUseCase
 import com.upsjb.movilsantarosa.feature.fine.domain.usecase.UpdateFineUseCase
+import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -108,6 +109,30 @@ class FineFormViewModel @Inject constructor(
     fun resetAction() {
         _uiState.update {
             it.copy(actionState = FineFormActionState.Idle)
+        }
+    }
+
+    fun selectMember(member: Member) {
+        _uiState.update {
+            it.copy(
+                selectedMember = member,
+                form = it.form.copy(
+                    memberName = member.fullName,
+                    memberEmail = member.email
+                )
+            )
+        }
+    }
+
+    fun clearMember() {
+        _uiState.update {
+            it.copy(
+                selectedMember = null,
+                form = it.form.copy(
+                    memberName = "",
+                    memberEmail = ""
+                )
+            )
         }
     }
 }

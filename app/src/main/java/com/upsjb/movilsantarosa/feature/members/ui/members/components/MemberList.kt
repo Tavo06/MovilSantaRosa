@@ -1,4 +1,4 @@
-package com.upsjb.movilsantarosa.feature.members.ui.components
+package com.upsjb.movilsantarosa.feature.members.ui.members.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize

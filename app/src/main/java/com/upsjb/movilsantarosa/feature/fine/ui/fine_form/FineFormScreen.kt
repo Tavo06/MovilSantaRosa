@@ -1,10 +1,8 @@
 package com.upsjb.movilsantarosa.feature.fine.ui.fine_form
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -20,7 +18,8 @@ import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.component.FineFormCont
 fun FineFormScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    viewModel: FineFormViewModel = hiltViewModel()
+    openMemberPicker: () -> Unit,
+    viewModel: FineFormViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -37,9 +36,18 @@ fun FineFormScreen(
 
         FineFormContent(
             state = state,
+            member = state.selectedMember,
             updateForm = viewModel::updateForm,
             onSave = viewModel::saveFine,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            openMemberPicker = openMemberPicker,
+            onMemberChange = {
+                if (it == null) {
+                    viewModel.clearMember()
+                } else {
+                    viewModel.selectMember(it)
+                }
+            }
         )
 
         if (state.actionState is FineFormActionState.Loading) {
@@ -62,9 +70,12 @@ private fun FineFormPreview() {
     )
 
     FineFormContent(
+        member = null,
         state = state,
         updateForm = {},
         onSave = {},
-        onBackClick = {}
+        onBackClick = {},
+        openMemberPicker = {},
+        onMemberChange = {}
     )
 }

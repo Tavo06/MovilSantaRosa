@@ -1,4 +1,4 @@
-package com.upsjb.movilsantarosa.feature.members.ui
+package com.upsjb.movilsantarosa.feature.members.ui.members
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,7 +15,7 @@ import com.upsjb.movilsantarosa.core.uicomponents.AppSearchBar
 import com.upsjb.movilsantarosa.core.uicomponents.ErrorSection
 import com.upsjb.movilsantarosa.core.uicomponents.SkeletonSection
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
-import com.upsjb.movilsantarosa.feature.members.ui.components.MemberList
+import com.upsjb.movilsantarosa.feature.members.ui.members.components.MemberList
 
 @Composable
 fun MembersScreen(

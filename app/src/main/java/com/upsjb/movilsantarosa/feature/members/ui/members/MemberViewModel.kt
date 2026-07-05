@@ -1,4 +1,4 @@
-package com.upsjb.movilsantarosa.feature.members.ui
+package com.upsjb.movilsantarosa.feature.members.ui.members
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

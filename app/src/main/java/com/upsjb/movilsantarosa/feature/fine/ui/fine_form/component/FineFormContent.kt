@@ -6,33 +6,45 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.PersonSearch
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.upsjb.movilsantarosa.core.uicomponents.AppHeader
 import com.upsjb.movilsantarosa.core.uicomponents.AppPrimaryButton
+import com.upsjb.movilsantarosa.core.uicomponents.CardContent
 import com.upsjb.movilsantarosa.core.uicomponents.FormDropdown
 import com.upsjb.movilsantarosa.core.uicomponents.FormTextField
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormMode
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormState
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormUiState
+import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 
 @Composable
 fun FineFormContent(
     state: FineFormUiState,
+    member: Member?,
+    onMemberChange: (Member?) -> Unit,
     updateForm: (FineFormState.() -> FineFormState) -> Unit,
     onSave: () -> Unit,
     onBackClick: () -> Unit,
+    openMemberPicker: () -> Unit,
 ) {
-
+    val memberFullName = member?.fullName.orEmpty()
     val form = state.form
     val isReadOnly = state.mode == FineFormMode.READ_ONLY
 
@@ -53,18 +65,39 @@ fun FineFormContent(
         Spacer(Modifier.height(16.dp))
 
         FormTextField(
-            value = form.memberName,
+            value = memberFullName,
             onValueChange = { updateForm { copy(memberName = it) } },
             label = "Nombre del socio",
-            enabled = !isReadOnly
+            enabled = true,
+            readOnly = true,
+            leadingIcon = {
+                IconButton(onClick = openMemberPicker) {
+                    Icon(
+                        imageVector = Icons.Default.PersonSearch,
+                        contentDescription = null
+                    )
+                }
+            },
+            trailingIcon = {
+                if (member != null) {
+                    IconButton(
+                        onClick = { onMemberChange(null) }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Quitar socio"
+                        )
+                    }
+                }
+            }
         )
-
-        FormTextField(
-            value = form.memberEmail,
-            onValueChange = { updateForm { copy(memberEmail = it) } },
-            label = "Correo",
-            enabled = !isReadOnly
-        )
+        member?.let {
+            CardContent(containerColor = MaterialTheme.colorScheme.secondaryContainer) {
+                Text("DNI: ${it.dniNumber}", fontWeight = FontWeight.Medium)
+                Text("Correo: ${it.email}", fontWeight = FontWeight.Medium)
+            }
+            Spacer(Modifier.height(12.dp))
+        }
 
         FormDropdown(
             label = "Motivo",
@@ -132,6 +165,7 @@ fun FineFormContentPreview() {
         Surface {
             FineFormContent(
                 state = state,
+                member = null,
                 updateForm = { transform ->
                     state = state.copy(
                         form = state.form.transform()
@@ -142,7 +176,9 @@ fun FineFormContentPreview() {
                         mode = FineFormMode.READ_ONLY
                     )
                 },
-                onBackClick = {}
+                onBackClick = {},
+                openMemberPicker = {},
+                onMemberChange = {}
             )
         }
     }

@@ -20,6 +20,8 @@ data object HomeDestination : NavKey
 @Serializable
 data object MembersDestination : NavKey
 @Serializable
+data object MemberPickerDestination : NavKey
+@Serializable
 data object FinesDestination : NavKey
 @Serializable
 data object FineFormDestination : NavKey
