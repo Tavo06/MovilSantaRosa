@@ -43,8 +43,6 @@ import com.upsjb.movilsantarosa.feature.members.ui.member_picker.MemberPickerBot
 import com.upsjb.movilsantarosa.feature.members.ui.members.MembersScreen
 import com.upsjb.movilsantarosa.feature.payments.PaymentsScreen
 
-const val SELECTED_MEMBER_KEY = "selected_member"
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainNavHost(

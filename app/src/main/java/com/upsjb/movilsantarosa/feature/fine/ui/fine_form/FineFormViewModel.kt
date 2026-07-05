@@ -71,7 +71,19 @@ class FineFormViewModel @Inject constructor(
         viewModelScope.launch {
 
             val state = _uiState.value
-            val fine = state.form.toDomain()
+            val form = state.form
+            val member = state.selectedMember
+
+            validateForm(form, member)?.let { message ->
+                _uiState.update {
+                    it.copy(
+                        actionState = FineFormActionState.Error(message)
+                    )
+                }
+                return@launch
+            }
+
+            val fine = form.toDomain()
 
             _uiState.update {
                 it.copy(actionState = FineFormActionState.Loading)
@@ -133,6 +145,31 @@ class FineFormViewModel @Inject constructor(
                     memberEmail = ""
                 )
             )
+        }
+    }
+
+    private fun validateForm(
+        form: FineFormState,
+        member: Member?
+    ): String? {
+
+        return when {
+
+            member == null ->
+                "Seleccione un socio."
+
+            form.reason == FineReason.OTHER && form.customReason.isBlank() ->
+                "Ingrese un motivo personalizado."
+
+            form.amount.isBlank() ->
+                "Ingrese un monto."
+
+            form.amount.toDoubleOrNull() == null ->
+                "El monto no es válido."
+
+            form.amount.toDouble() <= 0 ->
+                "El monto debe ser mayor a 0."
+            else -> null
         }
     }
 }

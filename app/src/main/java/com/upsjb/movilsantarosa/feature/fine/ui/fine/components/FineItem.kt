@@ -20,7 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
 import com.upsjb.movilsantarosa.feature.fine.domain.model.Fine
 
@@ -141,6 +143,26 @@ fun FineStatusChip(
             style = MaterialTheme.typography.labelSmall,
             color = color,
             fontWeight = FontWeight.SemiBold
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FineItemPreview() {
+
+    val fine = Fine(
+        memberName = "Juan Perez",
+        memberEmail = "juan@email.com",
+        reason = FineReason.OTHER,
+        amount = 100.0,
+        description = "Incumplimiento de normas"
+    )
+
+    MaterialTheme {
+        FineItem(
+            fine = fine,
+            onClick = {}
         )
     }
 }

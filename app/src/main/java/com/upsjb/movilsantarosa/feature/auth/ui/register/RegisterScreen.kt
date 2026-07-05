@@ -24,7 +24,6 @@ import com.upsjb.movilsantarosa.core.uicomponents.ProgressIndicatorOverlay
 import com.upsjb.movilsantarosa.feature.auth.ui.register.components.ContactInfoSection
 import com.upsjb.movilsantarosa.feature.auth.ui.register.components.PersonalInfoSection
 import com.upsjb.movilsantarosa.feature.auth.ui.register.components.RegisterActions
-import com.upsjb.movilsantarosa.feature.auth.ui.register.components.RegisterHeader
 import com.upsjb.movilsantarosa.feature.auth.ui.register.components.SecurityInfoSection
 import com.upsjb.movilsantarosa.feature.auth.ui.register.components.VehicleInfoSection
 

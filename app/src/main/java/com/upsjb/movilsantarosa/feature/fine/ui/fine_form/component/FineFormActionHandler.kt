@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,12 +17,19 @@ import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormActionState
 @Composable
 fun FineFormActionHandler(
     action: FineFormActionState,
+    navigateToFine: () -> Unit,
     onReset: () -> Unit
 ) {
 
+    LaunchedEffect(action) {
+        if (action is FineFormActionState.Success) {
+            navigateToFine()
+        }
+    }
+
     if (action is FineFormActionState.Error) {
         MessageDialog(
-            title = "Error",
+            title = "Aviso",
             message = action.message,
             confirmButtonText = "Aceptar",
             onConfirmClick = onReset,
@@ -47,7 +55,8 @@ fun FineFormActionHandlerPreview() {
                 action = state,
                 onReset = {
                     state = FineFormActionState.Idle
-                }
+                },
+                navigateToFine = {}
             )
         }
     }

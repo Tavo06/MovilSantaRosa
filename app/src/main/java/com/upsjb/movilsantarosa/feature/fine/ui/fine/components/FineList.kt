@@ -1,8 +1,11 @@
 package com.upsjb.movilsantarosa.feature.fine.ui.fine.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,19 +20,27 @@ fun FineList(
     modifier: Modifier = Modifier
 ) {
     if (fines.isEmpty()) {
+
         EmptySection(
+            modifier = modifier.fillMaxSize(),
             title = "No hay multas registradas",
             subtitle = "Aquí aparecerán las multas cuando estén en el sistema",
-            modifier = modifier
         )
+
     } else {
+
         LazyColumn(
-            modifier = modifier,
+            modifier = modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                bottom = 88.dp
+            ),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
+
             item {
                 FinesDescription()
             }
+
             items(fines) { fine ->
                 FineItem(
                     fine = fine,
@@ -40,11 +51,13 @@ fun FineList(
     }
 }
 
-
-@Preview(showBackground = true, name = "Fine List - Empty")
+@Preview(showBackground = true)
 @Composable
-fun PreviewFineListEmpty() {
-    FineList(
-        fines = emptyList(),
-        onClick = {})
+fun FineListEmptyPreview() {
+    MaterialTheme {
+        FineList(
+            fines = emptyList(),
+            onClick = {}
+        )
+    }
 }
