@@ -1,6 +1,5 @@
 package com.upsjb.movilsantarosa.feature.fine.ui.fine
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +16,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.upsjb.movilsantarosa.core.navigation.component.FinesDestination
+import com.upsjb.movilsantarosa.core.navigation.component.NavigationState
 import com.upsjb.movilsantarosa.core.uicomponents.AppSearchBar
 import com.upsjb.movilsantarosa.core.uicomponents.ErrorSection
 import com.upsjb.movilsantarosa.core.uicomponents.SkeletonSection
@@ -28,13 +29,17 @@ import com.upsjb.movilsantarosa.feature.fine.ui.fine.components.FineList
 fun FinesScreen(
     modifier: Modifier = Modifier,
     onFineClick: (Fine) -> Unit,
-    viewModel: FineViewModel = hiltViewModel()
+    viewModel: FineViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+            .padding(
+                start = 16.dp,
+                end = 16.dp,
+                top = 16.dp
+            )
             .fillMaxSize()
     ) {
         when (val state = uiState) {

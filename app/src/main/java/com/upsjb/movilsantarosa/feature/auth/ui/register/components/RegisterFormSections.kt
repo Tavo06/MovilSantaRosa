@@ -23,6 +23,7 @@ import com.upsjb.movilsantarosa.core.uicomponents.AppPrimaryButton
 import com.upsjb.movilsantarosa.core.uicomponents.FormDatePicker
 import com.upsjb.movilsantarosa.core.uicomponents.FormSection
 import com.upsjb.movilsantarosa.core.uicomponents.FormTextField
+import com.upsjb.movilsantarosa.core.utils.toDateString
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -38,9 +39,7 @@ fun PersonalInfoSection(
     onDniChange: (String) -> Unit,
     onBirthdateChange: (String) -> Unit,
 ) {
-    val formatter = remember {
-        SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-    }
+
     FormSection(title = "Información Personal") {
         Column {
             FormTextField(
@@ -77,7 +76,7 @@ fun PersonalInfoSection(
                 label = "Fecha de nacimiento",
                 onDateSelected = { millis ->
                     millis?.let {
-                        onBirthdateChange(formatter.format(Date(it)))
+                        onBirthdateChange(it.toDateString())
                     }
                 }
             )

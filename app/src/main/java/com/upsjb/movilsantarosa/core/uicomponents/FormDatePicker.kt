@@ -28,7 +28,8 @@ fun FormDatePicker(
     onDateSelected: (Long?) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
-    isError: Boolean = false
+    isError: Boolean = false,
+    allowFutureDates: Boolean = false
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
 
@@ -44,7 +45,12 @@ fun FormDatePicker(
     val datePickerState = rememberDatePickerState(
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis <= today
+
+                return if (allowFutureDates) {
+                    utcTimeMillis >= today
+                } else {
+                    utcTimeMillis <= today
+                }
             }
         }
     )
@@ -82,9 +88,7 @@ fun FormDatePicker(
         isError = isError,
         modifier = modifier.fillMaxWidth(),
         trailingIcon = {
-            IconButton(
-                onClick = { showDatePicker = true }
-            ) {
+            IconButton(onClick = { showDatePicker = true }) {
                 Icon(
                     imageVector = Icons.Default.DateRange,
                     contentDescription = "Seleccionar fecha"

@@ -12,6 +12,7 @@ import com.upsjb.movilsantarosa.feature.fine.domain.usecase.RegisterFineUseCase
 import com.upsjb.movilsantarosa.feature.fine.domain.usecase.UpdateFineUseCase
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -89,6 +90,7 @@ class FineFormViewModel @Inject constructor(
                 it.copy(actionState = FineFormActionState.Loading)
             }
 
+            delay(3000L)
             val result = when (state.mode) {
 
                 FineFormMode.CREATE -> registerFineUseCase(fine)

@@ -1,7 +1,5 @@
 package com.upsjb.movilsantarosa.feature.fine.ui.fine_form
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,32 +32,27 @@ fun FineFormScreen(
         navigateToFine = onBackClick
     )
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-
-        FineFormContent(
-            state = state,
-            member = state.selectedMember,
-            updateForm = viewModel::updateForm,
-            onSave = {
-                showRegisterDialog = true
-            },
-            onBackClick = onBackClick,
-            openMemberPicker = openMemberPicker,
-            onMemberChange = {
-                if (it == null) {
-                    viewModel.clearMember()
-                } else {
-                    viewModel.selectMember(it)
-                }
+    FineFormContent(
+        modifier = modifier.padding(horizontal = 16.dp),
+        state = state,
+        member = state.selectedMember,
+        updateForm = viewModel::updateForm,
+        onSave = {
+            showRegisterDialog = true
+        },
+        onBackClick = onBackClick,
+        openMemberPicker = openMemberPicker,
+        onMemberChange = {
+            if (it == null) {
+                viewModel.clearMember()
+            } else {
+                viewModel.selectMember(it)
             }
-        )
-
-        if (state.actionState is FineFormActionState.Loading) {
-            ProgressIndicatorOverlay()
         }
+    )
+
+    if (state.actionState is FineFormActionState.Loading) {
+        ProgressIndicatorOverlay()
     }
 
     if (showRegisterDialog) {

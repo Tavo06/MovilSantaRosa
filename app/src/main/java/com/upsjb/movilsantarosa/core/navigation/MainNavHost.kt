@@ -35,6 +35,7 @@ import com.upsjb.movilsantarosa.core.uicomponents.AppTopBar
 import com.upsjb.movilsantarosa.feature.announcements.AnnouncementsScreen
 import com.upsjb.movilsantarosa.feature.home.ui.HomeScreen
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
+import com.upsjb.movilsantarosa.feature.fine.ui.fine.FineViewModel
 import com.upsjb.movilsantarosa.feature.fine.ui.fine.FinesScreen
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormScreen
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormViewModel
@@ -62,6 +63,8 @@ fun MainNavHost(
         Navigator(navigationState)
     }
 
+    val activeRoute = navigationState.topLevelRoute
+
     val entryProvider = entryProvider {
         entry<HomeDestination> {
             HomeScreen()
@@ -87,10 +90,19 @@ fun MainNavHost(
         }
 
         entry<FinesDestination> {
+            val viewModel: FineViewModel = hiltViewModel()
+
+            LaunchedEffect(activeRoute) {
+                if (activeRoute == FinesDestination) {
+                    viewModel.loadFines()
+                }
+            }
+
             FinesScreen(
                 onFineClick = {}
             )
         }
+
         entry<FineFormDestination> {
             val viewModel: FineFormViewModel = hiltViewModel()
 

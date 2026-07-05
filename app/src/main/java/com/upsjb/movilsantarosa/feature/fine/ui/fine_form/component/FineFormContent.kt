@@ -30,8 +30,10 @@ import androidx.compose.ui.unit.dp
 import com.upsjb.movilsantarosa.core.uicomponents.AppHeader
 import com.upsjb.movilsantarosa.core.uicomponents.AppPrimaryButton
 import com.upsjb.movilsantarosa.core.uicomponents.CardContent
+import com.upsjb.movilsantarosa.core.uicomponents.FormDatePicker
 import com.upsjb.movilsantarosa.core.uicomponents.FormDropdown
 import com.upsjb.movilsantarosa.core.uicomponents.FormTextField
+import com.upsjb.movilsantarosa.core.utils.toDateString
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormMode
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormState
@@ -55,11 +57,11 @@ fun FineFormContent(
 
     Column(
         modifier = modifier
-            .padding(16.dp)
             .verticalScroll(rememberScrollState()),
     ) {
 
         AppHeader(
+            modifier = Modifier.padding(top = 16.dp),
             title = when (state.mode) {
                 FineFormMode.CREATE -> "Registrar multa"
                 FineFormMode.EDIT -> "Editar multa"
@@ -156,6 +158,14 @@ fun FineFormContent(
                 )
             }
         )
+        FormDatePicker(
+            value = form.dueDate,
+            onDateSelected = { updateForm { copy(dueDate = it.toDateString()) } },
+            label = "Fecha de vencimiento",
+            allowFutureDates = true
+        )
+
+        Spacer(Modifier.height(24.dp))
 
         if (!isReadOnly) {
             AppPrimaryButton(

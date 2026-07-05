@@ -1,5 +1,6 @@
 package com.upsjb.movilsantarosa.feature.fine.ui.fine_form
 
+import com.upsjb.movilsantarosa.core.utils.currentDateString
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
@@ -18,7 +19,7 @@ data class FineFormState(
     val customReason: String = "",
     val amount: String = "",
     val description: String = "",
-    val issuedAt: String = "",
+    val issuedAt: String = currentDateString(),
     val dueDate: String = "",
     val status: FineStatus = FineStatus.PENDING,
 )
