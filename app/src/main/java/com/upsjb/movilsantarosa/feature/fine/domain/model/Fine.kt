@@ -1,5 +1,6 @@
 package com.upsjb.movilsantarosa.feature.fine.domain.model
 
+import com.upsjb.movilsantarosa.core.utils.toDoubleSafe
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineModel
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
@@ -27,13 +28,19 @@ fun FineModel.toDomain(): Fine =
         memberEmail = memberEmail,
         memberName = memberName,
         memberDniNumber = memberDniNumber,
-        reason = reason,
+        reason = reason.let {
+            runCatching { FineReason.valueOf(it) }
+                .getOrDefault(FineReason.OTHER)
+        },
         customReason = customReason,
-        amount = amount,
+        amount = amount.toDoubleSafe(),
         description = description,
         issuedAt = issuedAt,
         dueDate = dueDate,
-        status = status,
+        status = status.let {
+            runCatching { FineStatus.valueOf(it) }
+                .getOrDefault(FineStatus.PENDING)
+        },
         createdBy = createdBy,
         createdAt = createdAt
     )
@@ -44,19 +51,20 @@ fun Fine.toModel(): FineModel =
         memberEmail = memberEmail,
         memberName = memberName,
         memberDniNumber = memberDniNumber,
-        reason = reason,
+        reason = reason.name,
         customReason = customReason,
-        amount = amount,
+        amount = amount.toString(),
         description = description,
         issuedAt = issuedAt,
         dueDate = dueDate,
-        status = status,
+        status = status.name,
         createdBy = createdBy,
         createdAt = createdAt
     )
 
 fun Fine.toForm(): FineFormState {
     return FineFormState(
+        id = id,
         memberEmail = memberEmail,
         memberName = memberName,
         memberDniNumber = memberDniNumber,
@@ -72,12 +80,13 @@ fun Fine.toForm(): FineFormState {
 
 fun FineFormState.toDomain(): Fine {
     return Fine(
+        id = id,
         memberEmail = memberEmail,
         memberName = memberName,
         memberDniNumber = memberDniNumber,
         reason = reason,
         customReason = customReason,
-        amount = amount.toDoubleOrNull() ?: 0.0,
+        amount = amount.toDoubleSafe(),
         description = description,
         issuedAt = issuedAt,
         dueDate = dueDate,

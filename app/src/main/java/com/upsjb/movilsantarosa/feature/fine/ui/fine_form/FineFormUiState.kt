@@ -3,16 +3,16 @@ package com.upsjb.movilsantarosa.feature.fine.ui.fine_form
 import com.upsjb.movilsantarosa.core.utils.currentDateString
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
-import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 
 data class FineFormUiState(
+    val fineId: String = "",
     val form: FineFormState = FineFormState(),
-    val selectedMember: Member? = null,
     val actionState: FineFormActionState = FineFormActionState.Idle,
     val mode: FineFormMode = FineFormMode.CREATE
 )
 
 data class FineFormState(
+    val id: String = "",
     val memberEmail: String = "",
     val memberName: String = "",
     val memberDniNumber: String = "",
@@ -23,7 +23,12 @@ data class FineFormState(
     val issuedAt: String = currentDateString(),
     val dueDate: String = "",
     val status: FineStatus = FineStatus.PENDING,
-)
+){
+    val isMemberFilled: Boolean
+        get() = memberEmail.isNotBlank() &&
+                memberName.isNotBlank() &&
+                memberDniNumber.isNotBlank()
+}
 
 sealed interface FineFormActionState {
     data object Idle : FineFormActionState

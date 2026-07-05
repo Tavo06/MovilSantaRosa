@@ -10,7 +10,6 @@ import com.upsjb.movilsantarosa.feature.fine.domain.usecase.RegisterFineUseCase
 import com.upsjb.movilsantarosa.feature.fine.domain.usecase.UpdateFineUseCase
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -54,6 +53,7 @@ class FineFormViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             form = fine.toForm(),
+                            fineId = fine.id,
                             actionState = FineFormActionState.Idle
                         )
                     }
@@ -73,9 +73,8 @@ class FineFormViewModel @Inject constructor(
 
             val state = _uiState.value
             val form = state.form
-            val member = state.selectedMember
 
-            validateForm(form, member)?.let { message ->
+            validateForm(form)?.let { message ->
                 _uiState.update {
                     it.copy(
                         actionState = FineFormActionState.Error(message)
@@ -128,10 +127,10 @@ class FineFormViewModel @Inject constructor(
     fun selectMember(member: Member) {
         _uiState.update {
             it.copy(
-                selectedMember = member,
                 form = it.form.copy(
                     memberName = member.fullName,
-                    memberEmail = member.email
+                    memberEmail = member.email,
+                    memberDniNumber = member.dniNumber,
                 )
             )
         }
@@ -140,10 +139,10 @@ class FineFormViewModel @Inject constructor(
     fun clearMember() {
         _uiState.update {
             it.copy(
-                selectedMember = null,
                 form = it.form.copy(
                     memberName = "",
-                    memberEmail = ""
+                    memberEmail = "",
+                    memberDniNumber = "",
                 )
             )
         }
@@ -151,12 +150,11 @@ class FineFormViewModel @Inject constructor(
 
     private fun validateForm(
         form: FineFormState,
-        member: Member?
     ): String? {
 
         return when {
 
-            member == null ->
+            !form.isMemberFilled ->
                 "Seleccione un socio."
 
             form.reason == FineReason.OTHER && form.customReason.isBlank() ->
@@ -170,6 +168,7 @@ class FineFormViewModel @Inject constructor(
 
             form.amount.toDouble() <= 0 ->
                 "El monto debe ser mayor a 0."
+
             else -> null
         }
     }

@@ -12,7 +12,7 @@ import javax.inject.Inject
 const val FINE_DATABASE = "fine_database"
 
 class FineRepositoryImpl @Inject constructor(
-    private val database: FirebaseDatabase
+    private val database: FirebaseDatabase,
 ) : FineRepository {
 
     override suspend fun getFinesByEmail(
@@ -96,14 +96,12 @@ class FineRepositoryImpl @Inject constructor(
 
         return try {
 
-            val id = if (fine.id.isBlank()) {
+            val id = fine.id.ifBlank {
                 database.reference
                     .child(FINE_DATABASE)
                     .push()
                     .key
                     ?: throw Exception("No se pudo generar el identificador.")
-            } else {
-                fine.id
             }
 
             database.reference

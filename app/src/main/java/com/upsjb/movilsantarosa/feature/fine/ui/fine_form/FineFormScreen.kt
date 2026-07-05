@@ -39,7 +39,6 @@ fun FineFormScreen(
             .padding(horizontal = 16.dp)
             .fillMaxSize(),
         state = state,
-        member = state.selectedMember,
         updateForm = viewModel::updateForm,
         onSaveClick = {
             showRegisterDialog = true
@@ -65,8 +64,8 @@ fun FineFormScreen(
     if (showRegisterDialog) {
         MessageDialog(
             title = "Confirmar",
-            message = "¿Desea completar el registro de multa?",
-            confirmButtonText = "Sí, registrar",
+            message = "¿Desea ${state.mode.displayName.lowercase()}?",
+            confirmButtonText = "Sí",
             onConfirmClick = {
                 showRegisterDialog = false
                 viewModel.saveFine()
@@ -89,11 +88,11 @@ private fun FineFormPreview() {
             memberEmail = "juan@mail.com",
             amount = "50"
         ),
-        mode = FineFormMode.CREATE
+        mode = FineFormMode.CREATE,
+        fineId = ""
     )
 
     FineFormContent(
-        member = null,
         state = state,
         updateForm = {},
         onSaveClick = {},

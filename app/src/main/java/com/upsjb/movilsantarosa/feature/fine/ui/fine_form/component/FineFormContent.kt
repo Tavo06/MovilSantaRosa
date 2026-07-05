@@ -1,6 +1,7 @@
 package com.upsjb.movilsantarosa.feature.fine.ui.fine_form.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,6 +39,7 @@ import com.upsjb.movilsantarosa.core.uicomponents.FormDropdown
 import com.upsjb.movilsantarosa.core.uicomponents.FormTextField
 import com.upsjb.movilsantarosa.core.utils.toDateString
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
+import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormMode
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormState
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormUiState
@@ -47,7 +49,6 @@ import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 fun FineFormContent(
     modifier: Modifier = Modifier,
     state: FineFormUiState,
-    member: Member?,
     onMemberChange: (Member?) -> Unit,
     updateForm: (FineFormState.() -> FineFormState) -> Unit,
     onSaveClick: () -> Unit,
@@ -55,13 +56,14 @@ fun FineFormContent(
     onBackClick: () -> Unit,
     openMemberPicker: () -> Unit,
 ) {
-    val memberFullName = member?.fullName.orEmpty()
     val form = state.form
     val isReadOnly = state.mode == FineFormMode.READ_ONLY
+    val isCreateMode = state.mode == FineFormMode.CREATE
 
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
 
         AppHeader(
@@ -85,13 +87,11 @@ fun FineFormContent(
             }
         )
 
-        Spacer(Modifier.height(16.dp))
-
         FormTextField(
-            value = memberFullName,
+            value = form.memberName,
             onValueChange = { updateForm { copy(memberName = it) } },
             label = "Nombre del socio",
-            enabled = true,
+            enabled = !isReadOnly && isCreateMode,
             readOnly = true,
             leadingIcon = {
                 IconButton(onClick = openMemberPicker) {
@@ -102,7 +102,7 @@ fun FineFormContent(
                 }
             },
             trailingIcon = {
-                if (member != null) {
+                if (form.isMemberFilled) {
                     IconButton(
                         onClick = { onMemberChange(null) }
                     ) {
@@ -114,12 +114,11 @@ fun FineFormContent(
                 }
             }
         )
-        member?.let {
+        if (form.isMemberFilled) {
             CardContent(containerColor = MaterialTheme.colorScheme.secondaryContainer) {
-                Text("DNI: ${it.dniNumber}", fontWeight = FontWeight.Medium)
-                Text("Correo: ${it.email}", fontWeight = FontWeight.Medium)
+                Text("DNI: ${form.memberDniNumber}", fontWeight = FontWeight.Medium)
+                Text("Correo: ${form.memberEmail}", fontWeight = FontWeight.Medium)
             }
-            Spacer(Modifier.height(12.dp))
         }
 
         FormDropdown(
@@ -130,6 +129,7 @@ fun FineFormContent(
             onValueChange = { updateForm { copy(reason = it) } },
             isEnabled = !isReadOnly
         )
+        Spacer(Modifier.height(4.dp))
 
         if (form.reason == FineReason.OTHER) {
             FormTextField(
@@ -174,6 +174,7 @@ fun FineFormContent(
             }
         )
         FormDatePicker(
+            modifier = Modifier.padding(bottom = 8.dp),
             value = form.dueDate,
             enabled = !isReadOnly,
             onDateSelected = { updateForm { copy(dueDate = it.toDateString()) } },
@@ -181,7 +182,17 @@ fun FineFormContent(
             allowFutureDates = true
         )
 
-        Spacer(Modifier.height(24.dp))
+        if (!isCreateMode) {
+            FormDropdown(
+                modifier = Modifier.padding(bottom = 24.dp),
+                label = "Estado Multa",
+                value = form.status,
+                options = FineStatus.entries,
+                labelProvider = { it.displayName },
+                onValueChange = { updateForm { copy(status = it) } },
+                isEnabled = !isReadOnly
+            )
+        }
 
         when (state.mode) {
 
@@ -190,7 +201,9 @@ fun FineFormContent(
                 AppPrimaryButton(
                     text = state.mode.displayButton,
                     onClick = onSaveClick,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 24.dp)
                 )
             }
 
@@ -223,7 +236,6 @@ fun FineFormContentPreview() {
         Surface {
             FineFormContent(
                 state = state,
-                member = null,
                 updateForm = { transform ->
                     state = state.copy(
                         form = state.form.transform()
