@@ -64,9 +64,9 @@ fun BoxShimmer(
 }
 
 @Composable
-fun SkeletonSection(modifier: Modifier = Modifier) {
+fun SkeletonSection(repeat: Int = 10, modifier: Modifier = Modifier) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        repeat(10) {
+        repeat(repeat) {
             BoxShimmer(
                 Modifier
                     .fillMaxWidth()

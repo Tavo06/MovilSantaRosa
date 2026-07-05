@@ -9,7 +9,9 @@ sealed class MemberUiState {
     data class Success(
         val query: String = "",
         val members: List<Member> = emptyList()
-    ) : MemberUiState()
+    ) : MemberUiState(){
+
+    }
 
     data class Error(
         val message: String

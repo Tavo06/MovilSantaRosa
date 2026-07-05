@@ -96,11 +96,13 @@ fun FineItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                Text(
-                    text = "Vence: ${fine.dueDate}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.outline
-                )
+                if (fine.dueDate.isNotEmpty()) {
+                    Text(
+                        text = "Vence: ${fine.dueDate}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                }
             }
 
             Column(
@@ -128,6 +130,7 @@ fun FineStatus.containerColor(): Color = when (this) {
     FineStatus.PAID -> MaterialTheme.colorScheme.primary
     FineStatus.CANCELLED -> MaterialTheme.colorScheme.outline
 }
+
 @Composable
 fun FineStatusChip(
     status: FineStatus

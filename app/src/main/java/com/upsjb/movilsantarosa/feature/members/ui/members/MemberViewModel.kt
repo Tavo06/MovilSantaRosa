@@ -16,20 +16,17 @@ class MemberViewModel @Inject constructor(
     private val getAllMembersUseCase: GetAllMembersUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow< MemberUiState>(MemberUiState.Loading)
+    private val _uiState = MutableStateFlow<MemberUiState>(MemberUiState.Loading)
     val uiState: StateFlow<MemberUiState> = _uiState.asStateFlow()
 
     init {
         getAllMembers()
     }
-    fun getAllMembers() {
 
-        if (_uiState.value is MemberUiState.Success) return
+    fun getAllMembers() {
+        _uiState.value = MemberUiState.Loading
 
         viewModelScope.launch {
-
-            _uiState.value = MemberUiState.Loading
-
             getAllMembersUseCase()
                 .onSuccess {
                     _uiState.value = MemberUiState.Success(members = it)

@@ -25,10 +25,8 @@ class FineViewModel @Inject constructor(
     }
 
     fun loadFines() {
-        if (_uiState.value is FineUiState.Success) return
-
+        _uiState.value = FineUiState.Loading
         viewModelScope.launch {
-            _uiState.value = FineUiState.Loading
             getFinesUseCase()
                 .onSuccess { fines ->
 

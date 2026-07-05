@@ -20,6 +20,7 @@ import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.component.FineFormCont
 fun FineFormScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
+    onSuccess: () -> Unit,
     openMemberPicker: () -> Unit,
     viewModel: FineFormViewModel = hiltViewModel(),
 ) {
@@ -29,7 +30,7 @@ fun FineFormScreen(
     FineFormActionHandler(
         action = state.actionState,
         onReset = viewModel::resetAction,
-        navigateToFine = onBackClick
+        onSuccess = onSuccess
     )
 
     FineFormContent(

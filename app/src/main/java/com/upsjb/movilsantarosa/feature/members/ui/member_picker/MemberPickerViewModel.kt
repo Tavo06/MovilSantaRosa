@@ -16,7 +16,9 @@ class MemberPickerViewModel @Inject constructor(
     private val getAllMembersUseCase: GetAllMembersUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(MemberPickerUiState())
+    private val _uiState =
+        MutableStateFlow<MemberPickerUiState>(MemberPickerUiState.Loading)
+
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -26,52 +28,29 @@ class MemberPickerViewModel @Inject constructor(
     fun loadMembers() {
         viewModelScope.launch {
 
-            _uiState.update {
-                it.copy(loading = true)
-            }
+            _uiState.value = MemberPickerUiState.Loading
 
             getAllMembersUseCase()
                 .onSuccess { members ->
-                    _uiState.update {
-                        it.copy(
-                            loading = false,
+                    _uiState.value =
+                        MemberPickerUiState.Success(
                             members = members
                         )
-                    }
                 }
                 .onFailure { error ->
-                    _uiState.update {
-                        it.copy(
-                            loading = false,
-                            error = error.message ?: "Error al cargar miembros"
+                    _uiState.value =
+                        MemberPickerUiState.Error(
+                            error.message ?: "No se pudieron cargar los socios."
                         )
-                    }
                 }
         }
     }
 
     fun updateQuery(query: String) {
-        _uiState.update {
-            it.copy(query = query)
+        val state = _uiState.value
+
+        if (state is MemberPickerUiState.Success) {
+            _uiState.value = state.copy(query = query)
         }
     }
-}
-
-data class MemberPickerUiState(
-    val members: List<Member> = emptyList(),
-    val query: String = "",
-    val loading: Boolean = false,
-    val error: String? = null
-) {
-
-    val filteredMembers: List<Member>
-        get() = if (query.isBlank()) {
-            members
-        } else {
-            members.filter {
-                it.fullName.contains(query, ignoreCase = true) ||
-                        it.email.contains(query, ignoreCase = true) ||
-                        it.dniNumber.contains(query)
-            }
-        }
 }

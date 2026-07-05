@@ -1,5 +1,6 @@
 package com.upsjb.movilsantarosa.core.navigation
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -29,6 +30,7 @@ import com.upsjb.movilsantarosa.core.navigation.component.MembersDestination
 import com.upsjb.movilsantarosa.core.navigation.component.Navigator
 import com.upsjb.movilsantarosa.core.navigation.component.PaymentsDestination
 import com.upsjb.movilsantarosa.core.navigation.component.rememberNavigationState
+import com.upsjb.movilsantarosa.core.navigation.results.FineSavedResult
 import com.upsjb.movilsantarosa.core.uicomponents.AppBottomBar
 import com.upsjb.movilsantarosa.core.uicomponents.AppFloatingActionButton
 import com.upsjb.movilsantarosa.core.uicomponents.AppTopBar
@@ -63,8 +65,6 @@ fun MainNavHost(
         Navigator(navigationState)
     }
 
-    val activeRoute = navigationState.topLevelRoute
-
     val entryProvider = entryProvider {
         entry<HomeDestination> {
             HomeScreen()
@@ -92,10 +92,8 @@ fun MainNavHost(
         entry<FinesDestination> {
             val viewModel: FineViewModel = hiltViewModel()
 
-            LaunchedEffect(activeRoute) {
-                if (activeRoute == FinesDestination) {
-                    viewModel.loadFines()
-                }
+            ResultEffect<FineSavedResult> {
+                viewModel.loadFines()
             }
 
             FinesScreen(
@@ -105,14 +103,19 @@ fun MainNavHost(
 
         entry<FineFormDestination> {
             val viewModel: FineFormViewModel = hiltViewModel()
-
+            
             ResultEffect<Member> { member ->
                 viewModel.selectMember(member)
             }
+            val resultBus = LocalResultEventBus.current
 
             FineFormScreen(
                 viewModel = viewModel,
                 onBackClick = {
+                    navigator.goBack()
+                },
+                onSuccess = {
+                    resultBus.sendResult(result = FineSavedResult)
                     navigator.goBack()
                 },
                 openMemberPicker = {

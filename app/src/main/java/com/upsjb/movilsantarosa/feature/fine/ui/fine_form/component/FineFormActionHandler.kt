@@ -17,13 +17,13 @@ import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormActionState
 @Composable
 fun FineFormActionHandler(
     action: FineFormActionState,
-    navigateToFine: () -> Unit,
+    onSuccess: () -> Unit,
     onReset: () -> Unit
 ) {
 
     LaunchedEffect(action) {
         if (action is FineFormActionState.Success) {
-            navigateToFine()
+            onSuccess()
         }
     }
 
@@ -56,7 +56,7 @@ fun FineFormActionHandlerPreview() {
                 onReset = {
                     state = FineFormActionState.Idle
                 },
-                navigateToFine = {}
+                onSuccess = {}
             )
         }
     }

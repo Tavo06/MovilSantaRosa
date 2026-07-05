@@ -18,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +32,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.upsjb.movilsantarosa.core.uicomponents.EmptySection
+import com.upsjb.movilsantarosa.core.uicomponents.ErrorSection
 import com.upsjb.movilsantarosa.core.uicomponents.FormTextField
+import com.upsjb.movilsantarosa.core.uicomponents.SkeletonSection
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 
 @Composable
@@ -43,7 +45,7 @@ fun MemberPickerBottomSheet(
     viewModel: MemberPickerViewModel = hiltViewModel()
 ) {
 
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
@@ -75,45 +77,49 @@ fun MemberPickerBottomSheet(
 
         Spacer(Modifier.height(12.dp))
 
-        FormTextField(
-            value = state.query,
-            onValueChange = viewModel::updateQuery,
-            label = "Buscar socio",
-            placeholder = "Nombre, correo o DNI",
-            singleLine = true
-        )
+        when (val state = uiState) {
 
-        Spacer(Modifier.height(12.dp))
-
-        when {
-
-            state.loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
+            MemberPickerUiState.Loading -> {
+                SkeletonSection(repeat = 5)
             }
 
-            state.filteredMembers.isEmpty() -> {
-                Text(
-                    text = "No se encontraron socios",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+            is MemberPickerUiState.Error -> {
+                ErrorSection(
+                    title = state.message,
+                    onRetry = viewModel::loadMembers
                 )
             }
 
-            else -> {
-                LazyColumn {
-                    items(state.filteredMembers) { member ->
+            is MemberPickerUiState.Success -> {
 
-                        MemberPickerItem(
-                            member = member,
-                            onClick = { onMemberSelected(member) }
-                        )
+                FormTextField(
+                    value = state.query,
+                    onValueChange = viewModel::updateQuery,
+                    label = "Buscar socio",
+                    placeholder = "Nombre, correo o DNI",
+                    singleLine = true
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                if (state.filteredMembers.isEmpty()) {
+                    EmptySection(
+                        title = "No se encontraron socios",
+                        subtitle = "Intente con otro criterio de búsqueda."
+                    )
+                } else {
+                    LazyColumn {
+                        items(
+                            items = state.filteredMembers,
+                            key = { it.email }
+                        ) { member ->
+                            MemberPickerItem(
+                                member = member,
+                                onClick = {
+                                    onMemberSelected(member)
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -167,9 +173,8 @@ fun MemberPickerItem(
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold
                 )
-
                 Text(
-                    text = member.email,
+                    text = "DNI: ${member.dniNumber}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

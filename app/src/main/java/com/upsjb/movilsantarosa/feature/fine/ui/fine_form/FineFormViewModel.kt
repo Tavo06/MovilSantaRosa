@@ -1,5 +1,6 @@
 package com.upsjb.movilsantarosa.feature.fine.ui.fine_form
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
