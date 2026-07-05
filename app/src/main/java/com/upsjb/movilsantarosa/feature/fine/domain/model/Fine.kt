@@ -28,19 +28,13 @@ fun FineModel.toDomain(): Fine =
         memberEmail = memberEmail,
         memberName = memberName,
         memberDniNumber = memberDniNumber,
-        reason = reason.let {
-            runCatching { FineReason.valueOf(it) }
-                .getOrDefault(FineReason.OTHER)
-        },
+        reason = reason,
         customReason = customReason,
         amount = amount.toDoubleSafe(),
         description = description,
         issuedAt = issuedAt,
         dueDate = dueDate,
-        status = status.let {
-            runCatching { FineStatus.valueOf(it) }
-                .getOrDefault(FineStatus.PENDING)
-        },
+        status = status,
         createdBy = createdBy,
         createdAt = createdAt
     )
@@ -51,13 +45,13 @@ fun Fine.toModel(): FineModel =
         memberEmail = memberEmail,
         memberName = memberName,
         memberDniNumber = memberDniNumber,
-        reason = reason.name,
+        reason = reason,
         customReason = customReason,
         amount = amount.toString(),
         description = description,
         issuedAt = issuedAt,
         dueDate = dueDate,
-        status = status.name,
+        status = status,
         createdBy = createdBy,
         createdAt = createdAt
     )

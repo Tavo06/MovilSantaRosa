@@ -8,13 +8,13 @@ data class FineModel(
     val memberEmail: String = "",
     val memberName: String = "",
     val memberDniNumber: String = "",
-    val reason: String = "",
+    val reason: FineReason = FineReason.OTHER,
     val customReason: String = "",
     val amount: String = "",
     val description: String = "",
     val issuedAt: String = "",
     val dueDate: String = "",
-    val status: String = "",
+    val status: FineStatus = FineStatus.PENDING,
     val createdBy: String = "",
     val createdAt: String = ""
 )
