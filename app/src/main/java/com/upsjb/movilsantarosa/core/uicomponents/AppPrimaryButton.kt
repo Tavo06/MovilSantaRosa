@@ -1,8 +1,10 @@
 package com.upsjb.movilsantarosa.core.uicomponents
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -23,7 +25,9 @@ fun AppPrimaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    isLoading: Boolean = false
+    isLoading: Boolean = false,
+    leadingIcon: (@Composable (() -> Unit))? = null,
+    trailingIcon: (@Composable (() -> Unit))? = null
 ) {
     val safeOnClick = rememberClearFocusAndHideKeyboard(onClick)
 
@@ -43,18 +47,32 @@ fun AppPrimaryButton(
                 color = MaterialTheme.colorScheme.onPrimary
             )
         } else {
+
+            leadingIcon?.invoke()
+
+            if (leadingIcon != null) {
+                Spacer(Modifier.width(8.dp))
+            }
+
             Text(text)
+
+            if (trailingIcon != null) {
+                Spacer(Modifier.width(8.dp))
+            }
+
+            trailingIcon?.invoke()
         }
     }
 }
-
 @Composable
 fun AppSecondaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    isLoading: Boolean = false
+    isLoading: Boolean = false,
+    leadingIcon: (@Composable (() -> Unit))? = null,
+    trailingIcon: (@Composable (() -> Unit))? = null
 ) {
     val safeOnClick = rememberClearFocusAndHideKeyboard(onClick)
 
@@ -74,7 +92,20 @@ fun AppSecondaryButton(
                 color = MaterialTheme.colorScheme.onSecondaryContainer
             )
         } else {
+
+            leadingIcon?.invoke()
+
+            if (leadingIcon != null) {
+                Spacer(Modifier.width(8.dp))
+            }
+
             Text(text)
+
+            if (trailingIcon != null) {
+                Spacer(Modifier.width(8.dp))
+            }
+
+            trailingIcon?.invoke()
         }
     }
 }
@@ -85,7 +116,9 @@ fun AppTertiaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    isLoading: Boolean = false
+    isLoading: Boolean = false,
+    leadingIcon: (@Composable (() -> Unit))? = null,
+    trailingIcon: (@Composable (() -> Unit))? = null
 ) {
     val safeOnClick = rememberClearFocusAndHideKeyboard(onClick)
 
@@ -105,7 +138,20 @@ fun AppTertiaryButton(
                 color = MaterialTheme.colorScheme.onTertiary
             )
         } else {
+
+            leadingIcon?.invoke()
+
+            if (leadingIcon != null) {
+                Spacer(Modifier.width(8.dp))
+            }
+
             Text(text)
+
+            if (trailingIcon != null) {
+                Spacer(Modifier.width(8.dp))
+            }
+
+            trailingIcon?.invoke()
         }
     }
 }
@@ -116,7 +162,9 @@ fun AppOutlinedButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    isLoading: Boolean = false
+    isLoading: Boolean = false,
+    leadingIcon: (@Composable (() -> Unit))? = null,
+    trailingIcon: (@Composable (() -> Unit))? = null
 ) {
     val safeOnClick = rememberClearFocusAndHideKeyboard(onClick)
 
@@ -139,7 +187,20 @@ fun AppOutlinedButton(
                 color = MaterialTheme.colorScheme.primary
             )
         } else {
+
+            leadingIcon?.invoke()
+
+            if (leadingIcon != null) {
+                Spacer(Modifier.width(8.dp))
+            }
+
             Text(text)
+
+            if (trailingIcon != null) {
+                Spacer(Modifier.width(8.dp))
+            }
+
+            trailingIcon?.invoke()
         }
     }
 }

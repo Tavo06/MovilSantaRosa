@@ -9,25 +9,31 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.upsjb.movilsantarosa.core.contact.ContactLauncher
+import com.upsjb.movilsantarosa.core.contact.rememberContactLauncher
 import com.upsjb.movilsantarosa.core.uicomponents.AppSearchBar
 import com.upsjb.movilsantarosa.core.uicomponents.ErrorSection
 import com.upsjb.movilsantarosa.core.uicomponents.SkeletonSection
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
+import com.upsjb.movilsantarosa.feature.members.ui.members.components.ContactMethodDialog
 import com.upsjb.movilsantarosa.feature.members.ui.members.components.MemberList
 
 @Composable
 fun MembersScreen(
     modifier: Modifier = Modifier,
-    onMemberClick: (Member) -> Unit,
-    viewModel: MemberViewModel = hiltViewModel()
+    viewModel: MemberViewModel = hiltViewModel(),
+    contactLauncher: ContactLauncher = rememberContactLauncher()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var showMemberContactDialog by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = modifier
@@ -73,13 +79,23 @@ fun MembersScreen(
 
                 MemberList(
                     members = filteredMembers,
-                    onMemberClick = onMemberClick,
+                    onMemberClick = {
+                        showMemberContactDialog = it.phone
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                 )
             }
         }
+    }
+    showMemberContactDialog?.let { phone ->
+        ContactMethodDialog(
+            phoneNumber = phone,
+            onWhatsAppClick = { contactLauncher.openWhatsApp(phone) },
+            onCallClick = { contactLauncher.makePhoneCall(phone) },
+            onDismiss = { showMemberContactDialog = null }
+        )
     }
 }
 
@@ -108,7 +124,11 @@ fun MembersScreenSuccessPreview() {
     )
 
     MaterialTheme {
-        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
 
             AppSearchBar(
                 query = "",

@@ -70,9 +70,7 @@ fun MainNavHost(
         }
 
         entry<MembersDestination> {
-            MembersScreen(
-                onMemberClick = {}
-            )
+            MembersScreen()
         }
 
         entry<MemberPickerDestination>(
