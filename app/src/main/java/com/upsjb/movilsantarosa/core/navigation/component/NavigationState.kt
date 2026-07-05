@@ -60,7 +60,8 @@ class NavigationState(
     topLevelRoute: MutableState<NavKey>,
     val backStacks: Map<NavKey, NavBackStack<NavKey>>
 ) {
-
+    val currentDestination: NavKey?
+        get() = backStacks[topLevelRoute]?.lastOrNull()
     /**
      * The top level route.
      */

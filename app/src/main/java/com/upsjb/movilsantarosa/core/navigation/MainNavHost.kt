@@ -62,7 +62,11 @@ fun MainNavHost(
             )
         }
         entry<FineFormDestination> {
-            FineFormScreen()
+            FineFormScreen(
+                onBackClick = {
+                    navigator.goBack()
+                }
+            )
         }
 
         entry<PaymentsDestination> {
@@ -90,7 +94,7 @@ fun MainNavHost(
         },
         floatingActionButton = {
             AppFloatingActionButton(
-                currentDestination = navigationState.topLevelRoute,
+                currentDestination = navigationState.currentDestination,
                 userRole = userRole,
                 onClick = {
                     when (navigationState.topLevelRoute) {

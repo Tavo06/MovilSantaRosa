@@ -16,7 +16,7 @@ import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 
 @Composable
 fun AppFloatingActionButton(
-    currentDestination: NavKey,
+    currentDestination: NavKey?,
     userRole: UserRole,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -24,7 +24,9 @@ fun AppFloatingActionButton(
 
     if (userRole != UserRole.ADMIN) return
 
-    val item = FAB_ITEMS[currentDestination] ?: return
+    val destination = currentDestination ?: return
+
+    val item = FAB_ITEMS[destination] ?: return
 
     FloatingActionButton(
         modifier = modifier,

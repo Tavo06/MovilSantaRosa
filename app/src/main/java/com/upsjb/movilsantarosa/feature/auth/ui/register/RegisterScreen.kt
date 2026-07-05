@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.upsjb.movilsantarosa.core.uicomponents.AppHeader
 import com.upsjb.movilsantarosa.core.uicomponents.MessageDialog
 import com.upsjb.movilsantarosa.core.uicomponents.ProgressIndicatorOverlay
 import com.upsjb.movilsantarosa.feature.auth.ui.register.components.ContactInfoSection
@@ -103,8 +104,9 @@ private fun RegisterContent(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
-        RegisterHeader(
-            onClick = onLoginClick
+        AppHeader(
+            title = "Crear Cuenta",
+            onBackClick = onLoginClick
         )
 
         Column(

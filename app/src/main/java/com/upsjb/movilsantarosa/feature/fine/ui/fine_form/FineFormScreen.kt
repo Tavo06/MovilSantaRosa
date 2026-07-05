@@ -19,6 +19,7 @@ import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.component.FineFormCont
 @Composable
 fun FineFormScreen(
     modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
     viewModel: FineFormViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -37,7 +38,8 @@ fun FineFormScreen(
         FineFormContent(
             state = state,
             updateForm = viewModel::updateForm,
-            onSave = viewModel::saveFine
+            onSave = viewModel::saveFine,
+            onBackClick = onBackClick
         )
 
         if (state.actionState is FineFormActionState.Loading) {
@@ -62,6 +64,7 @@ private fun FineFormPreview() {
     FineFormContent(
         state = state,
         updateForm = {},
-        onSave = {}
+        onSave = {},
+        onBackClick = {}
     )
 }
