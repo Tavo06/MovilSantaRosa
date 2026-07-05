@@ -21,6 +21,7 @@ data object HomeDestination : NavKey
 data object MembersDestination : NavKey
 @Serializable
 data object FinesDestination : NavKey
+data object FineFormDestination : NavKey
 
 @Serializable
 data object PaymentsDestination : NavKey

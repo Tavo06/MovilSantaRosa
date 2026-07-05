@@ -14,5 +14,5 @@ data class MemberModel(
     val phone: String = "",
     val plateNumber: String = "",
     val vehicleColor: String = "",
-    val rol: UserRole = UserRole.SOCIO
+    val rol: UserRole = UserRole.PARTNER
 )

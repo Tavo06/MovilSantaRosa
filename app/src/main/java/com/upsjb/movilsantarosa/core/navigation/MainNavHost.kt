@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.upsjb.movilsantarosa.core.navigation.component.AnnoucementsDestination
+import com.upsjb.movilsantarosa.core.navigation.component.FineFormDestination
 import com.upsjb.movilsantarosa.core.navigation.component.FinesDestination
 import com.upsjb.movilsantarosa.core.navigation.component.HomeDestination
 import com.upsjb.movilsantarosa.core.navigation.component.MAIN_ROUTES
@@ -21,12 +22,13 @@ import com.upsjb.movilsantarosa.core.navigation.component.rememberNavigationStat
 import com.upsjb.movilsantarosa.core.uicomponents.AppBottomBar
 import com.upsjb.movilsantarosa.core.uicomponents.AppFloatingActionButton
 import com.upsjb.movilsantarosa.core.uicomponents.AppTopBar
-import com.upsjb.movilsantarosa.feature.announcements.AnnouncementsRoute
-import com.upsjb.movilsantarosa.feature.fine.FinesRoute
+import com.upsjb.movilsantarosa.feature.announcements.AnnouncementsScreen
 import com.upsjb.movilsantarosa.feature.home.ui.HomeScreen
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
+import com.upsjb.movilsantarosa.feature.fine.ui.fine.FinesScreen
+import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormScreen
 import com.upsjb.movilsantarosa.feature.members.ui.MembersScreen
-import com.upsjb.movilsantarosa.feature.payments.PaymentsRoute
+import com.upsjb.movilsantarosa.feature.payments.PaymentsScreen
 
 @Composable
 fun MainNavHost(
@@ -55,15 +57,20 @@ fun MainNavHost(
         }
 
         entry<FinesDestination> {
-            FinesRoute()
+            FinesScreen(
+                onFineClick = {}
+            )
+        }
+        entry<FineFormDestination> {
+            FineFormScreen()
         }
 
         entry<PaymentsDestination> {
-            PaymentsRoute()
+            PaymentsScreen()
         }
 
         entry<AnnoucementsDestination> {
-            AnnouncementsRoute()
+            AnnouncementsScreen()
         }
     }
 
@@ -88,6 +95,7 @@ fun MainNavHost(
                 onClick = {
                     when (navigationState.topLevelRoute) {
                         FinesDestination -> {
+                            navigator.navigate(FineFormDestination)
                         }
 
                         PaymentsDestination -> {

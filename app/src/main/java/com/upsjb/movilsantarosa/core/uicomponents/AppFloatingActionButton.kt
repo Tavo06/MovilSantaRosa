@@ -22,7 +22,7 @@ fun AppFloatingActionButton(
     modifier: Modifier = Modifier
 ) {
 
-    if (userRole != UserRole.ADMINISTRADOR) return
+    if (userRole != UserRole.ADMIN) return
 
     val item = FAB_ITEMS[currentDestination] ?: return
 

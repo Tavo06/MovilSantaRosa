@@ -13,5 +13,6 @@ interface AuthRepository {
     suspend fun register(
         registerRequest: RegisterRequest
     ): Result<User>
-    val currentUser: User?
+
+    suspend fun getCurrentUser(): Result<User>
 }

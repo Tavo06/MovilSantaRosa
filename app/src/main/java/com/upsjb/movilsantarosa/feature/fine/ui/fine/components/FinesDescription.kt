@@ -1,4 +1,4 @@
-package com.upsjb.movilsantarosa.feature.fine.components
+package com.upsjb.movilsantarosa.feature.fine.ui.fine.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

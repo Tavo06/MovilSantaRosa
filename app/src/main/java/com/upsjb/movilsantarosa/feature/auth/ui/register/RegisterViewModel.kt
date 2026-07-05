@@ -65,8 +65,8 @@ class RegisterViewModel @Inject constructor(
                 plateNumber = form.plateNumber,
                 licenceNumber = form.licenceNumber,
                 vehicleColor = form.vehicleColor,
-                role = UserRole.SOCIO,
-                status = UserStatus.INACTIVO,
+                role = UserRole.PARTNER,
+                status = UserStatus.INACTIVE,
             )
 
             registerUseCase(request)

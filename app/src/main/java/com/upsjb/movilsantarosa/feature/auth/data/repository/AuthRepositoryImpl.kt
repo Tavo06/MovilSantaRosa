@@ -5,6 +5,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.upsjb.movilsantarosa.feature.auth.data.model.AuthModel
 import com.upsjb.movilsantarosa.feature.auth.data.model.toUser
 import com.upsjb.movilsantarosa.feature.auth.domain.model.User
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.auth.domain.repository.AuthRepository
 import com.upsjb.movilsantarosa.feature.auth.domain.request.RegisterRequest
 import kotlinx.coroutines.tasks.await
@@ -103,11 +104,43 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override val currentUser: User?
-        get() = auth.currentUser?.let {
-            AuthModel(
-                email = it.email.orEmpty(),
-                uid = it.uid
-            ).toUser()
+    override suspend fun getCurrentUser(): Result<User> {
+        return try {
+
+            val firebaseUser = auth.currentUser
+                ?: return Result.failure(
+                    Exception("No hay sesión activa")
+                )
+
+            val snapshot = database.reference
+                .child(USER_DATABASE)
+                .child(firebaseUser.uid)
+                .get()
+                .await()
+
+            if (!snapshot.exists()) {
+                return Result.failure(
+                    Exception("Usuario no encontrado en base de datos")
+                )
+            }
+
+            val user = User(
+                uid = firebaseUser.uid,
+                email = firebaseUser.email.orEmpty(),
+                firstname = snapshot.child("firstname")
+                    .getValue(String::class.java)
+                    .orEmpty(),
+                rol = snapshot.child("rol")
+                    .getValue(UserRole::class.java)
+                    ?: UserRole.ADMIN
+            )
+
+            Result.success(user)
+
+        } catch (e: Exception) {
+            Result.failure(
+                Exception(e.message ?: "Error al obtener usuario")
+            )
         }
+    }
 }

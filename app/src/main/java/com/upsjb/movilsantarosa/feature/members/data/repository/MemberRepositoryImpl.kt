@@ -24,7 +24,9 @@ class MemberRepositoryImpl @Inject constructor(
             val members = snapshot.children.mapNotNull {
                 it.getValue(MemberModel::class.java)
             }.sortedBy { it.lastname }
-            Result.success(members.map { it.toDomain() })
+                .map(MemberModel::toDomain)
+
+            Result.success(members)
 
         } catch (e: Exception) {
 

@@ -2,17 +2,17 @@ package com.upsjb.movilsantarosa.feature.members.ui
 
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 
-sealed class MemberUIState {
+sealed class MemberUiState {
 
-    data object Loading : MemberUIState()
+    data object Loading : MemberUiState()
 
     data class Success(
         val query: String = "",
         val members: List<Member> = emptyList()
-    ) : MemberUIState()
+    ) : MemberUiState()
 
     data class Error(
         val message: String
-    ) : MemberUIState()
+    ) : MemberUiState()
 
 }

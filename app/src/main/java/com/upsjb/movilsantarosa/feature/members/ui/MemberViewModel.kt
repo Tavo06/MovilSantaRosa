@@ -16,26 +16,26 @@ class MemberViewModel @Inject constructor(
     private val getAllMembersUseCase: GetAllMembersUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<MemberUIState>(MemberUIState.Loading)
-    val uiState: StateFlow<MemberUIState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow< MemberUiState>(MemberUiState.Loading)
+    val uiState: StateFlow<MemberUiState> = _uiState.asStateFlow()
 
     init {
         getAllMembers()
     }
     fun getAllMembers() {
 
-        if (_uiState.value is MemberUIState.Success) return
+        if (_uiState.value is MemberUiState.Success) return
 
         viewModelScope.launch {
 
-            _uiState.value = MemberUIState.Loading
+            _uiState.value = MemberUiState.Loading
 
             getAllMembersUseCase()
                 .onSuccess {
-                    _uiState.value = MemberUIState.Success(members = it)
+                    _uiState.value = MemberUiState.Success(members = it)
                 }
                 .onFailure {
-                    _uiState.value = MemberUIState.Error(
+                    _uiState.value = MemberUiState.Error(
                         it.message ?: "Ocurrió un error"
                     )
                 }
@@ -46,7 +46,7 @@ class MemberViewModel @Inject constructor(
         _uiState.update { state ->
 
             when (state) {
-                is MemberUIState.Success ->
+                is MemberUiState.Success ->
                     state.copy(query = query)
 
                 else -> state

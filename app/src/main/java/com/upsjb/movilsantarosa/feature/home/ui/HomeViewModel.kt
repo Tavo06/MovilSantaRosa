@@ -2,7 +2,6 @@ package com.upsjb.movilsantarosa.feature.home.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.upsjb.movilsantarosa.feature.home.domain.usecase.GetUserUseCase
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.CurrentUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +14,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val currentUserUseCase: CurrentUserUseCase,
-    private val getUserUseCase: GetUserUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -27,26 +25,28 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getUserInfo() {
+
         _uiState.update {
             it.copy(userUiState = UserUiState.Loading)
         }
+
         viewModelScope.launch {
-            val user = currentUserUseCase()
-            if (user != null) {
-                getUserUseCase(user.uid).onSuccess { data ->
+
+            currentUserUseCase()
+                .onSuccess { user ->
                     _uiState.update {
-                        it.copy(userUiState = UserUiState.Success(data))
-                    }
-                }.onFailure {
-                    _uiState.update {
-                        it.copy(userUiState = UserUiState.Error("Usuario no encontrado"))
+                        it.copy(userUiState = UserUiState.Success(user))
                     }
                 }
-            } else {
-                _uiState.update {
-                    it.copy(userUiState = UserUiState.Error("Usuario no logueado"))
+                .onFailure { failure ->
+                    _uiState.update {
+                        it.copy(
+                            userUiState = UserUiState.Error(
+                                failure.message ?: "Usuario no logueado"
+                            )
+                        )
+                    }
                 }
-            }
         }
     }
 

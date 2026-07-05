@@ -6,26 +6,30 @@ data class User(
     val firstname: String,
     val email: String,
     val uid: String,
-    val rol: UserRole = UserRole.SOCIO
+    val rol: UserRole = UserRole.PARTNER
 )
 
 @Serializable
 enum class UserRole {
-    @Serializable
-    ADMINISTRADOR,
+    ADMIN,
+    PARTNER;
 
-    @Serializable
-    SOCIO,
+    val displayName: String
+        get() = when (this) {
+            ADMIN -> "Administrador"
+            PARTNER -> "Socio"
+        }
 }
-
 @Serializable
 enum class UserStatus {
-    @Serializable
-    ACTIVO,
+    ACTIVE,
+    PENDING,
+    INACTIVE;
 
-    @Serializable
-    PENDIENTE,
-
-    @Serializable
-    INACTIVO,
+    val displayName: String
+        get() = when (this) {
+            ACTIVE -> "Activo"
+            PENDING -> "Pendiente"
+            INACTIVE -> "Inactivo"
+        }
 }

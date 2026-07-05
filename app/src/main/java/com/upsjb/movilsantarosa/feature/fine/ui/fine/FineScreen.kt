@@ -1,4 +1,4 @@
-package com.upsjb.movilsantarosa.feature.members.ui
+package com.upsjb.movilsantarosa.feature.fine.ui.fine
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,14 +14,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.upsjb.movilsantarosa.core.uicomponents.AppSearchBar
 import com.upsjb.movilsantarosa.core.uicomponents.ErrorSection
 import com.upsjb.movilsantarosa.core.uicomponents.SkeletonSection
-import com.upsjb.movilsantarosa.feature.members.domain.model.Member
-import com.upsjb.movilsantarosa.feature.members.ui.components.MemberList
+import com.upsjb.movilsantarosa.feature.fine.domain.model.Fine
+import com.upsjb.movilsantarosa.feature.fine.ui.fine.components.FineList
 
 @Composable
-fun MembersScreen(
+fun FinesScreen(
     modifier: Modifier = Modifier,
-    onMemberClick: (Member) -> Unit,
-    viewModel: MemberViewModel = hiltViewModel()
+    onFineClick: (Fine) -> Unit,
+    viewModel: FineViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -31,28 +31,27 @@ fun MembersScreen(
             .fillMaxSize()
     ) {
         when (val state = uiState) {
-            MemberUiState.Loading -> {
+            FineUiState.Loading -> {
                 SkeletonSection(modifier)
             }
 
-            is MemberUiState.Error -> {
+            is FineUiState.Error -> {
                 ErrorSection(
                     modifier = modifier,
                     title = state.message,
-                    onRetry = { viewModel.getAllMembers() },
+                    onRetry = { viewModel.loadFines() },
                 )
             }
 
-            is MemberUiState.Success -> {
-                val filteredMembers = remember(state.query, state.members) {
+            is FineUiState.Success -> {
+                val filteredFines = remember(state.query, state.fines) {
 
                     if (state.query.isBlank()) {
-                        state.members
+                        state.fines
                     } else {
-                        state.members.filter {
-                            it.firstname.contains(state.query, true) ||
-                                    it.fullName.contains(state.query, true) ||
-                                    it.dniNumber.contains(state.query)
+                        state.fines.filter {
+                            it.description.contains(state.query, true) ||
+                                    it.memberName.contains(state.query, true)
                         }
                     }
                 }
@@ -60,13 +59,13 @@ fun MembersScreen(
                     AppSearchBar(
                         query = state.query,
                         onQueryChange = viewModel::updateQuery,
-                        placeholder = "Buscar socio"
+                        placeholder = "Buscar multa"
                     )
 
-                    MemberList(
+                    FineList(
                         modifier = modifier,
-                        members = filteredMembers,
-                        onMemberClick = onMemberClick
+                        fines = filteredFines,
+                        onClick = onFineClick
                     )
                 }
             }

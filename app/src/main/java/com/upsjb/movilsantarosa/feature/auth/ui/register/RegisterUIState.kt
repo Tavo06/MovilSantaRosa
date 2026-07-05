@@ -1,7 +1,5 @@
 package com.upsjb.movilsantarosa.feature.auth.ui.register
 
-import com.upsjb.movilsantarosa.feature.auth.domain.model.User
-
 data class RegisterUiState(
     val form: RegisterFormState = RegisterFormState(),
     val uiState: RegisterActionUiState = RegisterActionUiState.Idle

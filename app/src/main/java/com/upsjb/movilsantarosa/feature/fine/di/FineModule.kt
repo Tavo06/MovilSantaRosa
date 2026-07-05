@@ -1,8 +1,8 @@
-package com.upsjb.movilsantarosa.feature.home.di
+package com.upsjb.movilsantarosa.feature.fine.di
 
 import com.google.firebase.database.FirebaseDatabase
-import com.upsjb.movilsantarosa.feature.home.data.repository.HomeRepositoryImpl
-import com.upsjb.movilsantarosa.feature.home.domain.repository.HomeRepository
+import com.upsjb.movilsantarosa.feature.fine.data.repository.FineRepositoryImpl
+import com.upsjb.movilsantarosa.feature.fine.domain.repository.FineRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,13 +11,13 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object HomeModule {
+object FineModule {
 
     @Provides
     @Singleton
-    fun provideHomeRepository(
+    fun provideFineRepository(
         database: FirebaseDatabase
-    ): HomeRepository =
-        HomeRepositoryImpl(database)
+    ): FineRepository =
+        FineRepositoryImpl(database)
 
 }

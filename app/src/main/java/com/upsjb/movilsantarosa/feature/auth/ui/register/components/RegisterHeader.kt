@@ -14,11 +14,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun RegisterHeader(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(
+        modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         IconButton(
             onClick = onClick,
             modifier = Modifier.background(MaterialTheme.colorScheme.primary, CircleShape)
@@ -35,6 +39,16 @@ fun RegisterHeader(modifier: Modifier = Modifier, onClick: () -> Unit) {
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RegisterHeaderPreview() {
+    MaterialTheme {
+        RegisterHeader(
+            onClick = {}
         )
     }
 }

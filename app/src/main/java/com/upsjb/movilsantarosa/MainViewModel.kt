@@ -2,7 +2,6 @@ package com.upsjb.movilsantarosa
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.upsjb.movilsantarosa.feature.home.domain.usecase.GetUserUseCase
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.CurrentUserUseCase
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.LogoutUseCase
@@ -18,7 +17,6 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val currentUserUseCase: CurrentUserUseCase,
     private val logoutUseCase: LogoutUseCase,
-    private val getUserUseCase: GetUserUseCase,
 ) : ViewModel() {
 
     private val _session =
@@ -36,14 +34,7 @@ class MainViewModel @Inject constructor(
                 delay(1000)
             }
 
-            val firebaseUser = currentUserUseCase()
-
-            if (firebaseUser == null) {
-                _session.value = SessionState.LoggedOut
-                return@launch
-            }
-
-            getUserUseCase(firebaseUser.uid)
+            currentUserUseCase()
                 .onSuccess { user ->
                     _session.value = SessionState.LoggedIn(user.rol)
                 }
