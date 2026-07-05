@@ -9,7 +9,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,7 +16,6 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.result.LocalResultEventBus
 import androidx.navigation3.runtime.result.ResultEffect
-import androidx.navigation3.runtime.result.rememberResultEventBusNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.upsjb.movilsantarosa.core.navigation.component.AnnoucementsDestination
 import com.upsjb.movilsantarosa.core.navigation.component.BottomSheetSceneStrategy
@@ -44,7 +42,7 @@ import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormViewModel
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 import com.upsjb.movilsantarosa.feature.members.ui.member_picker.MemberPickerBottomSheet
 import com.upsjb.movilsantarosa.feature.members.ui.members.MembersScreen
-import com.upsjb.movilsantarosa.feature.payments.PaymentsScreen
+import com.upsjb.movilsantarosa.feature.payments.ui.payment.PaymentsScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -125,7 +123,9 @@ fun MainNavHost(
         }
 
         entry<PaymentsDestination> {
-            PaymentsScreen()
+            PaymentsScreen(
+                onPaymentClick = {}
+            )
         }
 
         entry<AnnoucementsDestination> {
