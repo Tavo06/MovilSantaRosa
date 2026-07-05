@@ -6,14 +6,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.upsjb.movilsantarosa.MainViewModel
 import com.upsjb.movilsantarosa.SessionState
-import com.upsjb.movilsantarosa.ui.feature.splash.SplashScreen
+import com.upsjb.movilsantarosa.core.uicomponents.SplashScreen
 
 @Composable
 fun AppNavHost(
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
     val session by mainViewModel.session.collectAsStateWithLifecycle()
-    when (session) {
+    when (val uiState = session) {
         SessionState.Loading -> {
             SplashScreen()
         }
@@ -26,8 +26,9 @@ fun AppNavHost(
             )
         }
 
-        SessionState.LoggedIn -> {
+        is SessionState.LoggedIn -> {
             MainNavHost(
+                userRole = uiState.role,
                 onLogout = {
                     mainViewModel.logout()
                 }

@@ -2,8 +2,10 @@ package com.upsjb.movilsantarosa
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.upsjb.movilsantarosa.domain.authentic.usecase.CurrentUserUseCase
-import com.upsjb.movilsantarosa.domain.authentic.usecase.LogoutUseCase
+import com.upsjb.movilsantarosa.feature.home.domain.usecase.GetUserUseCase
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
+import com.upsjb.movilsantarosa.feature.auth.domain.usecase.CurrentUserUseCase
+import com.upsjb.movilsantarosa.feature.auth.domain.usecase.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val currentUserUseCase: CurrentUserUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
+    private val getUserUseCase: GetUserUseCase,
 ) : ViewModel() {
 
     private val _session =
@@ -28,15 +31,24 @@ class MainViewModel @Inject constructor(
 
     fun refreshSession() {
         viewModelScope.launch {
+
             if (_session.value == SessionState.Loading) {
                 delay(1000)
             }
 
-            _session.value =
-                if (currentUserUseCase() != null) {
-                    SessionState.LoggedIn
-                } else {
-                    SessionState.LoggedOut
+            val firebaseUser = currentUserUseCase()
+
+            if (firebaseUser == null) {
+                _session.value = SessionState.LoggedOut
+                return@launch
+            }
+
+            getUserUseCase(firebaseUser.uid)
+                .onSuccess { user ->
+                    _session.value = SessionState.LoggedIn(user.rol)
+                }
+                .onFailure {
+                    _session.value = SessionState.LoggedOut
                 }
         }
     }
@@ -58,5 +70,8 @@ class MainViewModel @Inject constructor(
 sealed interface SessionState {
     data object Loading : SessionState
     data object LoggedOut : SessionState
-    data object LoggedIn : SessionState
+
+    data class LoggedIn(
+        val role: UserRole
+    ) : SessionState
 }

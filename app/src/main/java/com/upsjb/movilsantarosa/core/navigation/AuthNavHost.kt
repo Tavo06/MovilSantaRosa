@@ -9,8 +9,8 @@ import com.upsjb.movilsantarosa.core.navigation.component.LoginDestination
 import com.upsjb.movilsantarosa.core.navigation.component.Navigator
 import com.upsjb.movilsantarosa.core.navigation.component.RegisterDestination
 import com.upsjb.movilsantarosa.core.navigation.component.rememberNavigationState
-import com.upsjb.movilsantarosa.ui.feature.login.LoginRoute
-import com.upsjb.movilsantarosa.ui.feature.register.RegisterRoute
+import com.upsjb.movilsantarosa.feature.auth.ui.login.LoginScreen
+import com.upsjb.movilsantarosa.feature.auth.ui.register.RegisterScreen
 
 @Composable
 fun AuthNavHost(
@@ -30,7 +30,7 @@ fun AuthNavHost(
 
         entry<LoginDestination> {
 
-            LoginRoute(
+            LoginScreen(
                 onLoginSuccess = onLoginSuccess,
                 onRegisterClick = {
                     navigator.navigate(RegisterDestination)
@@ -40,8 +40,8 @@ fun AuthNavHost(
 
         entry<RegisterDestination> {
 
-            RegisterRoute(
-                onLoginNavigate = {
+            RegisterScreen(
+                navigateToLogin = {
                     navigator.navigate(LoginDestination)
                 }
             )

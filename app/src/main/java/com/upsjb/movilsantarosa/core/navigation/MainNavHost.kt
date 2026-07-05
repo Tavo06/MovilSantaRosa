@@ -19,15 +19,18 @@ import com.upsjb.movilsantarosa.core.navigation.component.Navigator
 import com.upsjb.movilsantarosa.core.navigation.component.PaymentsDestination
 import com.upsjb.movilsantarosa.core.navigation.component.rememberNavigationState
 import com.upsjb.movilsantarosa.core.uicomponents.AppBottomBar
+import com.upsjb.movilsantarosa.core.uicomponents.AppFloatingActionButton
 import com.upsjb.movilsantarosa.core.uicomponents.AppTopBar
-import com.upsjb.movilsantarosa.ui.feature.announcements.AnnouncementsRoute
-import com.upsjb.movilsantarosa.ui.feature.fine.FinesRoute
-import com.upsjb.movilsantarosa.ui.feature.home.HomeScreen
-import com.upsjb.movilsantarosa.ui.feature.members.MembersScreen
-import com.upsjb.movilsantarosa.ui.feature.payments.PaymentsRoute
+import com.upsjb.movilsantarosa.feature.announcements.AnnouncementsRoute
+import com.upsjb.movilsantarosa.feature.fine.FinesRoute
+import com.upsjb.movilsantarosa.feature.home.ui.HomeScreen
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
+import com.upsjb.movilsantarosa.feature.members.ui.MembersScreen
+import com.upsjb.movilsantarosa.feature.payments.PaymentsRoute
 
 @Composable
 fun MainNavHost(
+    userRole: UserRole,
     onLogout: () -> Unit
 ) {
 
@@ -76,6 +79,26 @@ fun MainNavHost(
             AppBottomBar(
                 currentDestination = navigationState.topLevelRoute,
                 onDestinationSelected = navigator::navigate
+            )
+        },
+        floatingActionButton = {
+            AppFloatingActionButton(
+                currentDestination = navigationState.topLevelRoute,
+                userRole = userRole,
+                onClick = {
+                    when (navigationState.topLevelRoute) {
+                        FinesDestination -> {
+                        }
+
+                        PaymentsDestination -> {
+                        }
+
+                        AnnoucementsDestination -> {
+                        }
+
+                        else -> Unit
+                    }
+                }
             )
         }
     ) { padding ->

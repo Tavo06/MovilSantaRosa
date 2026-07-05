@@ -25,7 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.upsjb.movilsantarosa.R
-import com.upsjb.movilsantarosa.ui.common.components.AppPrimaryButton
 
 enum class ErrorSectionType {
     COLUMN,
