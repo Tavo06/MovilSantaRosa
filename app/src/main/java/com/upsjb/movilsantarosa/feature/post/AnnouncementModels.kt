@@ -1,5 +1,5 @@
 // domain/models/AnnouncementModels.kt
-package com.upsjb.movilsantarosa.feature.announcements
+package com.upsjb.movilsantarosa.feature.post
 
 data class Announcement(
     val id: String,

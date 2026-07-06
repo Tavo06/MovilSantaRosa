@@ -1,4 +1,4 @@
-package com.upsjb.movilsantarosa.feature.announcements.components
+package com.upsjb.movilsantarosa.feature.post.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.upsjb.movilsantarosa.feature.announcements.Announcement
+import com.upsjb.movilsantarosa.feature.post.Announcement
 
 @Composable
 fun AnnouncementList(
