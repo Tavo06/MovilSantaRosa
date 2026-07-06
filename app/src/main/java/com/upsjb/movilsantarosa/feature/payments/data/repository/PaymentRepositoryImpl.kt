@@ -1,14 +1,19 @@
 package com.upsjb.movilsantarosa.feature.payments.data.repository
 
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
 import com.upsjb.movilsantarosa.feature.fine.data.repository.FINE_DATABASE
-import com.upsjb.movilsantarosa.feature.fine.domain.model.toDomain
 import com.upsjb.movilsantarosa.feature.payments.data.model.PaymentModel
 import com.upsjb.movilsantarosa.feature.payments.domain.model.Payment
 import com.upsjb.movilsantarosa.feature.payments.domain.model.toDomain
 import com.upsjb.movilsantarosa.feature.payments.domain.model.toModel
 import com.upsjb.movilsantarosa.feature.payments.domain.repository.PaymentRepository
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -18,55 +23,64 @@ class PaymentRepositoryImpl @Inject constructor(
     private val database: FirebaseDatabase
 ) : PaymentRepository {
 
-    override suspend fun getPaymentByEmail(
-        email: String
-    ): Result<List<Payment>> {
+    override fun getPaymentByEmail(email: String): Flow<List<Payment>> =
+        callbackFlow {
 
-        return try {
-
-            val snapshot = database.reference
+            val query = database.reference
                 .child(PAYMENT_DATABASE)
                 .orderByChild("memberEmail")
                 .equalTo(email)
-                .get()
-                .await()
 
-            val payments = snapshot.children.mapNotNull {
-                it.getValue(PaymentModel::class.java)
-            }.map(PaymentModel::toDomain)
+            val listener = object : ValueEventListener {
 
-            Result.success(payments)
+                override fun onDataChange(snapshot: DataSnapshot) {
 
-        } catch (e: Exception) {
+                    val payments = snapshot.children.mapNotNull {
+                        it.getValue(PaymentModel::class.java)
+                    }.map(PaymentModel::toDomain)
 
-            Result.failure(
-                Exception(e.message ?: "No se pudieron obtener los pagos.")
-            )
+                    trySend(payments)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    close(error.toException())
+                }
+            }
+
+            query.addValueEventListener(listener)
+
+            awaitClose {
+                query.removeEventListener(listener)
+            }
         }
-    }
 
-    override suspend fun getAllPayments(): Result<List<Payment>> {
+    override fun getAllPayments(): Flow<List<Payment>> =
+        callbackFlow {
 
-        return try {
+            val ref = database.reference.child(PAYMENT_DATABASE)
 
-            val snapshot = database.reference
-                .child(PAYMENT_DATABASE)
-                .get()
-                .await()
+            val listener = object : ValueEventListener {
 
-            val payments = snapshot.children.mapNotNull {
-                it.getValue(PaymentModel::class.java)
-            }.map(PaymentModel::toDomain)
+                override fun onDataChange(snapshot: DataSnapshot) {
 
-            Result.success(payments)
+                    val payments = snapshot.children.mapNotNull {
+                        it.getValue(PaymentModel::class.java)
+                    }.map(PaymentModel::toDomain)
 
-        } catch (e: Exception) {
+                    trySend(payments)
+                }
 
-            Result.failure(
-                Exception(e.message ?: "No se pudieron obtener los pagos.")
-            )
+                override fun onCancelled(error: DatabaseError) {
+                    close(error.toException())
+                }
+            }
+
+            ref.addValueEventListener(listener)
+
+            awaitClose {
+                ref.removeEventListener(listener)
+            }
         }
-    }
 
     override suspend fun getPaymentById(id: String): Result<Payment> {
         return try {
