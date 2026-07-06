@@ -8,16 +8,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.upsjb.movilsantarosa.core.navigation.component.FinesDestination
-import com.upsjb.movilsantarosa.core.navigation.component.NavigationState
 import com.upsjb.movilsantarosa.core.uicomponents.AppSearchBar
 import com.upsjb.movilsantarosa.core.uicomponents.ErrorSection
 import com.upsjb.movilsantarosa.core.uicomponents.SkeletonSection
@@ -35,32 +31,28 @@ fun FinesScreen(
 
     Column(
         modifier = modifier
-            .padding(
-                start = 16.dp,
-                end = 16.dp,
-                top = 16.dp
-            )
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
             .fillMaxSize()
     ) {
+
         when (val state = uiState) {
 
             FineUiState.Loading -> {
                 SkeletonSection(
-                    modifier = Modifier
-                        .fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
             is FineUiState.Error -> {
                 ErrorSection(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    title = state.message,
-                    onRetry = { viewModel.loadFines() },
+                    modifier = Modifier.fillMaxSize(),
+                    title = "Ups, tenemos incovenientes",
+                    description =state.message
                 )
             }
 
             is FineUiState.Success -> {
+
                 AppSearchBar(
                     query = state.query,
                     onQueryChange = viewModel::updateQuery,
@@ -70,7 +62,7 @@ fun FinesScreen(
                 Spacer(Modifier.height(16.dp))
 
                 FineList(
-                    fines = state.filteredFines,
+                    fines = state.fines,
                     onClick = onFineClick,
                     modifier = Modifier
                         .fillMaxWidth()
