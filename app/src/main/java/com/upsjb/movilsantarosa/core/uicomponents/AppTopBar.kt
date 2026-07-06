@@ -9,7 +9,6 @@ import com.upsjb.movilsantarosa.core.navigation.component.HomeDestination
 import com.upsjb.movilsantarosa.core.navigation.component.MembersDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PaymentsDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PostDestination
-import com.upsjb.movilsantarosa.core.navigation.component.PostDestination
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
