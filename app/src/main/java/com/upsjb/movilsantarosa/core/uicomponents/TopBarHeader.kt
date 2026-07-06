@@ -108,9 +108,80 @@ fun HomeHeader(
     onLogout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    TopBarHeader(
-        title = "ASOCIACIÓN DE MOTOTAXIS",
-        onLogout = onLogout,
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
+    Box(
         modifier = modifier
-    )
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.primary)
+    ) {
+
+        IconButton(
+            onClick = {
+                showLogoutDialog = true
+            },
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.TopEnd)
+                .size(30.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primaryContainer)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.Logout,
+                contentDescription = "Cerrar sesión",
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = "'Honradez, Seguridad y Confianza'",
+                fontStyle = FontStyle.Italic,
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = "ASOCIACIÓN DE MOTOTAXIS",
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = "Santa Rosa de Lima",
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = "San Clemente - Pisco",
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+    if (showLogoutDialog) {
+        MessageDialog(
+            title = "Cerrar sesión",
+            message = "¿Desea realmente cerrar la sesión?",
+            confirmButtonText = "Sí, cerrar",
+            onConfirmClick = {
+                showLogoutDialog = false
+                onLogout()
+            },
+            onDismiss = {
+                showLogoutDialog = false
+            },
+            cancelButtonText = "Cancelar"
+        )
+    }
 }
