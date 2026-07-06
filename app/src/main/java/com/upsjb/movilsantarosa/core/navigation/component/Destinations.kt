@@ -41,14 +41,16 @@ data object PaymentsDestination : NavKey
 data class PaymentFormDestination(val paymentId: String? = null) : NavKey
 
 @Serializable
-data object AnnoucementsDestination : NavKey
+data object PostDestination : NavKey
+@Serializable
+data class PostFormDestination(val postId: String? = null) : NavKey
 
 val BOTTOM_BAR_ITEMS = mapOf(
     HomeDestination to NavBarItem(Icons.Default.Home, "Home"),
     MembersDestination to NavBarItem(Icons.Default.Person, "Socios"),
     FinesDestination to NavBarItem(Icons.Default.AssistantPhoto, "Multas"),
     PaymentsDestination to NavBarItem(Icons.Default.Payments, "Pagos"),
-    AnnoucementsDestination to NavBarItem(Icons.Default.TaxiAlert, "Anuncios"),
+    PostDestination to NavBarItem(Icons.Default.TaxiAlert, "Anuncios"),
 )
 
 val AUTH_ROUTES = setOf(
@@ -61,7 +63,7 @@ val MAIN_ROUTES = setOf(
     MembersDestination,
     FinesDestination,
     PaymentsDestination,
-    AnnoucementsDestination
+    PostDestination
 )
 
 val TOP_LEVEL_ROUTES = AUTH_ROUTES + MAIN_ROUTES

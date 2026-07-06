@@ -12,7 +12,7 @@ interface AuthRepository {
     suspend fun logout(): Result<Unit>
     suspend fun register(
         registerRequest: RegisterRequest
-    ): Result<User>
+    ): Result<Unit>
 
     suspend fun getCurrentUser(): Result<User>
 }

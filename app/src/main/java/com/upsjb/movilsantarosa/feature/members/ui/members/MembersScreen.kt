@@ -56,19 +56,6 @@ fun MembersScreen(
             }
 
             is MemberUiState.Success -> {
-
-                val filteredMembers = remember(state.query, state.members) {
-                    if (state.query.isBlank()) {
-                        state.members
-                    } else {
-                        state.members.filter {
-                            it.firstname.contains(state.query, true) ||
-                                    it.fullName.contains(state.query, true) ||
-                                    it.dniNumber.contains(state.query, true)
-                        }
-                    }
-                }
-
                 AppSearchBar(
                     query = state.query,
                     onQueryChange = viewModel::updateQuery,
@@ -78,7 +65,7 @@ fun MembersScreen(
                 Spacer(Modifier.height(12.dp))
 
                 MemberList(
-                    members = filteredMembers,
+                    members = state.filteredMembers,
                     onMemberClick = {
                         showMemberContactDialog = it.phone
                     },

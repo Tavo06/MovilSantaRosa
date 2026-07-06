@@ -9,9 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavKey
-import com.upsjb.movilsantarosa.core.navigation.component.AnnoucementsDestination
 import com.upsjb.movilsantarosa.core.navigation.component.FinesDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PaymentsDestination
+import com.upsjb.movilsantarosa.core.navigation.component.PostDestination
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 
 @Composable
@@ -55,7 +55,7 @@ val FAB_ITEMS = mapOf(
         icon = Icons.Default.Add,
         contentDescription = "Registrar pago"
     ),
-    AnnoucementsDestination to FabItem(
+    PostDestination to FabItem(
         icon = Icons.Default.Add,
         contentDescription = "Crear anuncio"
     )

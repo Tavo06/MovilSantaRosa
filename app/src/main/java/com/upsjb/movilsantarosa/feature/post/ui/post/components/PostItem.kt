@@ -17,8 +17,10 @@ fun PostItem(
     onClick: (Post) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth(),
         onClick = { onClick(post) },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
@@ -30,10 +32,10 @@ fun PostItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
 
-            // HEADER
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -45,7 +47,11 @@ fun PostItem(
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Text(
-                            text = post.createdBy.take(2).uppercase(),
+                            text = post.createdBy
+                                .takeIf { it.isNotBlank() }
+                                ?.take(2)
+                                ?.uppercase()
+                                ?: "NA",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -55,46 +61,66 @@ fun PostItem(
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                Column {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
                     Text(
-                        text = post.createdBy,
+                        text = post.createdBy.ifBlank { "Sistema" },
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
 
-                    Text(
-                        text = post.type.name,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = post.type.displayName,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+
+                        Text(
+                            text = "• ${post.priority.name.lowercase().replaceFirstChar { it.uppercase() }}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
+
+                Text(
+                    text = post.createdAt,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // TITLE
             Text(
                 text = post.title,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
 
-            Spacer(modifier = Modifier.height(6.dp))
+            if (post.description.isNotBlank()) {
+                Text(
+                    text = post.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
 
-            // DESCRIPTION
-            Text(
-                text = post.description,
-                style = MaterialTheme.typography.bodyMedium
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // ADDRESS (si existe)
             if (post.address.isNotBlank()) {
                 Text(
                     text = "📍 ${post.address}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            if (post.expiredAt.isNotBlank()) {
+                Text(
+                    text = "Expira: ${post.expiredAt}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.error
                 )
             }
         }

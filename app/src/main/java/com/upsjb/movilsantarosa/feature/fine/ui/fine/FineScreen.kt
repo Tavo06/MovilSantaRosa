@@ -61,18 +61,6 @@ fun FinesScreen(
             }
 
             is FineUiState.Success -> {
-
-                val filteredFines = remember(state.query, state.fines) {
-                    if (state.query.isBlank()) {
-                        state.fines
-                    } else {
-                        state.fines.filter {
-                            it.description.contains(state.query, true) ||
-                                    it.memberName.contains(state.query, true)
-                        }
-                    }
-                }
-
                 AppSearchBar(
                     query = state.query,
                     onQueryChange = viewModel::updateQuery,
@@ -82,7 +70,7 @@ fun FinesScreen(
                 Spacer(Modifier.height(16.dp))
 
                 FineList(
-                    fines = filteredFines,
+                    fines = state.filteredFines,
                     onClick = onFineClick,
                     modifier = Modifier
                         .fillMaxWidth()

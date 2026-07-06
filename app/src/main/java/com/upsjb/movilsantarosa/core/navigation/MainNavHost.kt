@@ -16,7 +16,6 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.result.LocalResultEventBus
 import androidx.navigation3.runtime.result.ResultEffect
 import androidx.navigation3.ui.NavDisplay
-import com.upsjb.movilsantarosa.core.navigation.component.AnnoucementsDestination
 import com.upsjb.movilsantarosa.core.navigation.component.BottomSheetSceneStrategy
 import com.upsjb.movilsantarosa.core.navigation.component.FineFormDestination
 import com.upsjb.movilsantarosa.core.navigation.component.FinePickerDestination
@@ -28,9 +27,12 @@ import com.upsjb.movilsantarosa.core.navigation.component.MembersDestination
 import com.upsjb.movilsantarosa.core.navigation.component.Navigator
 import com.upsjb.movilsantarosa.core.navigation.component.PaymentFormDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PaymentsDestination
+import com.upsjb.movilsantarosa.core.navigation.component.PostDestination
+import com.upsjb.movilsantarosa.core.navigation.component.PostFormDestination
 import com.upsjb.movilsantarosa.core.navigation.component.rememberNavigationState
 import com.upsjb.movilsantarosa.core.navigation.results.FineSavedResult
 import com.upsjb.movilsantarosa.core.navigation.results.PaymentSavedResult
+import com.upsjb.movilsantarosa.core.navigation.results.PostSavedResult
 import com.upsjb.movilsantarosa.core.uicomponents.AppBottomBar
 import com.upsjb.movilsantarosa.core.uicomponents.AppFloatingActionButton
 import com.upsjb.movilsantarosa.core.uicomponents.AppTopBar
@@ -52,6 +54,10 @@ import com.upsjb.movilsantarosa.feature.payments.ui.payment.PaymentsScreen
 import com.upsjb.movilsantarosa.feature.payments.ui.payment_form.PaymentFormMode
 import com.upsjb.movilsantarosa.feature.payments.ui.payment_form.PaymentFormScreen
 import com.upsjb.movilsantarosa.feature.payments.ui.payment_form.PaymentFormViewModel
+import com.upsjb.movilsantarosa.feature.post.ui.post.PostViewModel
+import com.upsjb.movilsantarosa.feature.post.ui.post_form.PostFormMode
+import com.upsjb.movilsantarosa.feature.post.ui.post_form.PostFormScreen
+import com.upsjb.movilsantarosa.feature.post.ui.post_form.PostFormViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -210,9 +216,57 @@ fun MainNavHost(
             )
         }
 
-        entry<AnnoucementsDestination> {
+        entry<PostDestination> {
+            val viewModel: PostViewModel = hiltViewModel()
+
+            ResultEffect<PostSavedResult> {
+                viewModel.loadPosts()
+            }
+
             PostsScreen(
-                onPostClick = {}
+                viewModel = viewModel,
+                onPostClick = { post ->
+                    navigator.navigate(
+                        PostFormDestination(post.id)
+                    )
+                }
+            )
+        }
+        entry<PostFormDestination> { destination ->
+
+            val viewModel: PostFormViewModel = hiltViewModel()
+            val resultBus = LocalResultEventBus.current
+
+//            ResultEffect<Location> { location ->
+//                viewModel.updateForm {
+//                    copy(
+//                        latitude = location.latitude.toString(),
+//                        longitude = location.longitude.toString(),
+//                        address = location.address
+//                    )
+//                }
+//            }
+
+            LaunchedEffect(destination.postId) {
+                if (destination.postId == null) {
+                    viewModel.setMode(PostFormMode.CREATE)
+                } else {
+                    viewModel.loadPost(destination.postId)
+                }
+            }
+
+            PostFormScreen(
+                viewModel = viewModel,
+                onBackClick = {
+                    navigator.goBack()
+                },
+                onSuccess = {
+                    resultBus.sendResult(result = PostSavedResult)
+                    navigator.goBack()
+                },
+                openLocationPicker = {
+                    //navigator.navigate(LocationPickerDestination)
+                }
             )
         }
     }
@@ -245,7 +299,8 @@ fun MainNavHost(
                             navigator.navigate(PaymentFormDestination())
                         }
 
-                        AnnoucementsDestination -> {
+                        PostDestination -> {
+                            navigator.navigate(PostFormDestination())
                         }
 
                         else -> Unit

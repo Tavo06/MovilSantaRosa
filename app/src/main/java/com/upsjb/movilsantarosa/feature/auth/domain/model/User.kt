@@ -4,10 +4,13 @@ import kotlinx.serialization.Serializable
 
 data class User(
     val firstname: String,
+    val lastname: String,
     val email: String,
     val uid: String,
     val rol: UserRole = UserRole.PARTNER
-)
+){
+    val fullName get() = "$firstname $lastname"
+}
 
 @Serializable
 enum class UserRole {
