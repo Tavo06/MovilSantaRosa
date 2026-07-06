@@ -17,9 +17,9 @@ sealed class StatsUiState {
     data object Loading : StatsUiState()
     data class Success(
         val activeMembers: Int,
-        val debtors: Int,
-        val paymentsOnTime: Int,
-        val pendingFines: Int
+        val totalFines: Int,
+        val totalPayments: Int,
+        val totalAnnouncements: Int
     ) : StatsUiState()
 
     data class Error(val message: String) : StatsUiState()
