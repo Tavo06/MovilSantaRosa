@@ -28,9 +28,7 @@ class RegisterPaymentUseCase @Inject constructor(
 
         val paymentToSave = payment.copy(
             createdBy = user.email,
-            createdAt = payment.createdAt.ifBlank {
-                System.currentTimeMillis().toString()
-            }
+            createdAt = payment.createdAt
         )
 
         return repository.registerPayment(paymentToSave)

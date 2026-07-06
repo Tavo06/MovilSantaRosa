@@ -11,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
@@ -29,6 +30,7 @@ import com.upsjb.movilsantarosa.core.uicomponents.FormDatePicker
 import com.upsjb.movilsantarosa.core.uicomponents.FormDropdown
 import com.upsjb.movilsantarosa.core.uicomponents.FormTextField
 import com.upsjb.movilsantarosa.core.utils.toDateString
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.post.data.model.PostType
 import com.upsjb.movilsantarosa.feature.post.data.model.Priority
 import com.upsjb.movilsantarosa.feature.post.ui.post_form.PostFormMode
@@ -43,6 +45,7 @@ fun PostFormContent(
     onSaveClick: () -> Unit,
     onEditClick: () -> Unit,
     onBackClick: () -> Unit,
+    clearLocation: () -> Unit,
     openLocationPicker: () -> Unit
 ) {
 
@@ -61,7 +64,7 @@ fun PostFormContent(
             title = state.mode.displayName,
             onBackClick = onBackClick,
             actions = {
-                if (!isCreateMode) {
+                if (state.role == UserRole.ADMIN && !isCreateMode) {
                     IconButton(
                         onClick = onEditClick,
                         modifier = Modifier.background(
@@ -137,6 +140,13 @@ fun PostFormContent(
                         contentDescription = null
                     )
                 }
+            }, trailingIcon = {
+                IconButton(onClick = clearLocation) {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = null
+                    )
+                }
             }
         )
 
@@ -150,9 +160,9 @@ fun PostFormContent(
         }
 
         FormDatePicker(
-            value = form.expiredAt,
+            value = form.expiredAt.toDateString(),
             enabled = !isReadOnly,
-            onDateSelected = { updateForm { copy(expiredAt = it.toDateString()) } },
+            onDateSelected = { updateForm { copy(expiredAt = it ?: 0L) } },
             label = "Fecha de expiración",
             allowFutureDates = true
         )

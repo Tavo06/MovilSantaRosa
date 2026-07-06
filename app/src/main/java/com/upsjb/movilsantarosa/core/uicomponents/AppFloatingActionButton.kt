@@ -21,12 +21,16 @@ fun AppFloatingActionButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    if (userRole != UserRole.ADMIN) return
-
     val destination = currentDestination ?: return
 
     val item = FAB_ITEMS[destination] ?: return
+
+    val canShowFab = when (destination) {
+        PostDestination -> true
+        else -> userRole == UserRole.ADMIN
+    }
+
+    if (!canShowFab) return
 
     FloatingActionButton(
         modifier = modifier,

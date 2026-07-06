@@ -2,6 +2,7 @@ package com.upsjb.movilsantarosa.feature.post.ui.post_form
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.CurrentUserUseCase
 import com.upsjb.movilsantarosa.feature.post.domain.model.toDomain
 import com.upsjb.movilsantarosa.feature.post.domain.model.toForm
@@ -40,6 +41,7 @@ class PostFormViewModel @Inject constructor(
 
     fun loadPost(id: String) {
         viewModelScope.launch {
+
             _uiState.update {
                 it.copy(
                     mode = PostFormMode.READ_ONLY,
@@ -49,6 +51,12 @@ class PostFormViewModel @Inject constructor(
 
             getPostByIdUseCase(id)
                 .onSuccess { post ->
+
+                    val currentUserResult = currentUserUseCase()
+                    val currentRoleName = currentUserResult
+                        .getOrNull()
+                        ?.role ?: UserRole.PARTNER
+
                     _uiState.update {
                         it.copy(
                             form = post.toForm(),
@@ -61,7 +69,7 @@ class PostFormViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             actionState = PostFormActionState.Error(
-                                "No se pudo cargar la publicación."
+                                "No se pudo cargar la publicación"
                             )
                         )
                     }
@@ -71,6 +79,7 @@ class PostFormViewModel @Inject constructor(
 
     fun savePost() {
         viewModelScope.launch {
+
             val state = _uiState.value
             val form = state.form
 
@@ -93,16 +102,15 @@ class PostFormViewModel @Inject constructor(
                 .orEmpty()
 
             val post = form
-                .copy(
-                    title = form.title.trim(),
-                    description = form.description.trim(),
-                    createdBy = currentUserName
-                )
+                .copy(createdBy = currentUserName)
                 .toDomain()
 
             val result = when (state.mode) {
+
                 PostFormMode.CREATE -> registerPostUseCase(post)
+
                 PostFormMode.EDIT -> updatePostUseCase(post)
+
                 PostFormMode.READ_ONLY -> return@launch
             }
 
@@ -116,7 +124,7 @@ class PostFormViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             actionState = PostFormActionState.Error(
-                                error.message ?: "No se pudo guardar la publicación."
+                                error.message ?: "Error desconocido"
                             )
                         )
                     }
@@ -143,27 +151,13 @@ class PostFormViewModel @Inject constructor(
     }
 
     private fun validateForm(form: PostFormState): String? {
-        val title = form.title.trim()
-        val description = form.description.trim()
-
         return when {
-            title.isBlank() ->
-                "Ingrese un título para la publicación."
 
-            title.length < 5 ->
-                "El título debe tener al menos 5 caracteres."
+            form.title.isBlank() ->
+                "Ingrese un título."
 
-            title.length > 80 ->
-                "El título no debe superar los 80 caracteres."
-
-            description.isBlank() ->
-                "Ingrese una descripción para la publicación."
-
-            description.length < 10 ->
-                "La descripción debe tener al menos 10 caracteres."
-
-            description.length > 500 ->
-                "La descripción no debe superar los 500 caracteres."
+            form.description.isBlank() ->
+                "Ingrese una descripción."
 
             form.type.name.isBlank() ->
                 "Seleccione un tipo de publicación."

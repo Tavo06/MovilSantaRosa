@@ -1,6 +1,7 @@
 package com.upsjb.movilsantarosa.feature.post.ui.post_form
 
-import com.upsjb.movilsantarosa.core.utils.currentDateString
+import com.upsjb.movilsantarosa.core.utils.currentTimeMillis
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.post.data.model.PostType
 import com.upsjb.movilsantarosa.feature.post.data.model.Priority
 
@@ -14,8 +15,8 @@ data class PostFormState(
 
     val createdBy: String = "",
 
-    val createdAt: String = currentDateString(),
-    val expiredAt: String = "",
+    val createdAt: Long = currentTimeMillis(),
+    val expiredAt: Long = currentTimeMillis(),
 
     val latitude: String = "",
     val longitude: String = "",
@@ -29,7 +30,8 @@ data class PostFormUiState(
 
     val actionState: PostFormActionState = PostFormActionState.Idle,
 
-    val mode: PostFormMode = PostFormMode.CREATE
+    val mode: PostFormMode = PostFormMode.CREATE,
+    val role: UserRole = UserRole.PARTNER,
 )
 
 sealed interface PostFormActionState {

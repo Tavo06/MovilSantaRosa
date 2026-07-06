@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.upsjb.movilsantarosa.core.utils.toDateString
 import com.upsjb.movilsantarosa.feature.post.domain.model.Post
 
 @Composable
@@ -80,7 +81,9 @@ fun PostItem(
                         )
 
                         Text(
-                            text = "• ${post.priority.name.lowercase().replaceFirstChar { it.uppercase() }}",
+                            text = "• ${
+                                post.priority.name.lowercase().replaceFirstChar { it.uppercase() }
+                            }",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -88,7 +91,7 @@ fun PostItem(
                 }
 
                 Text(
-                    text = post.createdAt,
+                    text = post.createdAt.toDateString(),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -116,9 +119,9 @@ fun PostItem(
                 )
             }
 
-            if (post.expiredAt.isNotBlank()) {
+            if (post.expiredAt > 0L) {
                 Text(
-                    text = "Expira: ${post.expiredAt}",
+                    text = "Expira: ${post.expiredAt.toDateString()}",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.error
                 )

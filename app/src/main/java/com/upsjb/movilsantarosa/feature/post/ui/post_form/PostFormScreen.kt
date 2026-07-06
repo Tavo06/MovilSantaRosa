@@ -70,6 +70,9 @@ fun PostFormScreen(
         onBackClick = onBackClick,
         openLocationPicker = {
             requestLocationPermission = true
+        },
+        clearLocation = {
+            viewModel.clearLocation()
         }
     )
 
@@ -107,7 +110,6 @@ private fun PostFormScreenPreview() {
             address = "Av. Principal 123",
             latitude = "-12.0453",
             longitude = "-77.0311",
-            expiredAt = currentDateString()
         ),
         mode = PostFormMode.CREATE,
         postId = ""
@@ -120,7 +122,8 @@ private fun PostFormScreenPreview() {
             onSaveClick = {},
             onEditClick = {},
             onBackClick = {},
-            openLocationPicker = {}
+            openLocationPicker = {},
+            clearLocation = {}
         )
     }
 }
