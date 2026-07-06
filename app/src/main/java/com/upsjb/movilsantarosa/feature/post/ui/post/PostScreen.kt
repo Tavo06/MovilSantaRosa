@@ -59,14 +59,6 @@ fun PostsScreen(
                     state.posts
                 }
 
-                AppSearchBar(
-                    query = "",
-                    onQueryChange = {},
-                    placeholder = "Buscar post"
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
                 PostList(
                     posts = postsToShow,
                     onClick = onPostClick,

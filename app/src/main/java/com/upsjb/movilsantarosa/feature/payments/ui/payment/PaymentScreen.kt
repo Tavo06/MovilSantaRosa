@@ -65,18 +65,6 @@ fun PaymentsScreen(
             }
 
             is PaymentUiState.Success -> {
-
-                val filteredPayments = remember(state.query, state.payments) {
-                    if (state.query.isBlank()) {
-                        state.payments
-                    } else {
-                        state.payments.filter {
-                            it.memberDniNumber.contains(state.query, true) ||
-                                    it.memberName.contains(state.query, true)
-                        }
-                    }
-                }
-
                 AppSearchBar(
                     query = state.query,
                     onQueryChange = viewModel::updateQuery,
@@ -86,7 +74,7 @@ fun PaymentsScreen(
                 Spacer(Modifier.height(16.dp))
 
                 PaymentList(
-                    payments = filteredPayments,
+                    payments = state.filteredPayments,
                     onClick = onPaymentClick,
                     modifier = Modifier
                         .fillMaxWidth()

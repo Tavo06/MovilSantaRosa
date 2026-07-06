@@ -6,12 +6,12 @@ interface PostRepository {
 
     suspend fun getAllPosts(): Result<List<Post>>
 
-   /* suspend fun createPost(
+    suspend fun createPost(
         post: Post
     ): Result<Unit>
 
     suspend fun updatePost(
         post: Post
-    ): Result<Unit> */
+    ): Result<Unit>
 }
 

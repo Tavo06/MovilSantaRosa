@@ -9,7 +9,17 @@ sealed class PaymentUiState {
     data class Success(
         val query: String = "",
         val payments: List<Payment> = emptyList(),
-    ) : PaymentUiState()
+    ) : PaymentUiState() {
+        val filteredPayments: List<Payment>
+            get() = if (query.isBlank()) {
+                payments
+            } else {
+                payments.filter {
+                    it.memberDniNumber.contains(query, true) ||
+                            it.memberName.contains(query, true)
+                }
+            }
+    }
 
     data class Error(
         val message: String

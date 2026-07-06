@@ -9,7 +9,17 @@ sealed class FineUiState {
     data class Success(
         val query: String = "",
         val fines: List<Fine> = emptyList(),
-    ) : FineUiState()
+    ) : FineUiState() {
+        val filteredFines: List<Fine>
+            get() = if (query.isBlank()) {
+                fines
+            } else {
+                fines.filter {
+                    it.description.contains(query, true) ||
+                            it.memberName.contains(query, true)
+                }
+            }
+    }
 
     data class Error(
         val message: String
