@@ -36,7 +36,7 @@ class MainViewModel @Inject constructor(
 
             currentUserUseCase()
                 .onSuccess { user ->
-                    _session.value = SessionState.LoggedIn(user.rol)
+                    _session.value = SessionState.LoggedIn(user.role)
                 }
                 .onFailure {
                     _session.value = SessionState.LoggedOut

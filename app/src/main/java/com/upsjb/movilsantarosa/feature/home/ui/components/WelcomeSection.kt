@@ -89,7 +89,7 @@ fun UserSectionSuccess(user: User, modifier: Modifier = Modifier) {
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = user.rol.displayName,
+                    text = user.role.displayName,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.outline
                 )

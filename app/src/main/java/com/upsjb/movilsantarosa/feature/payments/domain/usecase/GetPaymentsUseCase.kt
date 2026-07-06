@@ -20,7 +20,7 @@ class GetPaymentsUseCase @Inject constructor(
                 )
             }
 
-        return when (user.rol) {
+        return when (user.role) {
 
             UserRole.ADMIN ->
                 repository.getAllPayments()

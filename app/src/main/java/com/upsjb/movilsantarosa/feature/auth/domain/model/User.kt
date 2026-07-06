@@ -7,7 +7,7 @@ data class User(
     val lastname: String,
     val email: String,
     val uid: String,
-    val rol: UserRole = UserRole.PARTNER
+    val role: UserRole = UserRole.PARTNER
 ){
     val fullName get() = "$firstname $lastname"
 }
