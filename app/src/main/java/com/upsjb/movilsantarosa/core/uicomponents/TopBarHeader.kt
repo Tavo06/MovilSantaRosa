@@ -32,41 +32,6 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun TopBarHeader(
     title: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primary)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        Text(
-            text = "'Honradez, Seguridad y Confianza'",
-            fontStyle = FontStyle.Italic,
-            color = MaterialTheme.colorScheme.onPrimary,
-            fontSize = 14.sp,
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = title,
-            color = MaterialTheme.colorScheme.onPrimary,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "Members Header")
-@Composable
-fun TopBarHeaderPreview() {
-    TopBarHeader("Socios")
-}
-
-@Composable
-fun HomeHeader(
     onLogout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -83,8 +48,8 @@ fun HomeHeader(
                 showLogoutDialog = true
             },
             modifier = Modifier
-                .padding(16.dp)
                 .align(Alignment.TopEnd)
+                .padding(16.dp)
                 .size(30.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primaryContainer)
@@ -110,27 +75,17 @@ fun HomeHeader(
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center
             )
+
             Text(
-                text = "ASOCIACIÓN DE MOTOTAXIS",
+                text = title,
                 color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 16.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-            Text(
-                text = "Santa Rosa de Lima",
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center
-            )
-            Text(
-                text = "San Clemente - Pisco",
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 12.sp,
                 textAlign = TextAlign.Center
             )
         }
     }
+
     if (showLogoutDialog) {
         MessageDialog(
             title = "Cerrar sesión",
@@ -148,10 +103,14 @@ fun HomeHeader(
     }
 }
 
-@Preview(showBackground = true, name = "Home Header")
 @Composable
-fun PreviewHomeHeader() {
-    HomeHeader(onLogout = {
-        // Cerrar sesión
-    })
+fun HomeHeader(
+    onLogout: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TopBarHeader(
+        title = "ASOCIACIÓN DE MOTOTAXIS",
+        onLogout = onLogout,
+        modifier = modifier
+    )
 }
