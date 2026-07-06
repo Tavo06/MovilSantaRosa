@@ -1,5 +1,7 @@
 package com.upsjb.movilsantarosa.feature.fine.data.model
 
+import com.upsjb.movilsantarosa.core.utils.currentTimeMillis
+import com.upsjb.movilsantarosa.core.utils.toDateString
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,11 +14,11 @@ data class FineModel(
     val customReason: String = "",
     val amount: String = "",
     val description: String = "",
-    val issuedAt: String = "",
-    val dueDate: String = "",
+    val issuedAt: String = currentTimeMillis().toDateString(),
+    val dueDate: String = currentTimeMillis().toDateString(),
     val status: FineStatus = FineStatus.PENDING,
     val createdBy: String = "",
-    val createdAt: String = ""
+    val createdAt: String = currentTimeMillis().toDateString()
 )
 
 @Serializable

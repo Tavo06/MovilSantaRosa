@@ -26,8 +26,6 @@ class PaymentViewModel @Inject constructor(
     }
 
     fun loadPayments() {
-        if (_uiState.value is PaymentUiState.Success) return
-
         viewModelScope.launch {
             _uiState.value = PaymentUiState.Loading
             getPaymentsUseCase()
