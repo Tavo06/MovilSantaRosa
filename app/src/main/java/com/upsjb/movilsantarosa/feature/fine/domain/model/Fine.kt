@@ -1,7 +1,6 @@
 package com.upsjb.movilsantarosa.feature.fine.domain.model
 
 import com.upsjb.movilsantarosa.core.utils.currentTimeMillis
-import com.upsjb.movilsantarosa.core.utils.toDateString
 import com.upsjb.movilsantarosa.core.utils.toDoubleSafe
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineModel
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
@@ -17,11 +16,11 @@ data class Fine(
     val customReason: String = "",
     val amount: Double = 0.0,
     val description: String = "",
-    val issuedAt: String = currentTimeMillis().toDateString(),
-    val dueDate: String = currentTimeMillis().toDateString(),
+    val issuedAt: Long = currentTimeMillis(),
+    val dueDate: Long = currentTimeMillis(),
     val status: FineStatus = FineStatus.PENDING,
     val createdBy: String = "",
-    val createdAt: String = currentTimeMillis().toDateString()
+    val createdAt: Long = currentTimeMillis()
 )
 
 fun FineModel.toDomain(): Fine =

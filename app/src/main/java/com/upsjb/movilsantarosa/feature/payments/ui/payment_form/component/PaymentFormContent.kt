@@ -170,7 +170,7 @@ fun PaymentFormContent(
                         text = "Monto: ${form.fineAmount.toCurrencyString()}",
                         fontWeight = FontWeight.Medium
                     )
-                    if (form.fineDueDate.isNotEmpty()) {
+                    if (form.fineDueDate > 0) {
                         Text(
                             text = "Fecha vencimiento: ${form.fineDueDate}",
                             fontWeight = FontWeight.Medium
@@ -193,7 +193,7 @@ fun PaymentFormContent(
             modifier = Modifier.padding(bottom = 8.dp),
             value = form.paidAt.toDateString(),
             enabled = !isReadOnly,
-            onDateSelected = { updateForm { copy(paidAt = it?:0L) } },
+            onDateSelected = { updateForm { copy(paidAt = it ?: 0L) } },
             label = "Fecha de pago",
             allowFutureDates = false
         )

@@ -38,6 +38,7 @@ import com.upsjb.movilsantarosa.core.uicomponents.FormDatePicker
 import com.upsjb.movilsantarosa.core.uicomponents.FormDropdown
 import com.upsjb.movilsantarosa.core.uicomponents.FormTextField
 import com.upsjb.movilsantarosa.core.utils.toDateString
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormMode
@@ -71,18 +72,20 @@ fun FineFormContent(
             title = state.mode.displayName,
             onBackClick = onBackClick,
             actions = {
-                IconButton(
-                    onClick = onEditClick,
-                    modifier = Modifier.background(
-                        MaterialTheme.colorScheme.primary,
-                        CircleShape
-                    )
-                ) {
-                    Icon(
-                        Icons.Default.Edit,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
+                if (!isCreateMode && state.role == UserRole.ADMIN) {
+                    IconButton(
+                        onClick = onEditClick,
+                        modifier = Modifier.background(
+                            MaterialTheme.colorScheme.primary,
+                            CircleShape
+                        )
+                    ) {
+                        Icon(
+                            Icons.Default.Edit,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
                 }
             }
         )
@@ -175,9 +178,9 @@ fun FineFormContent(
         )
         FormDatePicker(
             modifier = Modifier.padding(bottom = 8.dp),
-            value = form.dueDate,
+            value = form.dueDate.toDateString(),
             enabled = !isReadOnly,
-            onDateSelected = { updateForm { copy(dueDate = it.toDateString()) } },
+            onDateSelected = { updateForm { copy(dueDate = it?:0L) } },
             label = "Fecha de vencimiento",
             allowFutureDates = true
         )

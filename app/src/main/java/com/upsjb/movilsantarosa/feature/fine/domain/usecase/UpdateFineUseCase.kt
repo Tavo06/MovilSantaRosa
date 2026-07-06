@@ -28,9 +28,7 @@ class UpdateFineUseCase @Inject constructor(
 
         val fineToUpdate = fine.copy(
             createdBy = fine.createdBy.ifBlank { user.email },
-            createdAt = fine.createdAt.ifBlank {
-                System.currentTimeMillis().toString()
-            }
+            createdAt = fine.createdAt
         )
 
         return repository.updateFine(fineToUpdate)

@@ -173,9 +173,9 @@ class PaymentFormViewModel @Inject constructor(
                 form = it.form.copy(
                     fineId = "",
                     fineReason = FineReason.OTHER,
-                    fineDueDate = "",
+                    fineDueDate = 0L,
                     fineStatus = FineStatus.PENDING,
-                    fineIssuedAt = "",
+                    fineIssuedAt = 0L,
                     fineCustomReason = "",
                 )
             )

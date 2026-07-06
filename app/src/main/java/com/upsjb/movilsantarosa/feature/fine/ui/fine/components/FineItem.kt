@@ -96,7 +96,7 @@ fun FineItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                if (fine.dueDate.isNotEmpty()) {
+                if (fine.dueDate > 0) {
                     Text(
                         text = "Vence: ${fine.dueDate}",
                         style = MaterialTheme.typography.bodySmall,

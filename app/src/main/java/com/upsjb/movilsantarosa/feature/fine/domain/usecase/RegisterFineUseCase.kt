@@ -28,9 +28,7 @@ class RegisterFineUseCase @Inject constructor(
 
         val fineToSave = fine.copy(
             createdBy = user.email,
-            createdAt = fine.createdAt.ifBlank {
-                System.currentTimeMillis().toString()
-            }
+            createdAt = fine.createdAt
         )
 
         return repository.registerFine(fineToSave)

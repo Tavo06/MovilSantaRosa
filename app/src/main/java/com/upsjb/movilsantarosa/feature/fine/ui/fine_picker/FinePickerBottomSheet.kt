@@ -33,6 +33,7 @@ import com.upsjb.movilsantarosa.core.uicomponents.ErrorSection
 import com.upsjb.movilsantarosa.core.uicomponents.FormTextField
 import com.upsjb.movilsantarosa.core.uicomponents.SkeletonSection
 import com.upsjb.movilsantarosa.core.utils.toCurrencyString
+import com.upsjb.movilsantarosa.core.utils.toDateString
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
 import com.upsjb.movilsantarosa.feature.fine.domain.model.Fine
@@ -151,8 +152,6 @@ private fun FinePickerBottomSheetPreview() {
                 reason = FineReason.LATE_PAYMENT,
                 amount = 50.0,
                 description = "Pago fuera de fecha",
-                issuedAt = "05/07/2026",
-                dueDate = "15/07/2026",
                 status = FineStatus.PENDING
             ),
             Fine(
@@ -163,8 +162,6 @@ private fun FinePickerBottomSheetPreview() {
                 reason = FineReason.ABSENCE_MEETING,
                 amount = 30.0,
                 description = "Inasistencia a reunión mensual",
-                issuedAt = "01/07/2026",
-                dueDate = "10/07/2026",
                 status = FineStatus.PAID
             )
         )
@@ -265,7 +262,7 @@ fun FinePickerItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = fine.issuedAt,
+                    text = fine.issuedAt.toDateString(),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

@@ -1,6 +1,7 @@
 package com.upsjb.movilsantarosa.feature.fine.ui.fine_form
 
-import com.upsjb.movilsantarosa.core.utils.currentDateString
+import com.upsjb.movilsantarosa.core.utils.currentTimeMillis
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
 
@@ -8,7 +9,8 @@ data class FineFormUiState(
     val fineId: String = "",
     val form: FineFormState = FineFormState(),
     val actionState: FineFormActionState = FineFormActionState.Idle,
-    val mode: FineFormMode = FineFormMode.CREATE
+    val mode: FineFormMode = FineFormMode.CREATE,
+    val role: UserRole = UserRole.PARTNER,
 )
 
 data class FineFormState(
@@ -20,8 +22,8 @@ data class FineFormState(
     val customReason: String = "",
     val amount: String = "",
     val description: String = "",
-    val issuedAt: String = currentDateString(),
-    val dueDate: String = "",
+    val issuedAt: Long = currentTimeMillis(),
+    val dueDate: Long = currentTimeMillis(),
     val status: FineStatus = FineStatus.PENDING,
 ){
     val isMemberFilled: Boolean
