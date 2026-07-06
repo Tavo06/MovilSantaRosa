@@ -10,11 +10,8 @@ data class PostModel(
     val description: String = "",
     val priority: Priority = Priority.NORMAL,
     val createdBy: String = "",
-    val createdByName: String = "",
-    val createdAt: Long = 0L,
-    val expiredAt: Long = 0L,
-    val imageUrl: String = "",
-    val attachmentUrl: String = "",
+    val createdAt: String = "",
+    val expiredAt: String = "",
     val latitude: Double? = null,
     val longitude: Double? = null,
     val address: String = ""

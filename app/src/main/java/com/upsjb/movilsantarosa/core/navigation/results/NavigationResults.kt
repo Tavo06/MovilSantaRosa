@@ -9,4 +9,4 @@ data object FineSavedResult
 data object PaymentSavedResult
 
 @Serializable
-data object AnnouncementSavedResult
+data object PostSavedResult

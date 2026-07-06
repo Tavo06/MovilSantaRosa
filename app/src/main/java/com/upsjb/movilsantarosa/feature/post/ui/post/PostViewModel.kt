@@ -23,8 +23,6 @@ class PostViewModel @Inject constructor(
     }
 
     fun loadPosts() {
-        if (_uiState.value is PostUiState.Success) return
-
         viewModelScope.launch {
             _uiState.value = PostUiState.Loading
 

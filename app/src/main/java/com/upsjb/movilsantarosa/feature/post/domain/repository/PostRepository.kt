@@ -6,7 +6,11 @@ interface PostRepository {
 
     suspend fun getAllPosts(): Result<List<Post>>
 
-    suspend fun createPost(
+    suspend fun getPostById(
+        id: String
+    ): Result<Post>
+
+    suspend fun registerPost(
         post: Post
     ): Result<Unit>
 
@@ -14,4 +18,3 @@ interface PostRepository {
         post: Post
     ): Result<Unit>
 }
-
