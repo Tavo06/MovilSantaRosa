@@ -40,7 +40,6 @@ class FineFormViewModel @Inject constructor(
 
     fun loadFine(id: String) {
         viewModelScope.launch {
-
             _uiState.update {
                 it.copy(
                     mode = FineFormMode.READ_ONLY,
@@ -61,7 +60,9 @@ class FineFormViewModel @Inject constructor(
                 .onFailure {
                     _uiState.update {
                         it.copy(
-                            actionState = FineFormActionState.Error("No se pudo cargar la multa")
+                            actionState = FineFormActionState.Error(
+                                "No se pudo cargar la multa."
+                            )
                         )
                     }
                 }
@@ -70,15 +71,12 @@ class FineFormViewModel @Inject constructor(
 
     fun saveFine() {
         viewModelScope.launch {
-
             val state = _uiState.value
             val form = state.form
 
             validateForm(form)?.let { message ->
                 _uiState.update {
-                    it.copy(
-                        actionState = FineFormActionState.Error(message)
-                    )
+                    it.copy(actionState = FineFormActionState.Error(message))
                 }
                 return@launch
             }
@@ -90,14 +88,9 @@ class FineFormViewModel @Inject constructor(
             }
 
             val result = when (state.mode) {
-
                 FineFormMode.CREATE -> registerFineUseCase(fine)
-
                 FineFormMode.EDIT -> updateFineUseCase(fine)
-
-                FineFormMode.READ_ONLY -> {
-                    return@launch
-                }
+                FineFormMode.READ_ONLY -> return@launch
             }
 
             result
@@ -110,7 +103,7 @@ class FineFormViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             actionState = FineFormActionState.Error(
-                                error.message ?: "Error desconocido"
+                                error.message ?: "No se pudo guardar la multa."
                             )
                         )
                     }
@@ -130,7 +123,7 @@ class FineFormViewModel @Inject constructor(
                 form = it.form.copy(
                     memberName = member.fullName,
                     memberEmail = member.email,
-                    memberDniNumber = member.dniNumber,
+                    memberDniNumber = member.dniNumber
                 )
             )
         }
@@ -142,32 +135,34 @@ class FineFormViewModel @Inject constructor(
                 form = it.form.copy(
                     memberName = "",
                     memberEmail = "",
-                    memberDniNumber = "",
+                    memberDniNumber = ""
                 )
             )
         }
     }
 
-    private fun validateForm(
-        form: FineFormState,
-    ): String? {
-
+    private fun validateForm(form: FineFormState): String? {
         return when {
-
             !form.isMemberFilled ->
-                "Seleccione un socio."
+                "Seleccione un socio antes de registrar la multa."
 
             form.reason == FineReason.OTHER && form.customReason.isBlank() ->
-                "Ingrese un motivo personalizado."
+                "Ingrese el motivo personalizado de la multa."
 
             form.amount.isBlank() ->
-                "Ingrese un monto."
+                "Ingrese el monto de la multa."
 
             form.amount.toDoubleOrNull() == null ->
-                "El monto no es válido."
+                "El monto debe ser un número válido."
 
             form.amount.toDouble() <= 0 ->
                 "El monto debe ser mayor a 0."
+
+            form.issuedAt.isBlank() ->
+                "Seleccione la fecha de emisión."
+
+            form.dueDate.isBlank() ->
+                "Seleccione la fecha de vencimiento."
 
             else -> null
         }

@@ -42,7 +42,6 @@ class PaymentFormViewModel @Inject constructor(
 
     fun loadPayment(id: String) {
         viewModelScope.launch {
-
             _uiState.update {
                 it.copy(
                     mode = PaymentFormMode.READ_ONLY,
@@ -65,7 +64,7 @@ class PaymentFormViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             actionState = PaymentFormActionState.Error(
-                                "No se pudo cargar el pago"
+                                "No se pudo cargar el pago."
                             )
                         )
                     }
@@ -75,15 +74,12 @@ class PaymentFormViewModel @Inject constructor(
 
     fun savePayment() {
         viewModelScope.launch {
-
             val state = _uiState.value
             val form = state.form
 
             validateForm(form)?.let { message ->
                 _uiState.update {
-                    it.copy(
-                        actionState = PaymentFormActionState.Error(message)
-                    )
+                    it.copy(actionState = PaymentFormActionState.Error(message))
                 }
                 return@launch
             }
@@ -95,11 +91,8 @@ class PaymentFormViewModel @Inject constructor(
             }
 
             val result = when (state.mode) {
-
                 PaymentFormMode.CREATE -> registerPaymentUseCase(payment)
-
                 PaymentFormMode.EDIT -> updatePaymentUseCase(payment)
-
                 PaymentFormMode.READ_ONLY -> return@launch
             }
 
@@ -113,7 +106,7 @@ class PaymentFormViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             actionState = PaymentFormActionState.Error(
-                                error.message ?: "Error desconocido"
+                                error.message ?: "No se pudo guardar el pago."
                             )
                         )
                     }
@@ -149,7 +142,7 @@ class PaymentFormViewModel @Inject constructor(
                     fineDueDate = fine.dueDate,
                     fineStatus = fine.status,
                     fineIssuedAt = fine.issuedAt,
-                    fineCustomReason = fine.customReason,
+                    fineCustomReason = fine.customReason
                 )
             )
         }
@@ -177,6 +170,7 @@ class PaymentFormViewModel @Inject constructor(
                     fineStatus = FineStatus.PENDING,
                     fineIssuedAt = "",
                     fineCustomReason = "",
+                    fineAmount = 0.0
                 )
             )
         }
@@ -184,15 +178,26 @@ class PaymentFormViewModel @Inject constructor(
 
     private fun validateForm(form: PaymentFormState): String? {
         return when {
-
             !form.isMemberFilled ->
-                "Seleccione un socio."
+                "Seleccione un socio antes de registrar el pago."
 
             !form.isFineFilled ->
-                "Seleccione un multa."
+                "Seleccione una multa antes de registrar el pago."
+
+            form.fineId.isBlank() ->
+                "Seleccione una multa válida."
 
             form.fineAmount <= 0 ->
-                "El monto debe ser mayor a 0."
+                "El monto de la multa debe ser mayor a 0."
+
+            form.fineIssuedAt.isBlank() ->
+                "La multa seleccionada no tiene fecha de emisión."
+
+            form.fineDueDate.isBlank() ->
+                "La multa seleccionada no tiene fecha de vencimiento."
+
+            form.fineStatus == FineStatus.PAID ->
+                "Esta multa ya se encuentra pagada."
 
             else -> null
         }

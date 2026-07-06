@@ -30,7 +30,8 @@ fun FormDatePicker(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     isError: Boolean = false,
-    allowFutureDates: Boolean = false
+    allowFutureDates: Boolean = false,
+    onManualDateChange: ((String) -> Unit)? = null
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
 
@@ -46,7 +47,6 @@ fun FormDatePicker(
     val datePickerState = rememberDatePickerState(
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-
                 return if (allowFutureDates) {
                     utcTimeMillis >= today
                 } else {
@@ -83,14 +83,20 @@ fun FormDatePicker(
 
     OutlinedTextField(
         value = value,
-        onValueChange = {},
-        readOnly = true,
+        onValueChange = { newValue ->
+            onManualDateChange?.invoke(formatDateInput(newValue))
+        },
+        readOnly = onManualDateChange == null,
         enabled = enabled,
         label = { Text(label) },
+        placeholder = { Text("dd/MM/yyyy") },
         isError = isError,
         modifier = modifier.fillMaxWidth(),
         trailingIcon = {
-            IconButton(onClick = { showDatePicker = true }) {
+            IconButton(
+                onClick = { showDatePicker = true },
+                enabled = enabled
+            ) {
                 Icon(
                     imageVector = Icons.Default.DateRange,
                     contentDescription = "Seleccionar fecha"
@@ -98,4 +104,17 @@ fun FormDatePicker(
             }
         }
     )
+}
+
+private fun formatDateInput(input: String): String {
+    val digits = input.filter { it.isDigit() }.take(8)
+
+    return buildString {
+        digits.forEachIndexed { index, char ->
+            append(char)
+            if (index == 1 || index == 3) {
+                append("/")
+            }
+        }
+    }
 }

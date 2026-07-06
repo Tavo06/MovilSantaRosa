@@ -36,7 +36,10 @@ class RegisterViewModel @Inject constructor(
             state.copy(
                 form = form.copy(
                     firstName = form.firstName.onlyLetters(),
-                    lastName = form.lastName.onlyLetters()
+                    lastName = form.lastName.onlyLetters(),
+                    phone = form.phone.onlyNumbers().take(9),
+                    dniNumber = form.dniNumber.onlyNumbers().take(8),
+                    plateNumber = form.plateNumber.uppercase().take(6)
                 )
             )
         }
@@ -55,7 +58,6 @@ class RegisterViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-
             _uiState.update {
                 it.copy(uiState = RegisterActionUiState.Loading)
             }
@@ -78,16 +80,14 @@ class RegisterViewModel @Inject constructor(
             registerUseCase(request)
                 .onSuccess {
                     _uiState.update {
-                        it.copy(
-                            uiState = RegisterActionUiState.Success
-                        )
+                        it.copy(uiState = RegisterActionUiState.Success)
                     }
                 }
-                .onFailure { error ->
+                .onFailure {
                     _uiState.update {
                         it.copy(
                             uiState = RegisterActionUiState.Error(
-                                error.message.orEmpty()
+                                "No se pudo registrar el usuario. Verifique los datos ingresados."
                             )
                         )
                     }
@@ -107,6 +107,16 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
+    private fun String.onlyNumbers(): String {
+        return filter {
+            it.isDigit()
+        }
+    }
+
+    private fun isValidPlate(plate: String): Boolean {
+        return Regex("^[A-Z]{3}[0-9]{3}$").matches(plate)
+    }
+
     private fun validateForm(form: RegisterFormState): String? {
 
         val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -120,17 +130,16 @@ class RegisterViewModel @Inject constructor(
                 "Ingrese sus apellidos."
 
             form.dniNumber.length != 8 ->
-                "El DNI debe tener 8 dígitos."
+                "El DNI debe tener exactamente 8 dígitos."
 
             form.birthDate.isBlank() ->
                 "Seleccione su fecha de nacimiento."
 
             else -> {
-
                 val birthDate = try {
                     LocalDate.parse(form.birthDate, formatter)
                 } catch (_: Exception) {
-                    return "La fecha de nacimiento no es válida."
+                    return "La fecha de nacimiento no es válida. Use el formato dd/MM/yyyy."
                 }
 
                 if (Period.between(birthDate, LocalDate.now()).years < 18) {
@@ -139,10 +148,12 @@ class RegisterViewModel @Inject constructor(
                     "Ingrese su correo electrónico."
                 } else if (!Patterns.EMAIL_ADDRESS.matcher(form.email).matches()) {
                     "El correo electrónico no es válido."
-                } else if (form.phone.length < 9) {
-                    "Ingrese un número de teléfono válido."
-                } else if (form.plateNumber.length < 6) {
-                    "Ingrese una placa válida."
+                } else if (form.phone.length != 9) {
+                    "El número celular debe tener exactamente 9 dígitos."
+                } else if (form.plateNumber.isBlank()) {
+                    "Ingrese la placa del vehículo."
+                } else if (!isValidPlate(form.plateNumber)) {
+                    "La placa debe tener 3 letras y 3 números. Ejemplo: ABC123."
                 } else if (form.vehicleColor.isBlank()) {
                     "Ingrese el color del vehículo."
                 } else if (form.licenceNumber.isBlank()) {
