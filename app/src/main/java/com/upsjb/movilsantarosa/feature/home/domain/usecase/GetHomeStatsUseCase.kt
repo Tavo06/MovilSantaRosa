@@ -4,6 +4,7 @@ import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
 import com.upsjb.movilsantarosa.feature.fine.domain.usecase.GetFinesUseCase
 import com.upsjb.movilsantarosa.feature.home.domain.model.HomeStats
 import com.upsjb.movilsantarosa.feature.members.domain.usecase.GetAllMembersUseCase
+import com.upsjb.movilsantarosa.feature.post.data.model.PostType
 import com.upsjb.movilsantarosa.feature.post.domain.usecase.GetAllPostsUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -20,8 +21,8 @@ class GetHomeStatsUseCase @Inject constructor(
         return combine(
             getMembersUseCase(),
             getFinesUseCase(),
-            //getPostsUseCase()
-        ) { members, fines ->
+            getPostsUseCase()
+        ) { members, fines, posts ->
 
             val totalMembers = members.size
 
@@ -33,15 +34,15 @@ class GetHomeStatsUseCase @Inject constructor(
 
             val totalPayments = totalMembers - totalFines
 
-//            val totalAnnouncements = posts.count {
-//                it.type == PostType.ANNOUNCEMENT
-//            }
+            val totalPost = posts.count {
+                it.type == PostType.ANNOUNCEMENT
+            }
 
             HomeStats(
                 totalMembers = totalMembers,
                 totalFines = totalFines,
                 totalPayments = totalPayments,
-                totalPost = 0
+                totalPost = totalPost
             )
         }
     }
