@@ -14,12 +14,12 @@ data class PaymentModel(
 
     val paymentMethod: PaymentMethod = PaymentMethod.CASH,
 
-    val paidAt: String = "",
+    val paidAt: Long = 0L,
 
     val observation: String = "",
 
     val createdBy: String = "",
-    val createdAt: String = "",
+    val createdAt: Long = 0L,
     val memberDniNumber: String= ""
 )
 

@@ -103,7 +103,6 @@ private fun PaymentFormScreenPreview() {
             fineAmount = 50.0,
             fineReason = FineReason.OTHER,
             paymentMethod = PaymentMethod.YAPE,
-            paidAt = currentDateString(),
             observation = "Pago realizado en oficina"
         ),
         mode = PaymentFormMode.CREATE,

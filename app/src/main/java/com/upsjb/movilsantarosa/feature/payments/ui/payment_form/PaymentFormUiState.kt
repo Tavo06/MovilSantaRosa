@@ -1,6 +1,7 @@
 package com.upsjb.movilsantarosa.feature.payments.ui.payment_form
 
-import com.upsjb.movilsantarosa.core.utils.currentDateString
+import com.upsjb.movilsantarosa.core.utils.currentTimeMillis
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
 import com.upsjb.movilsantarosa.feature.payments.data.model.PaymentMethod
@@ -13,7 +14,7 @@ data class PaymentFormState(
     val memberName: String = "",
     val memberDniNumber: String = "",
 
-    val fineAmount:  Double = 0.0,
+    val fineAmount: Double = 0.0,
     val fineReason: FineReason = FineReason.OTHER,
     val fineCustomReason: String = "",
     val fineIssuedAt: String = "",
@@ -21,9 +22,9 @@ data class PaymentFormState(
     val fineStatus: FineStatus = FineStatus.PENDING,
 
     val paymentMethod: PaymentMethod = PaymentMethod.CASH,
-    val paidAt: String = currentDateString(),
+    val paidAt: Long = currentTimeMillis(),
     val observation: String = ""
-){
+) {
     val isMemberFilled: Boolean
         get() = memberEmail.isNotBlank() &&
                 memberName.isNotBlank() &&
@@ -41,7 +42,8 @@ data class PaymentFormUiState(
 
     val actionState: PaymentFormActionState = PaymentFormActionState.Idle,
 
-    val mode: PaymentFormMode = PaymentFormMode.CREATE
+    val mode: PaymentFormMode = PaymentFormMode.CREATE,
+    val role: UserRole = UserRole.PARTNER,
 )
 
 sealed interface PaymentFormActionState {

@@ -1,14 +1,16 @@
 package com.upsjb.movilsantarosa.feature.home.domain.usecase
 
+import com.upsjb.movilsantarosa.core.utils.currentTimeMillis
+import com.upsjb.movilsantarosa.core.utils.toDateString
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
 import com.upsjb.movilsantarosa.feature.fine.domain.usecase.GetFinesUseCase
 import com.upsjb.movilsantarosa.feature.home.domain.model.HomeStats
 import com.upsjb.movilsantarosa.feature.members.domain.usecase.GetAllMembersUseCase
-import com.upsjb.movilsantarosa.feature.post.data.model.PostType
 import com.upsjb.movilsantarosa.feature.post.domain.usecase.GetAllPostsUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
+import kotlin.collections.count
 
 class GetHomeStatsUseCase @Inject constructor(
     private val getMembersUseCase: GetAllMembersUseCase,
@@ -34,8 +36,8 @@ class GetHomeStatsUseCase @Inject constructor(
 
             val totalPayments = totalMembers - totalFines
 
-            val totalPost = posts.count {
-                it.type == PostType.ANNOUNCEMENT
+            val totalPost = posts.count { post ->
+                post.expiredAt < currentTimeMillis()
             }
 
             HomeStats(

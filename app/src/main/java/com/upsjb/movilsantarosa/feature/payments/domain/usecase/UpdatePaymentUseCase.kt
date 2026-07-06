@@ -2,8 +2,6 @@ package com.upsjb.movilsantarosa.feature.payments.domain.usecase
 
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.CurrentUserUseCase
-import com.upsjb.movilsantarosa.feature.fine.domain.model.Fine
-import com.upsjb.movilsantarosa.feature.fine.domain.repository.FineRepository
 import com.upsjb.movilsantarosa.feature.payments.domain.model.Payment
 import com.upsjb.movilsantarosa.feature.payments.domain.repository.PaymentRepository
 import javax.inject.Inject
@@ -30,9 +28,7 @@ class UpdatePaymentUseCase @Inject constructor(
 
         val paymentToUpdate = payment.copy(
             createdBy = payment.createdBy.ifBlank { user.email },
-            createdAt = payment.createdAt.ifBlank {
-                System.currentTimeMillis().toString()
-            }
+            createdAt = payment.createdAt
         )
 
         return repository.updatePayment(paymentToUpdate)

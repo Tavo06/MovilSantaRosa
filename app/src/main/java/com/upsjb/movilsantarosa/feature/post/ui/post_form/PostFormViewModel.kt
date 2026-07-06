@@ -2,6 +2,7 @@ package com.upsjb.movilsantarosa.feature.post.ui.post_form
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.CurrentUserUseCase
 import com.upsjb.movilsantarosa.feature.post.domain.model.toDomain
 import com.upsjb.movilsantarosa.feature.post.domain.model.toForm
@@ -51,11 +52,17 @@ class PostFormViewModel @Inject constructor(
             getPostByIdUseCase(id)
                 .onSuccess { post ->
 
+                    val currentUserResult = currentUserUseCase()
+                    val currentRoleName = currentUserResult
+                        .getOrNull()
+                        ?.role ?: UserRole.PARTNER
+
                     _uiState.update {
                         it.copy(
                             form = post.toForm(),
                             postId = post.id,
-                            actionState = PostFormActionState.Idle
+                            actionState = PostFormActionState.Idle,
+                            role = currentRoleName
                         )
                     }
                 }

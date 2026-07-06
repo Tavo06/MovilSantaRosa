@@ -32,6 +32,7 @@ import com.upsjb.movilsantarosa.core.uicomponents.FormDropdown
 import com.upsjb.movilsantarosa.core.uicomponents.FormTextField
 import com.upsjb.movilsantarosa.core.utils.toCurrencyString
 import com.upsjb.movilsantarosa.core.utils.toDateString
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
 import com.upsjb.movilsantarosa.feature.fine.domain.model.Fine
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
@@ -69,7 +70,7 @@ fun PaymentFormContent(
             title = state.mode.displayName,
             onBackClick = onBackClick,
             actions = {
-                if (!isCreateMode) {
+                if (!isCreateMode && state.role == UserRole.ADMIN) {
                     IconButton(
                         onClick = onEditClick,
                         modifier = Modifier.background(
@@ -190,9 +191,9 @@ fun PaymentFormContent(
 
         FormDatePicker(
             modifier = Modifier.padding(bottom = 8.dp),
-            value = form.paidAt,
+            value = form.paidAt.toDateString(),
             enabled = !isReadOnly,
-            onDateSelected = { updateForm { copy(paidAt = it.toDateString()) } },
+            onDateSelected = { updateForm { copy(paidAt = it?:0L) } },
             label = "Fecha de pago",
             allowFutureDates = false
         )

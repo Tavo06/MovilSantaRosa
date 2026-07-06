@@ -14,8 +14,8 @@ data class Post(
     val description: String = "",
     val priority: Priority = Priority.NORMAL,
     val createdBy: String = "",
-    val createdAt: String = currentTimeMillis().toDateString(),
-    val expiredAt: String = currentTimeMillis().toDateString(),
+    val createdAt: Long = currentTimeMillis(),
+    val expiredAt: Long = currentTimeMillis(),
     val latitude: Double? = null,
     val longitude: Double? = null,
     val address: String = ""

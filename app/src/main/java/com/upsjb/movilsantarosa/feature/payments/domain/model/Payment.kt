@@ -17,12 +17,12 @@ data class Payment(
 
     val paymentMethod: PaymentMethod = PaymentMethod.CASH,
 
-    val paidAt: String = currentTimeMillis().toDateString(),
+    val paidAt: Long = currentTimeMillis(),
 
     val observation: String = "",
 
     val createdBy: String = "",
-    val createdAt: String = currentTimeMillis().toDateString(),
+    val createdAt: Long = currentTimeMillis(),
     val memberDniNumber: String = ""
 )
 
