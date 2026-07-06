@@ -1,4 +1,4 @@
-package com.upsjb.movilsantarosa.feature.announcements.components
+package com.upsjb.movilsantarosa.feature.post.ui.post.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,11 +12,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun AnnouncementsDescription(
+fun PostsDescription(
     modifier: Modifier = Modifier
 ) {
     Text(
-        text = "Los anuncios permiten comunicar avisos importantes a todos los socios.",
+        text = "Aquí se registran los anuncios para los socios.",
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -24,10 +24,4 @@ fun AnnouncementsDescription(
         fontSize = 14.sp,
         fontWeight = FontWeight.Medium
     )
-}
-
-@Preview(showBackground = true, name = "Announcements Description")
-@Composable
-fun PreviewAnnouncementsDescription() {
-    AnnouncementsDescription()
 }

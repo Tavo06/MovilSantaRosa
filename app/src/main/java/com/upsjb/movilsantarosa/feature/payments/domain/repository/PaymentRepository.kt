@@ -1,6 +1,5 @@
 package com.upsjb.movilsantarosa.feature.payments.domain.repository
 
-import com.upsjb.movilsantarosa.feature.fine.domain.model.Fine
 import com.upsjb.movilsantarosa.feature.payments.domain.model.Payment
 
 interface PaymentRepository {
