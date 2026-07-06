@@ -162,6 +162,7 @@ fun MainNavHost(
             ResultEffect<PaymentSavedResult> {
                 viewModel.loadPayments()
             }
+
             PaymentsScreen(
                 onPaymentClick = { payment ->
                     navigator.navigate(
