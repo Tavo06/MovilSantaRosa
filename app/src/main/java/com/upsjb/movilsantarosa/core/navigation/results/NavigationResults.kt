@@ -10,3 +10,6 @@ data object PaymentSavedResult
 
 @Serializable
 data object PostSavedResult
+
+@Serializable
+data object PickerMapSavedResult
