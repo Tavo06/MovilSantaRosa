@@ -70,7 +70,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun register(registerRequest: RegisterRequest): Result<User> {
+    override suspend fun register(registerRequest: RegisterRequest): Result<Unit> {
         return try {
             auth.createUserWithEmailAndPassword(
                 registerRequest.email,
@@ -80,20 +80,13 @@ class AuthRepositoryImpl @Inject constructor(
             val currentUser = auth.currentUser
 
             if (currentUser != null) {
-
-                val user = User(
-                    firstname = registerRequest.firstname,
-                    uid = currentUser.uid,
-                    email = currentUser.email.orEmpty()
-                )
-
                 database.reference
                     .child(USER_DATABASE)
                     .child(currentUser.uid)
                     .setValue(registerRequest.copy(password = ""))
                     .await()
 
-                Result.success(user)
+                Result.success(Unit)
 
             } else {
                 Result.failure(Exception("No se pudo obtener el usuario registrado."))
@@ -128,6 +121,9 @@ class AuthRepositoryImpl @Inject constructor(
                 uid = firebaseUser.uid,
                 email = firebaseUser.email.orEmpty(),
                 firstname = snapshot.child("firstname")
+                    .getValue(String::class.java)
+                    .orEmpty(),
+                lastname = snapshot.child("lastname")
                     .getValue(String::class.java)
                     .orEmpty(),
                 rol = snapshot.child("rol")

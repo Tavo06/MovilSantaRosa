@@ -92,7 +92,7 @@ class PostFormViewModel @Inject constructor(
 
             val currentUserName = currentUserResult
                 .getOrNull()
-                ?.firstname
+                ?.fullName
                 .orEmpty()
 
             val post = form

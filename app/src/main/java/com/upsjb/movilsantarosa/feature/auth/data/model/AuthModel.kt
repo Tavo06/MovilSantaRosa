@@ -10,6 +10,7 @@ data class AuthModel(
 fun AuthModel.toUser(): User {
     return User(
         firstname = "",
+        lastname = "",
         email = email,
         uid = uid
     )
