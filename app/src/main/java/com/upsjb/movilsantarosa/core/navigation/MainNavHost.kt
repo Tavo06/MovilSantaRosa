@@ -18,30 +18,39 @@ import androidx.navigation3.ui.NavDisplay
 import com.upsjb.movilsantarosa.core.navigation.component.AnnoucementsDestination
 import com.upsjb.movilsantarosa.core.navigation.component.BottomSheetSceneStrategy
 import com.upsjb.movilsantarosa.core.navigation.component.FineFormDestination
+import com.upsjb.movilsantarosa.core.navigation.component.FinePickerDestination
 import com.upsjb.movilsantarosa.core.navigation.component.FinesDestination
 import com.upsjb.movilsantarosa.core.navigation.component.HomeDestination
 import com.upsjb.movilsantarosa.core.navigation.component.MAIN_ROUTES
 import com.upsjb.movilsantarosa.core.navigation.component.MemberPickerDestination
 import com.upsjb.movilsantarosa.core.navigation.component.MembersDestination
 import com.upsjb.movilsantarosa.core.navigation.component.Navigator
+import com.upsjb.movilsantarosa.core.navigation.component.PaymentFormDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PaymentsDestination
 import com.upsjb.movilsantarosa.core.navigation.component.rememberNavigationState
 import com.upsjb.movilsantarosa.core.navigation.results.FineSavedResult
+import com.upsjb.movilsantarosa.core.navigation.results.PaymentSavedResult
 import com.upsjb.movilsantarosa.core.uicomponents.AppBottomBar
 import com.upsjb.movilsantarosa.core.uicomponents.AppFloatingActionButton
 import com.upsjb.movilsantarosa.core.uicomponents.AppTopBar
 import com.upsjb.movilsantarosa.feature.post.ui.post.PostsScreen
 import com.upsjb.movilsantarosa.feature.home.ui.HomeScreen
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
+import com.upsjb.movilsantarosa.feature.fine.domain.model.Fine
 import com.upsjb.movilsantarosa.feature.fine.ui.fine.FineViewModel
 import com.upsjb.movilsantarosa.feature.fine.ui.fine.FinesScreen
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormMode
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormScreen
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormViewModel
+import com.upsjb.movilsantarosa.feature.fine.ui.fine_picker.FinePickerBottomSheet
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 import com.upsjb.movilsantarosa.feature.members.ui.member_picker.MemberPickerBottomSheet
 import com.upsjb.movilsantarosa.feature.members.ui.members.MembersScreen
+import com.upsjb.movilsantarosa.feature.payments.ui.payment.PaymentViewModel
 import com.upsjb.movilsantarosa.feature.payments.ui.payment.PaymentsScreen
+import com.upsjb.movilsantarosa.feature.payments.ui.payment_form.PaymentFormMode
+import com.upsjb.movilsantarosa.feature.payments.ui.payment_form.PaymentFormScreen
+import com.upsjb.movilsantarosa.feature.payments.ui.payment_form.PaymentFormViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -132,9 +141,71 @@ fun MainNavHost(
             )
         }
 
+        entry<FinePickerDestination>(
+            metadata = BottomSheetSceneStrategy.bottomSheet()
+        ) { destination ->
+            val resultBus = LocalResultEventBus.current
+            FinePickerBottomSheet(
+                memberEmail = destination.memberEmail,
+                onFineSelected = { fine ->
+                    resultBus.sendResult(result = fine)
+                    navigator.goBack()
+                },
+                onDismiss = { navigator.goBack() },
+            )
+        }
+
         entry<PaymentsDestination> {
+            val viewModel: PaymentViewModel = hiltViewModel()
+
+            ResultEffect<PaymentSavedResult> {
+                viewModel.loadPayments()
+            }
+
             PaymentsScreen(
-                onPaymentClick = {}
+                onPaymentClick = { payment ->
+                    navigator.navigate(
+                        PaymentFormDestination(payment.id)
+                    )
+                }
+            )
+        }
+        entry<PaymentFormDestination> { destination ->
+            val viewModel: PaymentFormViewModel = hiltViewModel()
+
+            ResultEffect<Member> { member ->
+                viewModel.selectMember(member)
+            }
+
+            ResultEffect<Fine> { fine ->
+                viewModel.selectFine(fine)
+            }
+
+            val resultBus = LocalResultEventBus.current
+
+            LaunchedEffect(destination.paymentId) {
+                if (destination.paymentId == null) {
+                    viewModel.setMode(PaymentFormMode.CREATE)
+                } else {
+                    viewModel.loadPayment(destination.paymentId)
+                }
+            }
+
+            PaymentFormScreen(
+                viewModel = viewModel,
+                onBackClick = {
+                    navigator.goBack()
+                },
+                onSuccess = {
+                    resultBus.sendResult(result = PaymentSavedResult)
+                    navigator.goBack()
+                },
+                openMemberPicker = {
+                    navigator.navigate(MemberPickerDestination)
+                },
+                openFinePicker = { memberEmail ->
+                    navigator.navigate(FinePickerDestination(memberEmail))
+                }
             )
         }
 
@@ -170,6 +241,7 @@ fun MainNavHost(
                         }
 
                         PaymentsDestination -> {
+                            navigator.navigate(PaymentFormDestination())
                         }
 
                         AnnoucementsDestination -> {

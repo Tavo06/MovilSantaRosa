@@ -12,22 +12,33 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data object LoginDestination : NavKey
+
 @Serializable
 data object RegisterDestination : NavKey
 
 @Serializable
 data object HomeDestination : NavKey
+
 @Serializable
 data object MembersDestination : NavKey
+
 @Serializable
 data object MemberPickerDestination : NavKey
+
 @Serializable
 data object FinesDestination : NavKey
+
 @Serializable
 data class FineFormDestination(val fineId: String? = null) : NavKey
 
 @Serializable
+data class FinePickerDestination(val memberEmail: String) : NavKey
+
+@Serializable
 data object PaymentsDestination : NavKey
+
+@Serializable
+data class PaymentFormDestination(val paymentId: String? = null) : NavKey
 
 @Serializable
 data object AnnoucementsDestination : NavKey
@@ -54,6 +65,7 @@ val MAIN_ROUTES = setOf(
 )
 
 val TOP_LEVEL_ROUTES = AUTH_ROUTES + MAIN_ROUTES
+
 class NavBarItem(
     val icon: ImageVector,
     val description: String
