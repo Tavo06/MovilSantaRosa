@@ -1,6 +1,8 @@
 package com.upsjb.movilsantarosa.feature.payments.data.repository
 
 import com.google.firebase.database.FirebaseDatabase
+import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
+import com.upsjb.movilsantarosa.feature.fine.data.repository.FINE_DATABASE
 import com.upsjb.movilsantarosa.feature.fine.domain.model.toDomain
 import com.upsjb.movilsantarosa.feature.payments.data.model.PaymentModel
 import com.upsjb.movilsantarosa.feature.payments.domain.model.Payment
@@ -112,6 +114,16 @@ class PaymentRepositoryImpl @Inject constructor(
                     payment.copy(id = id).toModel()
                 )
                 .await()
+
+            payment.fineId.takeIf { it.isNotBlank() }?.let { fineId ->
+
+                database.reference
+                    .child(FINE_DATABASE)
+                    .child(fineId)
+                    .child("status")
+                    .setValue(FineStatus.PAID)
+                    .await()
+            }
 
             Result.success(Unit)
 

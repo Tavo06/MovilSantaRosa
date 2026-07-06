@@ -1,5 +1,6 @@
 package com.upsjb.movilsantarosa.core.navigation
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -27,11 +28,13 @@ import com.upsjb.movilsantarosa.core.navigation.component.MembersDestination
 import com.upsjb.movilsantarosa.core.navigation.component.Navigator
 import com.upsjb.movilsantarosa.core.navigation.component.PaymentFormDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PaymentsDestination
+import com.upsjb.movilsantarosa.core.navigation.component.PickerMapDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PostDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PostFormDestination
 import com.upsjb.movilsantarosa.core.navigation.component.rememberNavigationState
 import com.upsjb.movilsantarosa.core.navigation.results.FineSavedResult
 import com.upsjb.movilsantarosa.core.navigation.results.PaymentSavedResult
+import com.upsjb.movilsantarosa.core.navigation.results.PickerMapSavedResult
 import com.upsjb.movilsantarosa.core.navigation.results.PostSavedResult
 import com.upsjb.movilsantarosa.core.uicomponents.AppBottomBar
 import com.upsjb.movilsantarosa.core.uicomponents.AppFloatingActionButton
@@ -54,6 +57,8 @@ import com.upsjb.movilsantarosa.feature.payments.ui.payment.PaymentsScreen
 import com.upsjb.movilsantarosa.feature.payments.ui.payment_form.PaymentFormMode
 import com.upsjb.movilsantarosa.feature.payments.ui.payment_form.PaymentFormScreen
 import com.upsjb.movilsantarosa.feature.payments.ui.payment_form.PaymentFormViewModel
+import com.upsjb.movilsantarosa.feature.post.domain.model.Location
+import com.upsjb.movilsantarosa.feature.post.ui.location_picker.LocationPickerScreen
 import com.upsjb.movilsantarosa.feature.post.ui.post.PostViewModel
 import com.upsjb.movilsantarosa.feature.post.ui.post_form.PostFormMode
 import com.upsjb.movilsantarosa.feature.post.ui.post_form.PostFormScreen
@@ -237,15 +242,15 @@ fun MainNavHost(
             val viewModel: PostFormViewModel = hiltViewModel()
             val resultBus = LocalResultEventBus.current
 
-//            ResultEffect<Location> { location ->
-//                viewModel.updateForm {
-//                    copy(
-//                        latitude = location.latitude.toString(),
-//                        longitude = location.longitude.toString(),
-//                        address = location.address
-//                    )
-//                }
-//            }
+            ResultEffect<Location> { location ->
+                viewModel.updateForm {
+                    copy(
+                        latitude = location.latitude.toString(),
+                        longitude = location.longitude.toString(),
+                        address = location.address
+                    )
+                }
+            }
 
             LaunchedEffect(destination.postId) {
                 if (destination.postId == null) {
@@ -265,8 +270,18 @@ fun MainNavHost(
                     navigator.goBack()
                 },
                 openLocationPicker = {
-                    //navigator.navigate(LocationPickerDestination)
+                    navigator.navigate(PickerMapDestination)
                 }
+            )
+        }
+        entry<PickerMapDestination> {
+            val resultBus = LocalResultEventBus.current
+
+            LocationPickerScreen(
+                onLocationSelected = {
+                    resultBus.sendResult(result = it)
+                },
+                onBack = { navigator.goBack() }
             )
         }
     }

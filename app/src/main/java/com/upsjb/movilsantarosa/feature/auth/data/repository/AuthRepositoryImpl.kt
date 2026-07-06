@@ -126,9 +126,9 @@ class AuthRepositoryImpl @Inject constructor(
                 lastname = snapshot.child("lastname")
                     .getValue(String::class.java)
                     .orEmpty(),
-                rol = snapshot.child("rol")
+                role = snapshot.child("role")
                     .getValue(UserRole::class.java)
-                    ?: UserRole.ADMIN
+                    ?: UserRole.PARTNER
             )
 
             Result.success(user)

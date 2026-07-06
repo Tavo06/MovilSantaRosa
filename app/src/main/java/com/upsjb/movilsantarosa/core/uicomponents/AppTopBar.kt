@@ -27,19 +27,35 @@ fun AppTopBar(
         }
 
         MembersDestination -> {
-            TopBarHeader("Socios")
+            TopBarHeader(
+                title = "Socios",
+                onLogout = onLogout,
+                modifier = modifier
+            )
         }
 
         FinesDestination -> {
-            TopBarHeader("Multas")
+            TopBarHeader(
+                title = "Multas",
+                onLogout = onLogout,
+                modifier = modifier
+            )
         }
 
         PaymentsDestination -> {
-            TopBarHeader("Pagos")
+            TopBarHeader(
+                title = "Pagos",
+                onLogout = onLogout,
+                modifier = modifier
+            )
         }
 
         PostDestination -> {
-            TopBarHeader("Anuncios")
+            TopBarHeader(
+                title = "Anuncios",
+                onLogout = onLogout,
+                modifier = modifier
+            )
         }
     }
 }

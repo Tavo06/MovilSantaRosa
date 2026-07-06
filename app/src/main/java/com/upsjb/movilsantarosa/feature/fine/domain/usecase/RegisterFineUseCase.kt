@@ -20,7 +20,7 @@ class RegisterFineUseCase @Inject constructor(
                 )
             }
 
-        if (user.rol != UserRole.ADMIN) {
+        if (user.role != UserRole.ADMIN) {
             return Result.failure(
                 Exception("No tienes permisos para registrar multas.")
             )

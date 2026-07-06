@@ -32,37 +32,75 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun TopBarHeader(
     title: String,
+    onLogout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primary)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        Text(
-            text = "'Honradez, Seguridad y Confianza'",
-            fontStyle = FontStyle.Italic,
-            color = MaterialTheme.colorScheme.onPrimary,
-            fontSize = 14.sp,
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = title,
-            color = MaterialTheme.colorScheme.onPrimary,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
+
+        IconButton(
+            onClick = {
+                showLogoutDialog = true
+            },
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+                .size(30.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primaryContainer)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.Logout,
+                contentDescription = "Cerrar sesión",
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = "'Honradez, Seguridad y Confianza'",
+                fontStyle = FontStyle.Italic,
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center
+            )
+
+            Text(
+                text = title,
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+
+    if (showLogoutDialog) {
+        MessageDialog(
+            title = "Cerrar sesión",
+            message = "¿Desea realmente cerrar la sesión?",
+            confirmButtonText = "Sí, cerrar",
+            onConfirmClick = {
+                showLogoutDialog = false
+                onLogout()
+            },
+            onDismiss = {
+                showLogoutDialog = false
+            },
+            cancelButtonText = "Cancelar"
         )
     }
-}
-
-@Preview(showBackground = true, name = "Members Header")
-@Composable
-fun TopBarHeaderPreview() {
-    TopBarHeader("Socios")
 }
 
 @Composable
@@ -146,12 +184,4 @@ fun HomeHeader(
             cancelButtonText = "Cancelar"
         )
     }
-}
-
-@Preview(showBackground = true, name = "Home Header")
-@Composable
-fun PreviewHomeHeader() {
-    HomeHeader(onLogout = {
-        // Cerrar sesión
-    })
 }

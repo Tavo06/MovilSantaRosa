@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.upsjb.movilsantarosa.core.permission.LocationPermission
 import com.upsjb.movilsantarosa.core.uicomponents.MessageDialog
 import com.upsjb.movilsantarosa.core.uicomponents.ProgressIndicatorOverlay
 import com.upsjb.movilsantarosa.core.utils.currentDateString
@@ -33,6 +34,21 @@ fun PostFormScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var showSaveDialog by remember { mutableStateOf(false) }
 
+    var requestLocationPermission by remember {
+        mutableStateOf(false)
+    }
+
+    LocationPermission(
+        enabled = requestLocationPermission,
+        onGranted = {
+            requestLocationPermission = false
+            openLocationPicker()
+        },
+        onDenied = {
+            requestLocationPermission = false
+        }
+    )
+
     PostFormActionHandler(
         action = state.actionState,
         onReset = viewModel::resetAction,
@@ -52,7 +68,9 @@ fun PostFormScreen(
             viewModel.setMode(PostFormMode.EDIT)
         },
         onBackClick = onBackClick,
-        openLocationPicker = openLocationPicker
+        openLocationPicker = {
+            requestLocationPermission = true
+        }
     )
 
     if (state.actionState is PostFormActionState.Loading) {
