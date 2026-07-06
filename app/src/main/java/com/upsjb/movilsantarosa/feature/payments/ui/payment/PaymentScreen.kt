@@ -46,25 +46,25 @@ fun PaymentsScreen(
             )
             .fillMaxSize()
     ) {
+
         when (val state = uiState) {
 
             PaymentUiState.Loading -> {
                 SkeletonSection(
-                    modifier = Modifier
-                        .fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
             is PaymentUiState.Error -> {
                 ErrorSection(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    title = state.message,
-                    onRetry = { viewModel.loadPayments() },
+                    modifier = Modifier.fillMaxSize(),
+                    description = state.message,
+                    title = "Ups, tenemos incovenientes"
                 )
             }
 
             is PaymentUiState.Success -> {
+
                 AppSearchBar(
                     query = state.query,
                     onQueryChange = viewModel::updateQuery,

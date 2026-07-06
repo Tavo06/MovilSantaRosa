@@ -1,15 +1,49 @@
 package com.upsjb.movilsantarosa.feature.home.domain.usecase
 
-import com.upsjb.movilsantarosa.feature.home.domain.HomeRepository
-import com.upsjb.movilsantarosa.feature.home.domain.HomeStats
+import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
+import com.upsjb.movilsantarosa.feature.fine.domain.usecase.GetFinesUseCase
+import com.upsjb.movilsantarosa.feature.home.domain.model.HomeStats
+import com.upsjb.movilsantarosa.feature.members.domain.usecase.GetAllMembersUseCase
+import com.upsjb.movilsantarosa.feature.post.data.model.PostType
+import com.upsjb.movilsantarosa.feature.post.domain.usecase.GetAllPostsUseCase
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 class GetHomeStatsUseCase @Inject constructor(
-    private val repository: HomeRepository
+    private val getMembersUseCase: GetAllMembersUseCase,
+    private val getFinesUseCase: GetFinesUseCase,
+    private val getPostsUseCase: GetAllPostsUseCase,
 ) {
 
-    suspend operator fun invoke(): Result<HomeStats> {
-        return repository.getHomeStats()
-    }
+    operator fun invoke(): Flow<HomeStats> {
 
+        return combine(
+            getMembersUseCase(),
+            getFinesUseCase(),
+            getPostsUseCase()
+        ) { members, fines, posts ->
+
+            val totalMembers = members.size
+
+            val totalFines = fines
+                .filter { it.status == FineStatus.PENDING }
+                .map { it.memberEmail }
+                .toSet()
+                .size
+
+            val totalPayments = totalMembers - totalFines
+
+            val totalPost = posts.count {
+                it.type == PostType.ANNOUNCEMENT
+            }
+
+            HomeStats(
+                totalMembers = totalMembers,
+                totalFines = totalFines,
+                totalPayments = totalPayments,
+                totalPost = totalPost
+            )
+        }
+    }
 }

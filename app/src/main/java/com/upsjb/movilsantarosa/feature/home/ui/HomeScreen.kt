@@ -21,6 +21,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -28,17 +29,14 @@ fun HomeScreen(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
+
         WelcomeSection(
             userUiState = uiState.userUiState,
-            onRetry = { viewModel.getUserInfo() }
+            onRetry = { viewModel.observeUser() }
         )
+
         SummaryStatsSection(
             statsUiState = uiState.statsUiState,
-            onRetry = { viewModel.loadSummaryStats() },
-            onClick = {
-                //Load modal with data
-            }
         )
     }
 }
-

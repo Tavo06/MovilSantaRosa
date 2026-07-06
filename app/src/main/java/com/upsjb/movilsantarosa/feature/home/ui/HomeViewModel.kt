@@ -22,29 +22,27 @@ class HomeViewModel @Inject constructor(
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
-        getUserInfo()
-        loadSummaryStats()
+        observeUser()
+        observeStats()
     }
 
-    fun getUserInfo() {
-
+    fun observeUser() {
         _uiState.update {
             it.copy(userUiState = UserUiState.Loading)
         }
 
         viewModelScope.launch {
-
             currentUserUseCase()
                 .onSuccess { user ->
                     _uiState.update {
                         it.copy(userUiState = UserUiState.Success(user))
                     }
                 }
-                .onFailure { failure ->
+                .onFailure { error ->
                     _uiState.update {
                         it.copy(
                             userUiState = UserUiState.Error(
-                                failure.message ?: "Usuario no logueado"
+                                error.message ?: "Usuario no logueado"
                             )
                         )
                     }
@@ -52,30 +50,24 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun loadSummaryStats() {
-        _uiState.update {
-            it.copy(statsUiState = StatsUiState.Loading)
-        }
-        viewModelScope.launch {
-            getHomeStatsUseCase().onSuccess { data ->
-                _uiState.update {
-                    it.copy(
-                        statsUiState = StatsUiState.Success(
-                            activeMembers = data.totalMembers,
-                            totalFines = data.totalFines,
-                            totalPayments = data.totalPayments,
-                            totalAnnouncements = data.totalAnnouncements
-                        )
-                    )
-                }
-            }.onFailure { error ->
-                _uiState.update {
-                    it.copy(
-                        statsUiState = StatsUiState.Error(message = error.message.orEmpty())
-                    )
-                }
-            }
+    private fun observeStats() {
 
+        viewModelScope.launch {
+
+            getHomeStatsUseCase()
+                .collect { data ->
+
+                    _uiState.update {
+                        it.copy(
+                            statsUiState = StatsUiState.Success(
+                                activeMembers = data.totalMembers,
+                                totalFines = data.totalFines,
+                                totalPayments = data.totalPayments,
+                                totalPost = data.totalPost
+                            )
+                        )
+                    }
+                }
         }
     }
 }

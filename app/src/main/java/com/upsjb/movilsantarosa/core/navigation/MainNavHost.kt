@@ -1,6 +1,5 @@
 package com.upsjb.movilsantarosa.core.navigation
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -32,34 +31,27 @@ import com.upsjb.movilsantarosa.core.navigation.component.PickerMapDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PostDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PostFormDestination
 import com.upsjb.movilsantarosa.core.navigation.component.rememberNavigationState
-import com.upsjb.movilsantarosa.core.navigation.results.FineSavedResult
-import com.upsjb.movilsantarosa.core.navigation.results.PaymentSavedResult
-import com.upsjb.movilsantarosa.core.navigation.results.PickerMapSavedResult
-import com.upsjb.movilsantarosa.core.navigation.results.PostSavedResult
 import com.upsjb.movilsantarosa.core.uicomponents.AppBottomBar
 import com.upsjb.movilsantarosa.core.uicomponents.AppFloatingActionButton
 import com.upsjb.movilsantarosa.core.uicomponents.AppTopBar
-import com.upsjb.movilsantarosa.feature.post.ui.post.PostsScreen
-import com.upsjb.movilsantarosa.feature.home.ui.HomeScreen
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.fine.domain.model.Fine
-import com.upsjb.movilsantarosa.feature.fine.ui.fine.FineViewModel
 import com.upsjb.movilsantarosa.feature.fine.ui.fine.FinesScreen
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormMode
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormScreen
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_form.FineFormViewModel
 import com.upsjb.movilsantarosa.feature.fine.ui.fine_picker.FinePickerBottomSheet
+import com.upsjb.movilsantarosa.feature.home.ui.HomeScreen
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 import com.upsjb.movilsantarosa.feature.members.ui.member_picker.MemberPickerBottomSheet
 import com.upsjb.movilsantarosa.feature.members.ui.members.MembersScreen
-import com.upsjb.movilsantarosa.feature.payments.ui.payment.PaymentViewModel
 import com.upsjb.movilsantarosa.feature.payments.ui.payment.PaymentsScreen
 import com.upsjb.movilsantarosa.feature.payments.ui.payment_form.PaymentFormMode
 import com.upsjb.movilsantarosa.feature.payments.ui.payment_form.PaymentFormScreen
 import com.upsjb.movilsantarosa.feature.payments.ui.payment_form.PaymentFormViewModel
 import com.upsjb.movilsantarosa.feature.post.domain.model.Location
 import com.upsjb.movilsantarosa.feature.post.ui.location_picker.LocationPickerScreen
-import com.upsjb.movilsantarosa.feature.post.ui.post.PostViewModel
+import com.upsjb.movilsantarosa.feature.post.ui.post.PostsScreen
 import com.upsjb.movilsantarosa.feature.post.ui.post_form.PostFormMode
 import com.upsjb.movilsantarosa.feature.post.ui.post_form.PostFormScreen
 import com.upsjb.movilsantarosa.feature.post.ui.post_form.PostFormViewModel
@@ -106,12 +98,6 @@ fun MainNavHost(
         }
 
         entry<FinesDestination> {
-            val viewModel: FineViewModel = hiltViewModel()
-
-            ResultEffect<FineSavedResult> {
-                viewModel.loadFines()
-            }
-
             FinesScreen(
                 onFineClick = { fine ->
                     navigator.navigate(
@@ -127,7 +113,6 @@ fun MainNavHost(
             ResultEffect<Member> { member ->
                 viewModel.selectMember(member)
             }
-            val resultBus = LocalResultEventBus.current
 
             LaunchedEffect(destination.fineId) {
 
@@ -144,7 +129,6 @@ fun MainNavHost(
                     navigator.goBack()
                 },
                 onSuccess = {
-                    resultBus.sendResult(result = FineSavedResult)
                     navigator.goBack()
                 },
                 openMemberPicker = {
@@ -168,12 +152,6 @@ fun MainNavHost(
         }
 
         entry<PaymentsDestination> {
-            val viewModel: PaymentViewModel = hiltViewModel()
-
-            ResultEffect<PaymentSavedResult> {
-                viewModel.loadPayments()
-            }
-
             PaymentsScreen(
                 onPaymentClick = { payment ->
                     navigator.navigate(
@@ -193,8 +171,6 @@ fun MainNavHost(
                 viewModel.selectFine(fine)
             }
 
-            val resultBus = LocalResultEventBus.current
-
             LaunchedEffect(destination.paymentId) {
                 if (destination.paymentId == null) {
                     viewModel.setMode(PaymentFormMode.CREATE)
@@ -209,7 +185,6 @@ fun MainNavHost(
                     navigator.goBack()
                 },
                 onSuccess = {
-                    resultBus.sendResult(result = PaymentSavedResult)
                     navigator.goBack()
                 },
                 openMemberPicker = {
@@ -222,14 +197,7 @@ fun MainNavHost(
         }
 
         entry<PostDestination> {
-            val viewModel: PostViewModel = hiltViewModel()
-
-            ResultEffect<PostSavedResult> {
-                viewModel.loadPosts()
-            }
-
             PostsScreen(
-                viewModel = viewModel,
                 onPostClick = { post ->
                     navigator.navigate(
                         PostFormDestination(post.id)
@@ -240,7 +208,6 @@ fun MainNavHost(
         entry<PostFormDestination> { destination ->
 
             val viewModel: PostFormViewModel = hiltViewModel()
-            val resultBus = LocalResultEventBus.current
 
             ResultEffect<Location> { location ->
                 viewModel.updateForm {
@@ -266,7 +233,6 @@ fun MainNavHost(
                     navigator.goBack()
                 },
                 onSuccess = {
-                    resultBus.sendResult(result = PostSavedResult)
                     navigator.goBack()
                 },
                 openLocationPicker = {

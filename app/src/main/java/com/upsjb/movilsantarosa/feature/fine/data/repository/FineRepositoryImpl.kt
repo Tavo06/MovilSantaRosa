@@ -1,11 +1,17 @@
 package com.upsjb.movilsantarosa.feature.fine.data.repository
 
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineModel
 import com.upsjb.movilsantarosa.feature.fine.domain.model.Fine
 import com.upsjb.movilsantarosa.feature.fine.domain.model.toDomain
 import com.upsjb.movilsantarosa.feature.fine.domain.model.toModel
 import com.upsjb.movilsantarosa.feature.fine.domain.repository.FineRepository
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -15,53 +21,60 @@ class FineRepositoryImpl @Inject constructor(
     private val database: FirebaseDatabase,
 ) : FineRepository {
 
-    override suspend fun getFinesByEmail(
-        email: String
-    ): Result<List<Fine>> {
+    override fun getFinesByEmail(email: String): Flow<List<Fine>> = callbackFlow {
 
-        return try {
+        val ref = database.reference
+            .child(FINE_DATABASE)
+            .orderByChild("memberEmail")
+            .equalTo(email)
 
-            val snapshot = database.reference
-                .child(FINE_DATABASE)
-                .orderByChild("memberEmail")
-                .equalTo(email)
-                .get()
-                .await()
+        val listener = object : ValueEventListener {
 
-            val fines = snapshot.children.mapNotNull {
-                it.getValue(FineModel::class.java)
-            }.map(FineModel::toDomain)
+            override fun onDataChange(snapshot: DataSnapshot) {
 
-            Result.success(fines)
+                val fines = snapshot.children.mapNotNull {
+                    it.getValue(FineModel::class.java)
+                }.map(FineModel::toDomain)
 
-        } catch (e: Exception) {
+                trySend(fines).isSuccess
+            }
 
-            Result.failure(
-                Exception(e.message ?: "No se pudieron obtener las multas.")
-            )
+            override fun onCancelled(error: DatabaseError) {
+                close(error.toException())
+            }
+        }
+
+        ref.addValueEventListener(listener)
+
+        awaitClose {
+            ref.removeEventListener(listener)
         }
     }
 
-    override suspend fun getAllFines(): Result<List<Fine>> {
+    override fun getAllFines(): Flow<List<Fine>> = callbackFlow {
 
-        return try {
+        val ref = database.reference.child(FINE_DATABASE)
 
-            val snapshot = database.reference
-                .child(FINE_DATABASE)
-                .get()
-                .await()
+        val listener = object : ValueEventListener {
 
-            val fines = snapshot.children.mapNotNull {
-                it.getValue(FineModel::class.java)
-            }.map(FineModel::toDomain)
+            override fun onDataChange(snapshot: DataSnapshot) {
 
-            Result.success(fines)
+                val fines = snapshot.children.mapNotNull {
+                    it.getValue(FineModel::class.java)
+                }.map(FineModel::toDomain)
 
-        } catch (e: Exception) {
+                trySend(fines).isSuccess
+            }
 
-            Result.failure(
-                Exception(e.message ?: "No se pudieron obtener las multas.")
-            )
+            override fun onCancelled(error: DatabaseError) {
+                close(error.toException())
+            }
+        }
+
+        ref.addValueEventListener(listener)
+
+        awaitClose {
+            ref.removeEventListener(listener)
         }
     }
 

@@ -26,15 +26,13 @@ import com.upsjb.movilsantarosa.feature.home.ui.StatsUiState
 @Composable
 fun SummaryStatsSection(
     statsUiState: StatsUiState,
-    onRetry: () -> Unit,
-    onClick: (TypeStat) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (statsUiState) {
         is StatsUiState.Error -> {
             ErrorSection(
-                title = statsUiState.message,
-                onRetry = onRetry
+                title = "Ups, tenemos incovenientes",
+                description = statsUiState.message,
             )
         }
 
@@ -70,7 +68,7 @@ fun SummaryStatsSection(
                     ),
                     HomeStat(
                         title = "Anuncios y Alertas",
-                        value = statsUiState.totalAnnouncements.toString(),
+                        value = statsUiState.totalPost.toString(),
                         valueColor = Color(0xFFFF9800),
                         type = TypeStat.PENDING_FINES
                     )
