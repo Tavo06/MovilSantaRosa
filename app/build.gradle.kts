@@ -77,6 +77,22 @@ dependencies {
     // Kotlin Serialization
     implementation(libs.kotlinx.serialization.json)
 
+    // Map Libre
+    implementation(libs.maplibre.compose)
+    implementation(libs.maplibre.compose.material3)
+
+    //Mapa google
+    implementation(libs.play.services.location)
+
+    //Permisos
+    implementation(libs.accompanist.permissions)
+
+    // Ktor
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
