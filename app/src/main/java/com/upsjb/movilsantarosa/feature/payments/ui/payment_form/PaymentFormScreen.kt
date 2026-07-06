@@ -61,7 +61,11 @@ fun PaymentFormScreen(
             }
         },
         onFineChange = {
-
+            if (it == null) {
+                viewModel.clearFine()
+            } else {
+                viewModel.selectFine(it)
+            }
         },
         openFinePicker = openFinePicker
     )

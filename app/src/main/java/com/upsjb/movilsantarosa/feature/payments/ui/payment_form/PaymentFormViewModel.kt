@@ -2,6 +2,8 @@ package com.upsjb.movilsantarosa.feature.payments.ui.payment_form
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
+import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
 import com.upsjb.movilsantarosa.feature.fine.domain.model.Fine
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 import com.upsjb.movilsantarosa.feature.payments.domain.model.toDomain
@@ -142,9 +144,6 @@ class PaymentFormViewModel @Inject constructor(
             it.copy(
                 form = it.form.copy(
                     fineId = fine.id,
-                    memberName = fine.memberName,
-                    memberEmail = fine.memberEmail,
-                    memberDniNumber = fine.memberDniNumber,
                     fineAmount = fine.amount,
                     fineReason = fine.reason,
                     fineDueDate = fine.dueDate,
@@ -163,6 +162,21 @@ class PaymentFormViewModel @Inject constructor(
                     memberName = "",
                     memberEmail = "",
                     memberDniNumber = ""
+                )
+            )
+        }
+    }
+
+    fun clearFine() {
+        _uiState.update {
+            it.copy(
+                form = it.form.copy(
+                    fineId = "",
+                    fineReason = FineReason.OTHER,
+                    fineDueDate = "",
+                    fineStatus = FineStatus.PENDING,
+                    fineIssuedAt = "",
+                    fineCustomReason = "",
                 )
             )
         }
