@@ -25,7 +25,6 @@ class PaymentViewModel @Inject constructor(
     }
 
     private fun observePayments() {
-
         viewModelScope.launch {
             getPaymentsUseCase()
                 .collect { payments ->

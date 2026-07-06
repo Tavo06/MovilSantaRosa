@@ -1,11 +1,17 @@
 package com.upsjb.movilsantarosa.feature.post.data.repository
 
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.upsjb.movilsantarosa.feature.post.data.model.PostModel
 import com.upsjb.movilsantarosa.feature.post.domain.model.Post
 import com.upsjb.movilsantarosa.feature.post.domain.model.toDomain
 import com.upsjb.movilsantarosa.feature.post.domain.model.toModel
 import com.upsjb.movilsantarosa.feature.post.domain.repository.PostRepository
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -14,27 +20,33 @@ const val POST_DATABASE = "post_database"
 class PostRepositoryImpl @Inject constructor(
     private val database: FirebaseDatabase
 ) : PostRepository {
-    override suspend fun getAllPosts(): Result<List<Post>> {
-        return try {
+    override fun getAllPosts(): Flow<List<Post>> =
+        callbackFlow {
 
-            val snapshot = database.reference
-                .child(POST_DATABASE)
-                .get()
-                .await()
+            val ref = database.reference.child(POST_DATABASE)
 
-            val posts = snapshot.children.mapNotNull {
-                it.getValue(PostModel::class.java)
-            }.map(PostModel::toDomain)
+            val listener = object : ValueEventListener {
 
-            Result.success(posts)
+                override fun onDataChange(snapshot: DataSnapshot) {
 
-        } catch (e: Exception) {
+                    val posts = snapshot.children.mapNotNull {
+                        it.getValue(PostModel::class.java)
+                    }.map(PostModel::toDomain)
 
-            Result.failure(
-                Exception(e.message ?: "No se pudieron obtener los posts.")
-            )
+                    trySend(posts)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    close(error.toException())
+                }
+            }
+
+            ref.addValueEventListener(listener)
+
+            awaitClose {
+                ref.removeEventListener(listener)
+            }
         }
-    }
 
     override suspend fun getPostById(id: String): Result<Post> {
         return try {

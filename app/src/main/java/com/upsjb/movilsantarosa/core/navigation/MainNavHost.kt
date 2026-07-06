@@ -121,7 +121,6 @@ fun MainNavHost(
             ResultEffect<Member> { member ->
                 viewModel.selectMember(member)
             }
-            val resultBus = LocalResultEventBus.current
 
             LaunchedEffect(destination.fineId) {
 
@@ -138,7 +137,6 @@ fun MainNavHost(
                     navigator.goBack()
                 },
                 onSuccess = {
-                    resultBus.sendResult(result = FineSavedResult)
                     navigator.goBack()
                 },
                 openMemberPicker = {
@@ -181,8 +179,6 @@ fun MainNavHost(
                 viewModel.selectFine(fine)
             }
 
-            val resultBus = LocalResultEventBus.current
-
             LaunchedEffect(destination.paymentId) {
                 if (destination.paymentId == null) {
                     viewModel.setMode(PaymentFormMode.CREATE)
@@ -197,7 +193,6 @@ fun MainNavHost(
                     navigator.goBack()
                 },
                 onSuccess = {
-                    resultBus.sendResult(result = PaymentSavedResult)
                     navigator.goBack()
                 },
                 openMemberPicker = {
@@ -210,14 +205,7 @@ fun MainNavHost(
         }
 
         entry<PostDestination> {
-            val viewModel: PostViewModel = hiltViewModel()
-
-            ResultEffect<PostSavedResult> {
-                viewModel.loadPosts()
-            }
-
             PostsScreen(
-                viewModel = viewModel,
                 onPostClick = { post ->
                     navigator.navigate(
                         PostFormDestination(post.id)
@@ -228,7 +216,6 @@ fun MainNavHost(
         entry<PostFormDestination> { destination ->
 
             val viewModel: PostFormViewModel = hiltViewModel()
-            val resultBus = LocalResultEventBus.current
 
             ResultEffect<Location> { location ->
                 viewModel.updateForm {
@@ -254,7 +241,6 @@ fun MainNavHost(
                     navigator.goBack()
                 },
                 onSuccess = {
-                    resultBus.sendResult(result = PostSavedResult)
                     navigator.goBack()
                 },
                 openLocationPicker = {

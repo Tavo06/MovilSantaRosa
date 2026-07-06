@@ -4,39 +4,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.upsjb.movilsantarosa.feature.post.domain.usecase.GetAllPostsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    private val getAllPostsUseCase: GetAllPostsUseCase
+    getAllPostsUseCase: GetAllPostsUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<PostUiState>(PostUiState.Loading)
-    val uiState: StateFlow<PostUiState> = _uiState.asStateFlow()
-
-    init {
-        loadPosts()
-    }
-
-    fun loadPosts() {
-        viewModelScope.launch {
-            _uiState.value = PostUiState.Loading
-
-            getAllPostsUseCase()
-                .onSuccess { posts ->
-                    _uiState.value = PostUiState.Success(
-                        posts = posts
-                    )
-                }
-                .onFailure { error ->
-                    _uiState.value = PostUiState.Error(
-                        error.message ?: "Error al cargar posts"
-                    )
-                }
-        }
-    }
+    val uiState: StateFlow<PostUiState> =
+        getAllPostsUseCase()
+            .map { posts ->
+                PostUiState.Success(posts = posts)
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = PostUiState.Loading
+            )
 }

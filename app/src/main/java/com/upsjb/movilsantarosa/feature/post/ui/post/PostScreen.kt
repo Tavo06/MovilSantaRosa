@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,17 +25,13 @@ fun PostsScreen(
 
     Column(
         modifier = modifier
-            .padding(
-                start = 16.dp,
-                end = 16.dp,
-                top = 16.dp
-            )
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
             .fillMaxSize()
     ) {
 
         when (val state = uiState) {
 
-            is PostUiState.Loading -> {
+            PostUiState.Loading -> {
                 SkeletonSection(
                     modifier = Modifier.fillMaxSize()
                 )
@@ -45,19 +40,15 @@ fun PostsScreen(
             is PostUiState.Error -> {
                 ErrorSection(
                     modifier = Modifier.fillMaxSize(),
-                    title = state.message,
-                    onRetry = { viewModel.loadPosts() }
+                    description = state.message,
+                    title = "Ups, tenemos incovenientes"
                 )
             }
 
             is PostUiState.Success -> {
 
-                val postsToShow = remember(state.posts) {
-                    state.posts
-                }
-
                 PostList(
-                    posts = postsToShow,
+                    posts = state.posts,
                     onClick = onPostClick,
                     modifier = Modifier
                         .fillMaxWidth()
