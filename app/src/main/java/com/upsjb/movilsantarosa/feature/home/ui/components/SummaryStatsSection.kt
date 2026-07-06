@@ -58,24 +58,24 @@ fun SummaryStatsSection(
                     ),
                     HomeStat(
                         title = "Deudores",
-                        value = statsUiState.debtors.toString(),
+                        value = statsUiState.totalFines.toString(),
                         valueColor = Color(0xFFF44336),
                         type = TypeStat.DEBTORS
                     ),
                     HomeStat(
                         title = "Socios al día",
-                        value = statsUiState.paymentsOnTime.toString(),
+                        value = statsUiState.totalPayments.toString(),
                         valueColor = Color(0xFF2196F3),
                         type = TypeStat.PAYMENTS_ON_TIME
                     ),
                     HomeStat(
-                        title = "Multas pendientes",
-                        value = statsUiState.pendingFines.toString(),
+                        title = "Anuncios y Alertas",
+                        value = statsUiState.totalAnnouncements.toString(),
                         valueColor = Color(0xFFFF9800),
                         type = TypeStat.PENDING_FINES
                     )
                 ),
-                onClick = onClick
+                onClick = {}
             )
         }
     }
@@ -100,45 +100,38 @@ fun HomeStatItem(
     stat: HomeStat,
     modifier: Modifier = Modifier,
     showDivider: Boolean = true,
-    enabled: Boolean = true,
-    onClick: (TypeStat) -> Unit,
 ) {
     Column(modifier = modifier) {
 
-        Surface(
-            onClick = { onClick(stat.type) },
-            enabled = enabled,
-            color = Color.Transparent
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 14.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
 
-                Text(
-                    text = stat.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.primary
-                )
+            Text(
+                text = stat.title,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.primary
+            )
 
-                Text(
-                    text = stat.value,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = stat.valueColor
-                )
-            }
-        }
-
-        if (showDivider) {
-            HorizontalDivider()
+            Text(
+                text = stat.value,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = stat.valueColor
+            )
         }
     }
+
+    if (showDivider) {
+        HorizontalDivider()
+    }
 }
+
 
 @Composable
 fun HomeStats(
@@ -175,7 +168,6 @@ fun HomeStats(
                 HomeStatItem(
                     stat = stat,
                     showDivider = index != stats.lastIndex,
-                    onClick = onClick
                 )
             }
         }

@@ -3,6 +3,7 @@ package com.upsjb.movilsantarosa.feature.home.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.CurrentUserUseCase
+import com.upsjb.movilsantarosa.feature.home.domain.usecase.GetHomeStatsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,6 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val currentUserUseCase: CurrentUserUseCase,
+    private val getHomeStatsUseCase: GetHomeStatsUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -55,21 +57,25 @@ class HomeViewModel @Inject constructor(
             it.copy(statsUiState = StatsUiState.Loading)
         }
         viewModelScope.launch {
-
-            _uiState.update {
-                it.copy(statsUiState = StatsUiState.Loading)
-            }
-
-            _uiState.update {
-                it.copy(
-                    statsUiState = StatsUiState.Success(
-                        activeMembers = 48,
-                        debtors = 12,
-                        paymentsOnTime = 36,
-                        pendingFines = 7
+            getHomeStatsUseCase().onSuccess { data ->
+                _uiState.update {
+                    it.copy(
+                        statsUiState = StatsUiState.Success(
+                            activeMembers = data.totalMembers,
+                            totalFines = data.totalFines,
+                            totalPayments = data.totalPayments,
+                            totalAnnouncements = data.totalAnnouncements
+                        )
                     )
-                )
+                }
+            }.onFailure { error ->
+                _uiState.update {
+                    it.copy(
+                        statsUiState = StatsUiState.Error(message = error.message.orEmpty())
+                    )
+                }
             }
+
         }
     }
 }
