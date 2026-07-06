@@ -162,12 +162,6 @@ fun MainNavHost(
         }
 
         entry<PaymentsDestination> {
-            val viewModel: PaymentViewModel = hiltViewModel()
-
-            ResultEffect<PaymentSavedResult> {
-                viewModel.loadPayments()
-            }
-
             PaymentsScreen(
                 onPaymentClick = { payment ->
                     navigator.navigate(

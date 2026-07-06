@@ -1,14 +1,13 @@
 package com.upsjb.movilsantarosa.feature.payments.domain.repository
 
 import com.upsjb.movilsantarosa.feature.payments.domain.model.Payment
+import kotlinx.coroutines.flow.Flow
 
 interface PaymentRepository {
 
-    suspend fun getPaymentByEmail(
-        email: String
-    ): Result<List<Payment>>
+    fun getPaymentByEmail(email: String): Flow<List<Payment>>
 
-    suspend fun getAllPayments(): Result<List<Payment>>
+    fun getAllPayments(): Flow<List<Payment>>
 
     suspend fun getPaymentById(
         id: String
