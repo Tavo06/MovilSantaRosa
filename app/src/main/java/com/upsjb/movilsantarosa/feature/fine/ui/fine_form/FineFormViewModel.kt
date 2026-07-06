@@ -2,6 +2,8 @@ package com.upsjb.movilsantarosa.feature.fine.ui.fine_form
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
+import com.upsjb.movilsantarosa.feature.auth.domain.usecase.CurrentUserUseCase
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
 import com.upsjb.movilsantarosa.feature.fine.domain.model.toDomain
 import com.upsjb.movilsantarosa.feature.fine.domain.model.toForm
@@ -20,12 +22,15 @@ import javax.inject.Inject
 class FineFormViewModel @Inject constructor(
     private val registerFineUseCase: RegisterFineUseCase,
     private val updateFineUseCase: UpdateFineUseCase,
-    private val getFineByIdUseCase: GetFineByIdUseCase
+    private val getFineByIdUseCase: GetFineByIdUseCase,
+    private val currentUserUseCase: CurrentUserUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FineFormUiState())
     val uiState = _uiState.asStateFlow()
-
+    init {
+        loadCurrentUser()
+    }
     fun updateForm(transform: FineFormState.() -> FineFormState) {
         _uiState.update {
             it.copy(form = it.form.transform())
@@ -35,6 +40,18 @@ class FineFormViewModel @Inject constructor(
     fun setMode(mode: FineFormMode) {
         _uiState.update {
             it.copy(mode = mode)
+        }
+    }
+    private fun loadCurrentUser() {
+        viewModelScope.launch {
+            currentUserUseCase()
+                .onSuccess { user ->
+                    _uiState.update {
+                        it.copy(
+                            isAdmin = user.role == UserRole.ADMIN
+                        )
+                    }
+                }
         }
     }
 

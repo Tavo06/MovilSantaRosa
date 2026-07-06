@@ -71,18 +71,20 @@ fun FineFormContent(
             title = state.mode.displayName,
             onBackClick = onBackClick,
             actions = {
-                IconButton(
-                    onClick = onEditClick,
-                    modifier = Modifier.background(
-                        MaterialTheme.colorScheme.primary,
-                        CircleShape
-                    )
-                ) {
-                    Icon(
-                        Icons.Default.Edit,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
+                if (state.mode == FineFormMode.READ_ONLY && state.isAdmin) {
+                    IconButton(
+                        onClick = onEditClick,
+                        modifier = Modifier.background(
+                            MaterialTheme.colorScheme.primary,
+                            CircleShape
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Editar multa",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
                 }
             }
         )

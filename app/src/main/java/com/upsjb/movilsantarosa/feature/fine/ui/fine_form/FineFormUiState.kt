@@ -8,7 +8,8 @@ data class FineFormUiState(
     val fineId: String = "",
     val form: FineFormState = FineFormState(),
     val actionState: FineFormActionState = FineFormActionState.Idle,
-    val mode: FineFormMode = FineFormMode.CREATE
+    val mode: FineFormMode = FineFormMode.CREATE,
+    val isAdmin: Boolean = false
 )
 
 data class FineFormState(
