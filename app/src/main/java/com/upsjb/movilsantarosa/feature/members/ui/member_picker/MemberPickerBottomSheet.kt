@@ -85,8 +85,8 @@ fun MemberPickerBottomSheet(
 
             is MemberPickerUiState.Error -> {
                 ErrorSection(
-                    title = state.message,
-                    onRetry = viewModel::loadMembers
+                    title = "Ups, tenemos incovenientes",
+                    description = state.message
                 )
             }
 

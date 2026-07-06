@@ -106,12 +106,6 @@ fun MainNavHost(
         }
 
         entry<FinesDestination> {
-            val viewModel: FineViewModel = hiltViewModel()
-
-            ResultEffect<FineSavedResult> {
-                viewModel.loadFines()
-            }
-
             FinesScreen(
                 onFineClick = { fine ->
                     navigator.navigate(

@@ -2,10 +2,13 @@ package com.upsjb.movilsantarosa.feature.fine.ui.fine_picker
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.upsjb.movilsantarosa.feature.fine.domain.model.Fine
 import com.upsjb.movilsantarosa.feature.fine.domain.usecase.GetFinesByEmailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -14,35 +17,49 @@ class FinePickerViewModel @Inject constructor(
     private val getFinesByEmailUseCase: GetFinesByEmailUseCase
 ) : ViewModel() {
 
-    private val _uiState =
-        MutableStateFlow<FinePickerUiState>(FinePickerUiState.Loading)
+    private val query = MutableStateFlow("")
 
-    val uiState = _uiState.asStateFlow()
+    private val finesFlow = MutableStateFlow<List<Fine>>(emptyList())
 
     fun loadFines(memberEmail: String) {
+
         viewModelScope.launch {
 
-            _uiState.value = FinePickerUiState.Loading
-
             getFinesByEmailUseCase(memberEmail)
-                .onSuccess { fines ->
-                    _uiState.value = FinePickerUiState.Success(
-                        fines = fines
-                    )
-                }
-                .onFailure { error ->
-                    _uiState.value = FinePickerUiState.Error(
-                        error.message ?: "No se pudieron cargar las multas."
-                    )
+                .collect { fines ->
+                    finesFlow.value = fines
                 }
         }
     }
 
-    fun updateQuery(query: String) {
-        val state = _uiState.value
+    val uiState = combine(
+        finesFlow,
+        query
+    ) { fines, query ->
 
-        if (state is FinePickerUiState.Success) {
-            _uiState.value = state.copy(query = query)
+        val filtered = if (query.isBlank()) {
+            fines
+        } else {
+            fines.filter { fine ->
+                fine.memberName.contains(query, true) ||
+                        fine.memberEmail.contains(query, true) ||
+                        fine.reason.name.contains(query, true) ||
+                        fine.customReason.contains(query, true)
+            }
         }
+
+        FinePickerUiState.Success(
+            fines = filtered,
+            query = query
+        )
+    }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = FinePickerUiState.Loading
+        )
+
+    fun updateQuery(query: String) {
+        this.query.value = query
     }
 }

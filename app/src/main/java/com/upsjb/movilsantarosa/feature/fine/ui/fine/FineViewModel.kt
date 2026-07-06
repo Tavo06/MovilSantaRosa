@@ -5,8 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.upsjb.movilsantarosa.feature.fine.domain.usecase.GetFinesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,60 +17,41 @@ import kotlin.collections.filter
 
 @HiltViewModel
 class FineViewModel @Inject constructor(
-    private val getFinesUseCase: GetFinesUseCase,
+    getFinesUseCase: GetFinesUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<FineUiState>(FineUiState.Loading)
-    val uiState: StateFlow<FineUiState> = _uiState.asStateFlow()
+    private val query = MutableStateFlow("")
 
-    init {
-        loadFines()
-    }
+    private val finesFlow = getFinesUseCase()
 
-    fun loadFines() {
-        _uiState.value = FineUiState.Loading
-        viewModelScope.launch {
-            getFinesUseCase()
-                .onSuccess { fines ->
+    val uiState = combine(
+        finesFlow,
+        query
+    ) { fines, query ->
 
-                    _uiState.value = FineUiState.Success(
-                        fines = fines,
-                    )
-                }
-                .onFailure { error ->
-
-                    _uiState.value = FineUiState.Error(
-                        error.message ?: "Error al cargar multas"
-                    )
-                }
-        }
-    }
-
-    fun updateQuery(query: String) {
-
-        _uiState.update { state ->
-
-            when (state) {
-
-                is FineUiState.Success -> {
-                    val filtered = if (query.isBlank()) {
-                        state.fines
-                    } else {
-                        state.fines.filter { fine ->
-                            fine.memberName.contains(query, true) ||
-                                    fine.memberEmail.contains(query, true) ||
-                                    fine.reason.name.contains(query, true) ||
-                                    fine.customReason.contains(query, true)
-                        }
-                    }
-
-                    state.copy(
-                        query = query,
-                    )
-                }
-
-                else -> state
+        val filtered = if (query.isBlank()) {
+            fines
+        } else {
+            fines.filter { fine ->
+                fine.memberName.contains(query, true) ||
+                        fine.memberEmail.contains(query, true) ||
+                        fine.reason.name.contains(query, true) ||
+                        fine.customReason.contains(query, true)
             }
         }
+
+        FineUiState.Success(
+            fines = filtered,
+            query = query
+        )
+    }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = FineUiState.Loading
+        )
+
+    fun updateQuery(query: String) {
+        this.query.value = query
     }
 }

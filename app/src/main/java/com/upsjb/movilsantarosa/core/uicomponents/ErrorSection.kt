@@ -60,7 +60,7 @@ fun ErrorSection(
     title: String,
     description: String = "¿Le damos otra oportunidad?",
     image: Painter = painterResource(R.drawable.logo_app),
-    onRetry: () -> Unit,
+    onRetry: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     buttonText: String = "Reintentar",
     type: ErrorSectionType = ErrorSectionType.COLUMN
@@ -97,21 +97,22 @@ fun ErrorSection(
             else
                 TextAlign.Start
         )
+        onRetry?.let {
+            Spacer(Modifier.height(16.dp))
 
-        Spacer(Modifier.height(16.dp))
-
-        AppPrimaryButton(
-            modifier = Modifier
-                .height(type.buttonHeight)
-                .then(
-                    if (type == ErrorSectionType.ROW)
-                        Modifier.wrapContentWidth()
-                    else
-                        Modifier.fillMaxWidth()
-                ),
-            text = buttonText,
-            onClick = onRetry
-        )
+            AppPrimaryButton(
+                modifier = Modifier
+                    .height(type.buttonHeight)
+                    .then(
+                        if (type == ErrorSectionType.ROW)
+                            Modifier.wrapContentWidth()
+                        else
+                            Modifier.fillMaxWidth()
+                    ),
+                text = buttonText,
+                onClick = onRetry
+            )
+        }
     }
 
     when (type) {

@@ -50,8 +50,8 @@ fun MembersScreen(
             is MemberUiState.Error -> {
                 ErrorSection(
                     modifier = Modifier.fillMaxSize(),
-                    title = state.message,
-                    onRetry = { viewModel.getAllMembers() },
+                    description = state.message,
+                    title = "Ups, tenemos incovenientes",
                 )
             }
 

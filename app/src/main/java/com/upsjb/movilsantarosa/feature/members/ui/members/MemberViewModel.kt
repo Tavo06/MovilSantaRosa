@@ -5,50 +5,35 @@ import androidx.lifecycle.viewModelScope
 import com.upsjb.movilsantarosa.feature.members.domain.usecase.GetAllMembersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class MemberViewModel @Inject constructor(
-    private val getAllMembersUseCase: GetAllMembersUseCase
+    getAllMembersUseCase: GetAllMembersUseCase
 ) : ViewModel() {
+    private val query = MutableStateFlow("")
+    private val membersFlow = getAllMembersUseCase()
 
-    private val _uiState = MutableStateFlow<MemberUiState>(MemberUiState.Loading)
-    val uiState: StateFlow<MemberUiState> = _uiState.asStateFlow()
+    val uiState = combine(
+        membersFlow,
+        query
+    ) { members, query ->
 
-    init {
-        getAllMembers()
+        MemberUiState.Success(
+            members = members,
+            query = query
+        )
     }
-
-    fun getAllMembers() {
-        _uiState.value = MemberUiState.Loading
-
-        viewModelScope.launch {
-            getAllMembersUseCase()
-                .onSuccess {
-                    _uiState.value = MemberUiState.Success(members = it)
-                }
-                .onFailure {
-                    _uiState.value = MemberUiState.Error(
-                        it.message ?: "Ocurrió un error"
-                    )
-                }
-        }
-    }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = MemberUiState.Loading
+        )
 
     fun updateQuery(query: String) {
-        _uiState.update { state ->
-
-            when (state) {
-                is MemberUiState.Success ->
-                    state.copy(query = query)
-
-                else -> state
-            }
-        }
+        this.query.value = query
     }
-
 }

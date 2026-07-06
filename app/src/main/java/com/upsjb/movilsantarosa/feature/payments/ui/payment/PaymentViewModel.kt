@@ -2,8 +2,6 @@ package com.upsjb.movilsantarosa.feature.payments.ui.payment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.upsjb.movilsantarosa.feature.fine.domain.usecase.GetFinesUseCase
-import com.upsjb.movilsantarosa.feature.fine.ui.fine.FineUiState
 import com.upsjb.movilsantarosa.feature.payments.domain.usecase.GetPaymentsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

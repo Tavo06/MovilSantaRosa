@@ -12,7 +12,7 @@ data class FineModel(
     val memberDniNumber: String = "",
     val reason: FineReason = FineReason.OTHER,
     val customReason: String = "",
-    val amount: String = "",
+    val amount: Double = 0.0,
     val description: String = "",
     val issuedAt: String = currentTimeMillis().toDateString(),
     val dueDate: String = currentTimeMillis().toDateString(),
