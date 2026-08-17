@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.sp
 fun TopBarHeader(
     title: String,
     onLogout: () -> Unit,
+    onMenuClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showLogoutDialog by remember { mutableStateOf(false) }
@@ -42,6 +44,22 @@ fun TopBarHeader(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primary)
     ) {
+
+        IconButton(
+            onClick = onMenuClick,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(16.dp)
+                .size(30.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primaryContainer)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Menu,
+                contentDescription = "Abrir menú",
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
 
         IconButton(
             onClick = {
@@ -106,6 +124,7 @@ fun TopBarHeader(
 @Composable
 fun HomeHeader(
     onLogout: () -> Unit,
+    onMenuClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showLogoutDialog by remember { mutableStateOf(false) }
@@ -115,6 +134,22 @@ fun HomeHeader(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primary)
     ) {
+
+        IconButton(
+            onClick = onMenuClick,
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.TopStart)
+                .size(30.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primaryContainer)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Menu,
+                contentDescription = "Abrir menú",
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
 
         IconButton(
             onClick = {

@@ -3,12 +3,16 @@ package com.upsjb.movilsantarosa.core.navigation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
@@ -31,8 +35,8 @@ import com.upsjb.movilsantarosa.core.navigation.component.PickerMapDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PostDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PostFormDestination
 import com.upsjb.movilsantarosa.core.navigation.component.rememberNavigationState
-import com.upsjb.movilsantarosa.core.uicomponents.AppBottomBar
 import com.upsjb.movilsantarosa.core.uicomponents.AppFloatingActionButton
+import com.upsjb.movilsantarosa.core.uicomponents.AppNavigationDrawer
 import com.upsjb.movilsantarosa.core.uicomponents.AppTopBar
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.fine.domain.model.Fine
@@ -55,6 +59,7 @@ import com.upsjb.movilsantarosa.feature.post.ui.post.PostsScreen
 import com.upsjb.movilsantarosa.feature.post.ui.post_form.PostFormMode
 import com.upsjb.movilsantarosa.feature.post.ui.post_form.PostFormScreen
 import com.upsjb.movilsantarosa.feature.post.ui.post_form.PostFormViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,6 +79,9 @@ fun MainNavHost(
     val navigator = remember {
         Navigator(navigationState)
     }
+
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val coroutineScope = rememberCoroutineScope()
 
     val entryProvider = entryProvider {
         entry<HomeDestination> {
@@ -252,55 +260,65 @@ fun MainNavHost(
         }
     }
 
-    Scaffold(
-        modifier = Modifier.safeDrawingPadding(),
-        topBar = {
-            AppTopBar(
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            AppNavigationDrawer(
                 currentDestination = navigationState.topLevelRoute,
-                onLogout = onLogout
-            )
-        },
-        bottomBar = {
-            AppBottomBar(
-                currentDestination = navigationState.topLevelRoute,
-                onDestinationSelected = navigator::navigate
-            )
-        },
-        floatingActionButton = {
-            AppFloatingActionButton(
-                currentDestination = navigationState.currentDestination,
-                userRole = userRole,
-                onClick = {
-                    when (navigationState.topLevelRoute) {
-                        FinesDestination -> {
-                            navigator.navigate(FineFormDestination())
-                        }
-
-                        PaymentsDestination -> {
-                            navigator.navigate(PaymentFormDestination())
-                        }
-
-                        PostDestination -> {
-                            navigator.navigate(PostFormDestination())
-                        }
-
-                        else -> Unit
-                    }
+                onDestinationSelected = { destination ->
+                    navigator.navigate(destination)
+                    coroutineScope.launch { drawerState.close() }
                 }
             )
         }
-    ) { padding ->
-        NavDisplay(
-            entries = navigationState.toDecoratedEntries(entryProvider),
-            onBack = {
-                navigator.goBack()
+    ) {
+        Scaffold(
+            modifier = Modifier.safeDrawingPadding(),
+            topBar = {
+                AppTopBar(
+                    currentDestination = navigationState.topLevelRoute,
+                    onLogout = onLogout,
+                    onMenuClick = {
+                        coroutineScope.launch { drawerState.open() }
+                    }
+                )
             },
-            sceneStrategies = listOf(
-                bottomSheetStrategy
-            ),
-            modifier = Modifier
-                .padding(padding)
-                .background(MaterialTheme.colorScheme.surface)
-        )
+            floatingActionButton = {
+                AppFloatingActionButton(
+                    currentDestination = navigationState.currentDestination,
+                    userRole = userRole,
+                    onClick = {
+                        when (navigationState.topLevelRoute) {
+                            FinesDestination -> {
+                                navigator.navigate(FineFormDestination())
+                            }
+
+                            PaymentsDestination -> {
+                                navigator.navigate(PaymentFormDestination())
+                            }
+
+                            PostDestination -> {
+                                navigator.navigate(PostFormDestination())
+                            }
+
+                            else -> Unit
+                        }
+                    }
+                )
+            }
+        ) { padding ->
+            NavDisplay(
+                entries = navigationState.toDecoratedEntries(entryProvider),
+                onBack = {
+                    navigator.goBack()
+                },
+                sceneStrategies = listOf(
+                    bottomSheetStrategy
+                ),
+                modifier = Modifier
+                    .padding(padding)
+                    .background(MaterialTheme.colorScheme.surface)
+            )
+        }
     }
 }
