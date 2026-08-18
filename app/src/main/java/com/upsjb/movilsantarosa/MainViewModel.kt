@@ -5,12 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserStatus
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.CurrentUserUseCase
+import com.upsjb.movilsantarosa.feature.auth.domain.usecase.EnsureActiveSessionUseCase
+import com.upsjb.movilsantarosa.feature.auth.domain.usecase.GetLocalSessionIdUseCase
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.LogoutUseCase
+import com.upsjb.movilsantarosa.feature.auth.domain.usecase.ObserveActiveSessionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,11 +23,16 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val currentUserUseCase: CurrentUserUseCase,
     private val logoutUseCase: LogoutUseCase,
+    private val observeActiveSessionUseCase: ObserveActiveSessionUseCase,
+    private val getLocalSessionIdUseCase: GetLocalSessionIdUseCase,
+    private val ensureActiveSessionUseCase: EnsureActiveSessionUseCase,
 ) : ViewModel() {
 
     private val _session =
         MutableStateFlow<SessionState>(SessionState.Loading)
     val session: StateFlow<SessionState> = _session.asStateFlow()
+
+    private var sessionWatchJob: Job? = null
 
     init {
         refreshSession()
@@ -37,19 +47,45 @@ class MainViewModel @Inject constructor(
 
             currentUserUseCase()
                 .onSuccess { user ->
-                    _session.value = if (user.status == UserStatus.ACTIVE) {
-                        SessionState.LoggedIn(user.role)
+                    if (user.status == UserStatus.ACTIVE) {
+                        _session.value = SessionState.LoggedIn(user.role)
+                        startSessionWatcher(user.uid)
                     } else {
-                        SessionState.PendingApproval(user.status)
+                        sessionWatchJob?.cancel()
+                        _session.value = SessionState.PendingApproval(user.status)
                     }
                 }
                 .onFailure {
+                    sessionWatchJob?.cancel()
                     _session.value = SessionState.LoggedOut
                 }
         }
     }
 
+    private fun startSessionWatcher(uid: String) {
+        sessionWatchJob?.cancel()
+        sessionWatchJob = viewModelScope.launch {
+
+            ensureActiveSessionUseCase(uid)
+
+            val localSessionId = getLocalSessionIdUseCase()
+
+            observeActiveSessionUseCase(uid)
+                .catch { /* fail open: a transient listener error must not force a logout */ }
+                .collect { remoteSessionId ->
+                    if (localSessionId != null &&
+                        remoteSessionId != null &&
+                        remoteSessionId != localSessionId
+                    ) {
+                        logout()
+                    }
+                }
+        }
+    }
+
     fun logout() {
+        sessionWatchJob?.cancel()
+
         viewModelScope.launch {
 
             logoutUseCase()
