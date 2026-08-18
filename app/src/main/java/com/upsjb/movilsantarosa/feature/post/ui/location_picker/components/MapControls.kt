@@ -20,6 +20,7 @@ fun MapControls(
     onZoomIn: () -> Unit,
     onZoomOut: () -> Unit,
     onSelect: () -> Unit,
+    showSelect: Boolean = true,
 ) {
 
     Column(
@@ -28,15 +29,16 @@ fun MapControls(
         horizontalAlignment = Alignment.End
     ) {
 
-        FloatingActionButton(
-            onClick = onSelect
-        ) {
-            Icon(
-                imageVector = Icons.Default.CenterFocusWeak,
-                contentDescription = "onSelect"
-            )
+        if (showSelect) {
+            FloatingActionButton(
+                onClick = onSelect
+            ) {
+                Icon(
+                    imageVector = Icons.Default.CenterFocusWeak,
+                    contentDescription = "onSelect"
+                )
+            }
         }
-
 
         FloatingActionButton(
             onClick = onZoomIn

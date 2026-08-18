@@ -22,8 +22,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserStatus
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 
 @Composable
@@ -97,6 +99,10 @@ fun MemberItem(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                MemberStatusChip(status = member.status)
             }
 
             Icon(
@@ -105,5 +111,31 @@ fun MemberItem(
                 tint = MaterialTheme.colorScheme.outline
             )
         }
+    }
+}
+
+@Composable
+fun UserStatus.containerColor(): Color = when (this) {
+    UserStatus.ACTIVE -> MaterialTheme.colorScheme.primary
+    UserStatus.PENDING -> MaterialTheme.colorScheme.tertiary
+    UserStatus.INACTIVE -> MaterialTheme.colorScheme.outline
+    UserStatus.REJECTED -> MaterialTheme.colorScheme.error
+}
+
+@Composable
+fun MemberStatusChip(status: UserStatus) {
+    val color = status.containerColor()
+
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        color = color.copy(alpha = 0.15f)
+    ) {
+        Text(
+            text = status.displayName,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+            style = MaterialTheme.typography.labelSmall,
+            color = color,
+            fontWeight = FontWeight.SemiBold
+        )
     }
 }

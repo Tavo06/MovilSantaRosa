@@ -46,7 +46,11 @@ data object PostDestination : NavKey
 data class PostFormDestination(val postId: String? = null) : NavKey
 
 @Serializable
-data object PickerMapDestination : NavKey
+data class PickerMapDestination(
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+    val readOnly: Boolean = false
+) : NavKey
 
 @Serializable
 data object PendingRegistrationsDestination : NavKey

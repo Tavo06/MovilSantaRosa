@@ -71,4 +71,33 @@ class MemberRepositoryImpl @Inject constructor(
             )
         }
     }
+
+    override suspend fun updateMember(member: Member): Result<Unit> {
+        return try {
+
+            val updates = mapOf(
+                "firstname" to member.firstname,
+                "lastname" to member.lastname,
+                "dniNumber" to member.dniNumber,
+                "birthdate" to member.birthdate,
+                "phone" to member.phone,
+                "plateNumber" to member.plateNumber,
+                "licenceNumber" to member.licenceNumber,
+                "vehicleColor" to member.vehicleColor
+            )
+
+            database.reference
+                .child(USER_DATABASE)
+                .child(member.uid)
+                .updateChildren(updates)
+                .await()
+
+            Result.success(Unit)
+
+        } catch (e: Exception) {
+            Result.failure(
+                Exception(e.message ?: "Error al actualizar los datos del socio")
+            )
+        }
+    }
 }

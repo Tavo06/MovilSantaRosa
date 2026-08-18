@@ -19,6 +19,7 @@ import com.upsjb.movilsantarosa.feature.post.ui.post.components.PostList
 fun PostsScreen(
     modifier: Modifier = Modifier,
     onPostClick: (Post) -> Unit,
+    onViewMapClick: (Post) -> Unit = {},
     viewModel: PostViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -50,6 +51,7 @@ fun PostsScreen(
                 PostList(
                     posts = state.posts,
                     onClick = onPostClick,
+                    onViewMapClick = onViewMapClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)

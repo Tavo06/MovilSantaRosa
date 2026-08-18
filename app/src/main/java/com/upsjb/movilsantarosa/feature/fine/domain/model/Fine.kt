@@ -17,7 +17,6 @@ data class Fine(
     val amount: Double = 0.0,
     val description: String = "",
     val issuedAt: Long = currentTimeMillis(),
-    val dueDate: Long = currentTimeMillis(),
     val status: FineStatus = FineStatus.PENDING,
     val createdBy: String = "",
     val createdAt: Long = currentTimeMillis()
@@ -34,7 +33,6 @@ fun FineModel.toDomain(): Fine =
         amount = amount,
         description = description,
         issuedAt = issuedAt,
-        dueDate = dueDate,
         status = status,
         createdBy = createdBy,
         createdAt = createdAt
@@ -51,7 +49,6 @@ fun Fine.toModel(): FineModel =
         amount = amount,
         description = description,
         issuedAt = issuedAt,
-        dueDate = dueDate,
         status = status,
         createdBy = createdBy,
         createdAt = createdAt
@@ -68,7 +65,6 @@ fun Fine.toForm(): FineFormState {
         amount = amount.toString(),
         description = description,
         issuedAt = issuedAt,
-        dueDate = dueDate,
         status = status
     )
 }
@@ -84,7 +80,6 @@ fun FineFormState.toDomain(): Fine {
         amount = amount.toDoubleSafe(),
         description = description,
         issuedAt = issuedAt,
-        dueDate = dueDate,
         status = status
     )
 }

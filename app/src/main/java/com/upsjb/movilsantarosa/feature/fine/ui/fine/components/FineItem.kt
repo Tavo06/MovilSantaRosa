@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.upsjb.movilsantarosa.core.utils.toCurrencyString
+import com.upsjb.movilsantarosa.core.utils.toDateString
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineReason
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
 import com.upsjb.movilsantarosa.feature.fine.domain.model.Fine
@@ -96,9 +97,9 @@ fun FineItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                if (fine.dueDate > 0) {
+                if (fine.issuedAt > 0) {
                     Text(
-                        text = "Vence: ${fine.dueDate}",
+                        text = "Impuesta: ${fine.issuedAt.toDateString()}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.outline
                     )

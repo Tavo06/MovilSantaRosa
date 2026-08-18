@@ -39,11 +39,20 @@ import org.maplibre.spatialk.geojson.Position
 fun LocationPickerScreen(
     onLocationSelected: (Location) -> Unit,
     onBack: () -> Unit,
+    initialLatitude: Double? = null,
+    initialLongitude: Double? = null,
+    readOnly: Boolean = false,
     viewModel: LocationPickerViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val selectedLocation by viewModel.selectedLocation.collectAsStateWithLifecycle()
     val loading by viewModel.isResolvingAddress.collectAsStateWithLifecycle()
+
+    LaunchedEffect(initialLatitude, initialLongitude) {
+        if (initialLatitude != null && initialLongitude != null) {
+            viewModel.loadLocation(initialLatitude, initialLongitude)
+        }
+    }
 
     LaunchedEffect(selectedLocation) {
         selectedLocation?.let {
@@ -77,7 +86,8 @@ fun LocationPickerScreen(
                     confirmLocation = { location ->
                         viewModel.confirmLocation(location)
                     },
-                    onBack = onBack
+                    onBack = onBack,
+                    readOnly = readOnly
                 )
             }
         }
@@ -88,7 +98,8 @@ fun LocationPickerScreen(
 private fun LocationPickerContent(
     initialLocation: Location,
     confirmLocation: (Location) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    readOnly: Boolean = false
 ) {
     val cameraState = rememberCameraState(
         CameraPosition(
@@ -136,7 +147,7 @@ private fun LocationPickerContent(
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
-            title = "Seleccionar ubicación",
+            title = if (readOnly) "Ubicación del anuncio" else "Seleccionar ubicación",
             onBackClick = onBack
         )
 
@@ -144,6 +155,7 @@ private fun LocationPickerContent(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 16.dp, bottom = 16.dp),
+            showSelect = !readOnly,
 
             onZoomIn = {
                 scope.launch {

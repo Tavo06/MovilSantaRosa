@@ -13,7 +13,6 @@ data class FineModel(
     val amount: Double = 0.0,
     val description: String = "",
     val issuedAt: Long = 0L,
-    val dueDate: Long = 0L,
     val status: FineStatus = FineStatus.PENDING,
     val createdBy: String = "",
     val createdAt: Long = 0L

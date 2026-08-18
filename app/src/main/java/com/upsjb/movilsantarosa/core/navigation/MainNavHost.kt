@@ -224,6 +224,15 @@ fun MainNavHost(
                     navigator.navigate(
                         PostFormDestination(post.id)
                     )
+                },
+                onViewMapClick = { post ->
+                    navigator.navigate(
+                        PickerMapDestination(
+                            latitude = post.latitude,
+                            longitude = post.longitude,
+                            readOnly = true
+                        )
+                    )
                 }
             )
         }
@@ -258,14 +267,17 @@ fun MainNavHost(
                     navigator.goBack()
                 },
                 openLocationPicker = {
-                    navigator.navigate(PickerMapDestination)
+                    navigator.navigate(PickerMapDestination())
                 }
             )
         }
-        entry<PickerMapDestination> {
+        entry<PickerMapDestination> { destination ->
             val resultBus = LocalResultEventBus.current
 
             LocationPickerScreen(
+                initialLatitude = destination.latitude,
+                initialLongitude = destination.longitude,
+                readOnly = destination.readOnly,
                 onLocationSelected = {
                     resultBus.sendResult(result = it)
                 },
@@ -276,12 +288,20 @@ fun MainNavHost(
 
     ModalNavigationDrawer(
         drawerState = drawerState,
+        gesturesEnabled = false,
         drawerContent = {
             AppNavigationDrawer(
                 currentDestination = navigationState.topLevelRoute,
                 onDestinationSelected = { destination ->
                     navigator.navigate(destination)
                     coroutineScope.launch { drawerState.close() }
+                },
+                onCloseClick = {
+                    coroutineScope.launch { drawerState.close() }
+                },
+                onLogoutClick = {
+                    coroutineScope.launch { drawerState.close() }
+                    onLogout()
                 }
             )
         }
@@ -291,7 +311,6 @@ fun MainNavHost(
             topBar = {
                 AppTopBar(
                     currentDestination = navigationState.topLevelRoute,
-                    onLogout = onLogout,
                     onMenuClick = {
                         coroutineScope.launch { drawerState.open() }
                     }

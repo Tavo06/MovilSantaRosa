@@ -11,4 +11,8 @@ interface MemberRepository {
         uid: String,
         status: UserStatus
     ): Result<Unit>
+
+    suspend fun updateMember(
+        member: Member
+    ): Result<Unit>
 }

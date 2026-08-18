@@ -23,7 +23,6 @@ data class FineFormState(
     val amount: String = "",
     val description: String = "",
     val issuedAt: Long = currentTimeMillis(),
-    val dueDate: Long = currentTimeMillis(),
     val status: FineStatus = FineStatus.PENDING,
 ){
     val isMemberFilled: Boolean

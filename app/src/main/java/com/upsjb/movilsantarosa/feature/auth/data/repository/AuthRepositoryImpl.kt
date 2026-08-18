@@ -200,6 +200,31 @@ class AuthRepositoryImpl @Inject constructor(
     override fun getLocalSessionId(): String? =
         sessionLocalDataSource.getSessionId()
 
+    override fun observeCurrentUserStatus(uid: String): Flow<UserStatus?> = callbackFlow {
+
+        val ref = database.reference
+            .child(USER_DATABASE)
+            .child(uid)
+            .child("status")
+
+        val listener = object : ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                trySend(snapshot.getValue(UserStatus::class.java)).isSuccess
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                close(error.toException())
+            }
+        }
+
+        ref.addValueEventListener(listener)
+
+        awaitClose {
+            ref.removeEventListener(listener)
+        }
+    }
+
     private suspend fun startNewSession(uid: String) {
 
         val sessionId = UUID.randomUUID().toString()

@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.upsjb.movilsantarosa.core.utils.toCurrencyString
+import com.upsjb.movilsantarosa.core.utils.toDateString
 import com.upsjb.movilsantarosa.feature.payments.domain.model.Payment
 
 @Composable
@@ -97,7 +98,7 @@ fun PaymentItem(
                 )
 
                 Text(
-                    text = "Pagado: ${payment.paidAt}",
+                    text = "Pagado: ${payment.paidAt.toDateString()}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,8 +22,10 @@ import com.upsjb.movilsantarosa.core.uicomponents.AppPrimaryButton
 @Composable
 fun ContactMethodDialog(
     phoneNumber: String,
+    isAdmin: Boolean = false,
     onWhatsAppClick: (String) -> Unit,
     onCallClick: (String) -> Unit,
+    onManageClick: () -> Unit = {},
     onDismiss: () -> Unit
 ) {
     AlertDialog(
@@ -83,6 +86,23 @@ fun ContactMethodDialog(
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
+
+                    if (isAdmin) {
+                        AppOutlinedButton(
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.ManageAccounts,
+                                    contentDescription = null
+                                )
+                            },
+                            text = "Gestionar socio",
+                            onClick = {
+                                onManageClick()
+                                onDismiss()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
         },

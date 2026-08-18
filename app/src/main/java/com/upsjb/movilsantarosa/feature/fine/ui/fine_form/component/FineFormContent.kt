@@ -178,11 +178,11 @@ fun FineFormContent(
         )
         FormDatePicker(
             modifier = Modifier.padding(bottom = 8.dp),
-            value = form.dueDate.toDateString(),
+            value = form.issuedAt.toDateString(),
             enabled = !isReadOnly,
-            onDateSelected = { updateForm { copy(dueDate = it?:0L) } },
-            label = "Fecha de vencimiento",
-            allowFutureDates = true
+            onDateSelected = { updateForm { copy(issuedAt = it ?: 0L) } },
+            label = "Fecha de imposición",
+            allowFutureDates = false
         )
 
         if (!isCreateMode) {

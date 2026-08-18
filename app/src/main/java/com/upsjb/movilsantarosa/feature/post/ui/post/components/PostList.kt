@@ -17,6 +17,7 @@ import com.upsjb.movilsantarosa.feature.post.domain.model.Post
 fun PostList(
     posts: List<Post>,
     onClick: (Post) -> Unit,
+    onViewMapClick: (Post) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     if (posts.isEmpty()) {
@@ -40,7 +41,8 @@ fun PostList(
             items(posts) { post ->
                 PostItem(
                     post = post,
-                    onClick = onClick
+                    onClick = onClick,
+                    onViewMapClick = onViewMapClick
                 )
             }
         }

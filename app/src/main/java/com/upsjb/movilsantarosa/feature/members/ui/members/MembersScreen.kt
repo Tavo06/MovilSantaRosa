@@ -25,6 +25,7 @@ import com.upsjb.movilsantarosa.core.uicomponents.SkeletonSection
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 import com.upsjb.movilsantarosa.feature.members.ui.members.components.ContactMethodDialog
 import com.upsjb.movilsantarosa.feature.members.ui.members.components.MemberList
+import com.upsjb.movilsantarosa.feature.members.ui.members.components.MemberManagementDialog
 
 @Composable
 fun MembersScreen(
@@ -33,7 +34,12 @@ fun MembersScreen(
     contactLauncher: ContactLauncher = rememberContactLauncher()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var showMemberContactDialog by remember { mutableStateOf<String?>(null) }
+    val actionState by viewModel.actionState.collectAsStateWithLifecycle()
+
+    var contactDialogMember by remember { mutableStateOf<Member?>(null) }
+    var managementDialogMember by remember { mutableStateOf<Member?>(null) }
+
+    val isAdmin = (uiState as? MemberUiState.Success)?.isAdmin == true
 
     Column(
         modifier = modifier
@@ -67,7 +73,7 @@ fun MembersScreen(
                 MemberList(
                     members = state.filteredMembers,
                     onMemberClick = {
-                        showMemberContactDialog = it.phone
+                        contactDialogMember = it
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -76,12 +82,28 @@ fun MembersScreen(
             }
         }
     }
-    showMemberContactDialog?.let { phone ->
+    contactDialogMember?.let { member ->
         ContactMethodDialog(
-            phoneNumber = phone,
-            onWhatsAppClick = { contactLauncher.openWhatsApp(phone) },
-            onCallClick = { contactLauncher.makePhoneCall(phone) },
-            onDismiss = { showMemberContactDialog = null }
+            phoneNumber = member.phone,
+            isAdmin = isAdmin,
+            onWhatsAppClick = { contactLauncher.openWhatsApp(member.phone) },
+            onCallClick = { contactLauncher.makePhoneCall(member.phone) },
+            onManageClick = { managementDialogMember = member },
+            onDismiss = { contactDialogMember = null }
+        )
+    }
+
+    managementDialogMember?.let { member ->
+        MemberManagementDialog(
+            member = member,
+            actionState = actionState,
+            onSave = { updated -> viewModel.updateMemberProfile(updated) },
+            onToggleStatus = { viewModel.toggleMemberStatus(member) },
+            onDismiss = {
+                managementDialogMember = null
+                viewModel.resetActionState()
+            },
+            onResetAction = { viewModel.resetActionState() }
         )
     }
 }

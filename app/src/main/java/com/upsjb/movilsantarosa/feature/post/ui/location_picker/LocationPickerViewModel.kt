@@ -31,6 +31,14 @@ class LocationPickerViewModel @Inject constructor(
         loadCurrentLocation()
     }
 
+    fun loadLocation(latitude: Double, longitude: Double) {
+        _state.update {
+            LocationPickerUiState.Ready(
+                Location(latitude = latitude, longitude = longitude)
+            )
+        }
+    }
+
     fun loadCurrentLocation() {
         viewModelScope.launch {
 

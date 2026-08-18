@@ -18,7 +18,6 @@ data class PaymentFormState(
     val fineReason: FineReason = FineReason.OTHER,
     val fineCustomReason: String = "",
     val fineIssuedAt: Long = 0L,
-    val fineDueDate: Long = 0L,
     val fineStatus: FineStatus = FineStatus.PENDING,
 
     val paymentMethod: PaymentMethod = PaymentMethod.CASH,

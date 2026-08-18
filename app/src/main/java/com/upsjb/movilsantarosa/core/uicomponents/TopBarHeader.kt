@@ -9,17 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,12 +28,9 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun TopBarHeader(
     title: String,
-    onLogout: () -> Unit,
     onMenuClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var showLogoutDialog by remember { mutableStateOf(false) }
-
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -57,24 +49,6 @@ fun TopBarHeader(
             Icon(
                 imageVector = Icons.Default.Menu,
                 contentDescription = "Abrir menú",
-                tint = MaterialTheme.colorScheme.onPrimaryContainer
-            )
-        }
-
-        IconButton(
-            onClick = {
-                showLogoutDialog = true
-            },
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
-                .size(30.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer)
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.Logout,
-                contentDescription = "Cerrar sesión",
                 tint = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
@@ -103,32 +77,13 @@ fun TopBarHeader(
             )
         }
     }
-
-    if (showLogoutDialog) {
-        MessageDialog(
-            title = "Cerrar sesión",
-            message = "¿Desea realmente cerrar la sesión?",
-            confirmButtonText = "Sí, cerrar",
-            onConfirmClick = {
-                showLogoutDialog = false
-                onLogout()
-            },
-            onDismiss = {
-                showLogoutDialog = false
-            },
-            cancelButtonText = "Cancelar"
-        )
-    }
 }
 
 @Composable
 fun HomeHeader(
-    onLogout: () -> Unit,
     onMenuClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var showLogoutDialog by remember { mutableStateOf(false) }
-
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -147,24 +102,6 @@ fun HomeHeader(
             Icon(
                 imageVector = Icons.Default.Menu,
                 contentDescription = "Abrir menú",
-                tint = MaterialTheme.colorScheme.onPrimaryContainer
-            )
-        }
-
-        IconButton(
-            onClick = {
-                showLogoutDialog = true
-            },
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.TopEnd)
-                .size(30.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer)
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.Logout,
-                contentDescription = "Cerrar sesión",
                 tint = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
@@ -203,20 +140,5 @@ fun HomeHeader(
                 textAlign = TextAlign.Center
             )
         }
-    }
-    if (showLogoutDialog) {
-        MessageDialog(
-            title = "Cerrar sesión",
-            message = "¿Desea realmente cerrar la sesión?",
-            confirmButtonText = "Sí, cerrar",
-            onConfirmClick = {
-                showLogoutDialog = false
-                onLogout()
-            },
-            onDismiss = {
-                showLogoutDialog = false
-            },
-            cancelButtonText = "Cancelar"
-        )
     }
 }

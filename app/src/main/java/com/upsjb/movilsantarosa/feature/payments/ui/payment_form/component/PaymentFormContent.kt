@@ -170,9 +170,9 @@ fun PaymentFormContent(
                         text = "Monto: ${form.fineAmount.toCurrencyString()}",
                         fontWeight = FontWeight.Medium
                     )
-                    if (form.fineDueDate > 0) {
+                    if (form.fineIssuedAt > 0) {
                         Text(
-                            text = "Fecha vencimiento: ${form.fineDueDate}",
+                            text = "Fecha de imposición: ${form.fineIssuedAt.toDateString()}",
                             fontWeight = FontWeight.Medium
                         )
                     }

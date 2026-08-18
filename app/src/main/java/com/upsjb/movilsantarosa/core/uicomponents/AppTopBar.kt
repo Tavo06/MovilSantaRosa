@@ -14,7 +14,6 @@ import com.upsjb.movilsantarosa.core.navigation.component.PostDestination
 @Composable
 fun AppTopBar(
     currentDestination: NavKey,
-    onLogout: () -> Unit,
     onMenuClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -22,7 +21,6 @@ fun AppTopBar(
 
         HomeDestination -> {
             HomeHeader(
-                onLogout = onLogout,
                 onMenuClick = onMenuClick,
                 modifier = modifier
             )
@@ -31,7 +29,6 @@ fun AppTopBar(
         MembersDestination -> {
             TopBarHeader(
                 title = "Socios",
-                onLogout = onLogout,
                 onMenuClick = onMenuClick,
                 modifier = modifier
             )
@@ -40,7 +37,6 @@ fun AppTopBar(
         FinesDestination -> {
             TopBarHeader(
                 title = "Multas",
-                onLogout = onLogout,
                 onMenuClick = onMenuClick,
                 modifier = modifier
             )
@@ -49,7 +45,6 @@ fun AppTopBar(
         PaymentsDestination -> {
             TopBarHeader(
                 title = "Pagos",
-                onLogout = onLogout,
                 onMenuClick = onMenuClick,
                 modifier = modifier
             )
@@ -58,7 +53,6 @@ fun AppTopBar(
         PostDestination -> {
             TopBarHeader(
                 title = "Anuncios",
-                onLogout = onLogout,
                 onMenuClick = onMenuClick,
                 modifier = modifier
             )

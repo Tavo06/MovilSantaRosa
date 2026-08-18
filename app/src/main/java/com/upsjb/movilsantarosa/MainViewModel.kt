@@ -9,6 +9,7 @@ import com.upsjb.movilsantarosa.feature.auth.domain.usecase.EnsureActiveSessionU
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.GetLocalSessionIdUseCase
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.LogoutUseCase
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.ObserveActiveSessionUseCase
+import com.upsjb.movilsantarosa.feature.auth.domain.usecase.ObserveUserStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,6 +28,7 @@ class MainViewModel @Inject constructor(
     private val observeActiveSessionUseCase: ObserveActiveSessionUseCase,
     private val getLocalSessionIdUseCase: GetLocalSessionIdUseCase,
     private val ensureActiveSessionUseCase: EnsureActiveSessionUseCase,
+    private val observeUserStatusUseCase: ObserveUserStatusUseCase,
 ) : ViewModel() {
 
     private val _session =
@@ -70,14 +73,25 @@ class MainViewModel @Inject constructor(
 
             val localSessionId = getLocalSessionIdUseCase()
 
-            observeActiveSessionUseCase(uid)
+            combine(
+                observeActiveSessionUseCase(uid),
+                observeUserStatusUseCase(uid)
+            ) { remoteSessionId, remoteStatus ->
+                remoteSessionId to remoteStatus
+            }
                 .catch { /* fail open: a transient listener error must not force a logout */ }
-                .collect { remoteSessionId ->
-                    if (localSessionId != null &&
-                        remoteSessionId != null &&
-                        remoteSessionId != localSessionId
-                    ) {
-                        logout()
+                .collect { (remoteSessionId, remoteStatus) ->
+                    when {
+                        localSessionId != null &&
+                            remoteSessionId != null &&
+                            remoteSessionId != localSessionId -> {
+                            logout()
+                        }
+
+                        remoteStatus != null && remoteStatus != UserStatus.ACTIVE -> {
+                            sessionWatchJob?.cancel()
+                            _session.value = SessionState.PendingApproval(remoteStatus)
+                        }
                     }
                 }
         }

@@ -8,7 +8,8 @@ sealed class MemberUiState {
 
     data class Success(
         val query: String = "",
-        val members: List<Member> = emptyList()
+        val members: List<Member> = emptyList(),
+        val isAdmin: Boolean = false
     ) : MemberUiState() {
         val filteredMembers: List<Member>
             get() = if (query.isBlank()) {
@@ -27,4 +28,11 @@ sealed class MemberUiState {
         val message: String
     ) : MemberUiState()
 
+}
+
+sealed interface MemberActionState {
+    data object Idle : MemberActionState
+    data object Loading : MemberActionState
+    data object Success : MemberActionState
+    data class Error(val message: String) : MemberActionState
 }
