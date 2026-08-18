@@ -1,6 +1,7 @@
 package com.upsjb.movilsantarosa.feature.members.data.model
 
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserStatus
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -14,5 +15,6 @@ data class MemberModel(
     val phone: String = "",
     val plateNumber: String = "",
     val vehicleColor: String = "",
-    val rol: UserRole = UserRole.PARTNER
+    val rol: UserRole = UserRole.PARTNER,
+    val status: UserStatus = UserStatus.ACTIVE
 )

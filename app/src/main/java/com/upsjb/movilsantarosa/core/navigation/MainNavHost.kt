@@ -31,6 +31,7 @@ import com.upsjb.movilsantarosa.core.navigation.component.MembersDestination
 import com.upsjb.movilsantarosa.core.navigation.component.Navigator
 import com.upsjb.movilsantarosa.core.navigation.component.PaymentFormDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PaymentsDestination
+import com.upsjb.movilsantarosa.core.navigation.component.PendingRegistrationsDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PickerMapDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PostDestination
 import com.upsjb.movilsantarosa.core.navigation.component.PostFormDestination
@@ -49,6 +50,7 @@ import com.upsjb.movilsantarosa.feature.home.ui.HomeScreen
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 import com.upsjb.movilsantarosa.feature.members.ui.member_picker.MemberPickerBottomSheet
 import com.upsjb.movilsantarosa.feature.members.ui.members.MembersScreen
+import com.upsjb.movilsantarosa.feature.members.ui.pending_registrations.PendingRegistrationsBottomSheet
 import com.upsjb.movilsantarosa.feature.payments.ui.payment.PaymentsScreen
 import com.upsjb.movilsantarosa.feature.payments.ui.payment_form.PaymentFormMode
 import com.upsjb.movilsantarosa.feature.payments.ui.payment_form.PaymentFormScreen
@@ -85,7 +87,19 @@ fun MainNavHost(
 
     val entryProvider = entryProvider {
         entry<HomeDestination> {
-            HomeScreen()
+            HomeScreen(
+                onOpenPendingRequests = {
+                    navigator.navigate(PendingRegistrationsDestination)
+                }
+            )
+        }
+
+        entry<PendingRegistrationsDestination>(
+            metadata = BottomSheetSceneStrategy.bottomSheet()
+        ) {
+            PendingRegistrationsBottomSheet(
+                onDismiss = { navigator.goBack() }
+            )
         }
 
         entry<MembersDestination> {

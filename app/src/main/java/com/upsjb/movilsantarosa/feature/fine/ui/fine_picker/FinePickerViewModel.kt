@@ -2,6 +2,7 @@ package com.upsjb.movilsantarosa.feature.fine.ui.fine_picker
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
 import com.upsjb.movilsantarosa.feature.fine.domain.model.Fine
 import com.upsjb.movilsantarosa.feature.fine.domain.usecase.GetFinesByEmailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +28,7 @@ class FinePickerViewModel @Inject constructor(
 
             getFinesByEmailUseCase(memberEmail)
                 .collect { fines ->
-                    finesFlow.value = fines
+                    finesFlow.value = fines.filter { it.status == FineStatus.PENDING }
                 }
         }
     }

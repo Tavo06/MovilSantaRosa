@@ -6,6 +6,7 @@ import com.upsjb.movilsantarosa.feature.auth.data.model.AuthModel
 import com.upsjb.movilsantarosa.feature.auth.data.model.toUser
 import com.upsjb.movilsantarosa.feature.auth.domain.model.User
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserStatus
 import com.upsjb.movilsantarosa.feature.auth.domain.repository.AuthRepository
 import com.upsjb.movilsantarosa.feature.auth.domain.request.RegisterRequest
 import kotlinx.coroutines.tasks.await
@@ -128,7 +129,10 @@ class AuthRepositoryImpl @Inject constructor(
                     .orEmpty(),
                 role = snapshot.child("role")
                     .getValue(UserRole::class.java)
-                    ?: UserRole.PARTNER
+                    ?: UserRole.PARTNER,
+                status = snapshot.child("status")
+                    .getValue(UserStatus::class.java)
+                    ?: UserStatus.ACTIVE
             )
 
             Result.success(user)

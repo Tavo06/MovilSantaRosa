@@ -48,6 +48,9 @@ data class PostFormDestination(val postId: String? = null) : NavKey
 @Serializable
 data object PickerMapDestination : NavKey
 
+@Serializable
+data object PendingRegistrationsDestination : NavKey
+
 val BOTTOM_BAR_ITEMS = mapOf(
     HomeDestination to NavBarItem(Icons.Default.Home, "Home"),
     MembersDestination to NavBarItem(Icons.Default.Person, "Socios"),

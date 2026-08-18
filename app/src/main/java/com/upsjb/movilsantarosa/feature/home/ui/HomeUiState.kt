@@ -19,7 +19,8 @@ sealed class StatsUiState {
         val activeMembers: Int,
         val totalFines: Int,
         val totalPayments: Int,
-        val totalPost: Int
+        val totalPost: Int,
+        val pendingRegistrations: Int = 0
     ) : StatsUiState()
 
     data class Error(val message: String) : StatsUiState()

@@ -12,15 +12,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
+import com.upsjb.movilsantarosa.feature.home.ui.components.PendingRegistrationsSection
 import com.upsjb.movilsantarosa.feature.home.ui.components.SummaryStatsSection
 import com.upsjb.movilsantarosa.feature.home.ui.components.WelcomeSection
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    onOpenPendingRequests: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val isAdmin = (uiState.userUiState as? UserUiState.Success)?.user?.role == UserRole.ADMIN
+    val pendingCount = (uiState.statsUiState as? StatsUiState.Success)?.pendingRegistrations ?: 0
 
     Column(
         modifier = modifier
@@ -38,5 +44,12 @@ fun HomeScreen(
         SummaryStatsSection(
             statsUiState = uiState.statsUiState,
         )
+
+        if (isAdmin) {
+            PendingRegistrationsSection(
+                pendingCount = pendingCount,
+                onViewRequestsClick = onOpenPendingRequests
+            )
+        }
     }
 }

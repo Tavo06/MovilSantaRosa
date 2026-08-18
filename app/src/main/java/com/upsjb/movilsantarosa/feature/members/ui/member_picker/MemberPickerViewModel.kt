@@ -2,7 +2,7 @@ package com.upsjb.movilsantarosa.feature.members.ui.member_picker
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.upsjb.movilsantarosa.feature.members.domain.usecase.GetAllMembersUseCase
+import com.upsjb.movilsantarosa.feature.members.domain.usecase.GetActiveMembersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -12,12 +12,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MemberPickerViewModel @Inject constructor(
-    getAllMembersUseCase: GetAllMembersUseCase
+    getActiveMembersUseCase: GetActiveMembersUseCase
 ) : ViewModel() {
 
     private val query = MutableStateFlow("")
 
-    private val membersFlow = getAllMembersUseCase()
+    private val membersFlow = getActiveMembersUseCase()
 
     val uiState = combine(
         membersFlow,

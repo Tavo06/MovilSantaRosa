@@ -5,7 +5,8 @@ import com.upsjb.movilsantarosa.core.utils.toDateString
 import com.upsjb.movilsantarosa.feature.fine.data.model.FineStatus
 import com.upsjb.movilsantarosa.feature.fine.domain.usecase.GetFinesUseCase
 import com.upsjb.movilsantarosa.feature.home.domain.model.HomeStats
-import com.upsjb.movilsantarosa.feature.members.domain.usecase.GetAllMembersUseCase
+import com.upsjb.movilsantarosa.feature.members.domain.usecase.GetActiveMembersUseCase
+import com.upsjb.movilsantarosa.feature.members.domain.usecase.GetPendingMembersUseCase
 import com.upsjb.movilsantarosa.feature.post.domain.usecase.GetAllPostsUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -13,9 +14,10 @@ import javax.inject.Inject
 import kotlin.collections.count
 
 class GetHomeStatsUseCase @Inject constructor(
-    private val getMembersUseCase: GetAllMembersUseCase,
+    private val getMembersUseCase: GetActiveMembersUseCase,
     private val getFinesUseCase: GetFinesUseCase,
     private val getPostsUseCase: GetAllPostsUseCase,
+    private val getPendingMembersUseCase: GetPendingMembersUseCase,
 ) {
 
     operator fun invoke(): Flow<HomeStats> {
@@ -23,8 +25,9 @@ class GetHomeStatsUseCase @Inject constructor(
         return combine(
             getMembersUseCase(),
             getFinesUseCase(),
-            getPostsUseCase()
-        ) { members, fines, posts ->
+            getPostsUseCase(),
+            getPendingMembersUseCase()
+        ) { members, fines, posts, pendingMembers ->
 
             val totalMembers = members.size
 
@@ -44,7 +47,8 @@ class GetHomeStatsUseCase @Inject constructor(
                 totalMembers = totalMembers,
                 totalFines = totalFines,
                 totalPayments = totalPayments,
-                totalPost = totalPost
+                totalPost = totalPost,
+                pendingRegistrations = pendingMembers.size
             )
         }
     }

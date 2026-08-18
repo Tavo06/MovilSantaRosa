@@ -1,11 +1,13 @@
 package com.upsjb.movilsantarosa.feature.members.domain.model
 
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserStatus
 import com.upsjb.movilsantarosa.feature.members.data.model.MemberModel
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Member(
+    val uid: String = "",
     val birthdate: String = "",
     val dniNumber: String = "",
     val email: String = "",
@@ -15,7 +17,8 @@ data class Member(
     val phone: String = "",
     val plateNumber: String = "",
     val vehicleColor: String = "",
-    val rol: UserRole = UserRole.PARTNER
+    val rol: UserRole = UserRole.PARTNER,
+    val status: UserStatus = UserStatus.ACTIVE
 ) {
     val letterName: String
         get() = "${firstname.firstOrNull() ?: ""}${lastname.firstOrNull() ?: ""}".uppercase()
@@ -35,5 +38,6 @@ fun MemberModel.toDomain(): Member =
         phone = phone,
         plateNumber = plateNumber,
         vehicleColor = vehicleColor,
-        rol = rol
+        rol = rol,
+        status = status
     )

@@ -63,7 +63,8 @@ class HomeViewModel @Inject constructor(
                                 activeMembers = data.totalMembers,
                                 totalFines = data.totalFines,
                                 totalPayments = data.totalPayments,
-                                totalPost = data.totalPost
+                                totalPost = data.totalPost,
+                                pendingRegistrations = data.pendingRegistrations
                             )
                         )
                     }

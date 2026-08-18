@@ -3,6 +3,7 @@ package com.upsjb.movilsantarosa
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
+import com.upsjb.movilsantarosa.feature.auth.domain.model.UserStatus
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.CurrentUserUseCase
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.LogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +37,11 @@ class MainViewModel @Inject constructor(
 
             currentUserUseCase()
                 .onSuccess { user ->
-                    _session.value = SessionState.LoggedIn(user.role)
+                    _session.value = if (user.status == UserStatus.ACTIVE) {
+                        SessionState.LoggedIn(user.role)
+                    } else {
+                        SessionState.PendingApproval(user.status)
+                    }
                 }
                 .onFailure {
                     _session.value = SessionState.LoggedOut
@@ -64,5 +69,9 @@ sealed interface SessionState {
 
     data class LoggedIn(
         val role: UserRole
+    ) : SessionState
+
+    data class PendingApproval(
+        val status: UserStatus
     ) : SessionState
 }

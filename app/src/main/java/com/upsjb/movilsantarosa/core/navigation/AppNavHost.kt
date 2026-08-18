@@ -6,6 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.upsjb.movilsantarosa.MainViewModel
 import com.upsjb.movilsantarosa.SessionState
+import com.upsjb.movilsantarosa.core.uicomponents.PendingApprovalScreen
 import com.upsjb.movilsantarosa.core.uicomponents.SplashScreen
 
 @Composable
@@ -21,6 +22,18 @@ fun AppNavHost(
         SessionState.LoggedOut -> {
             AuthNavHost(
                 onLoginSuccess = {
+                    mainViewModel.refreshSession()
+                }
+            )
+        }
+
+        is SessionState.PendingApproval -> {
+            PendingApprovalScreen(
+                status = uiState.status,
+                onLogout = {
+                    mainViewModel.logout()
+                },
+                onRefresh = {
                     mainViewModel.refreshSession()
                 }
             )

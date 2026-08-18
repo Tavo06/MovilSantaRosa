@@ -7,7 +7,8 @@ data class User(
     val lastname: String,
     val email: String,
     val uid: String,
-    val role: UserRole = UserRole.PARTNER
+    val role: UserRole = UserRole.PARTNER,
+    val status: UserStatus = UserStatus.ACTIVE
 ){
     val fullName get() = "$firstname $lastname"
 }
@@ -27,12 +28,14 @@ enum class UserRole {
 enum class UserStatus {
     ACTIVE,
     PENDING,
-    INACTIVE;
+    INACTIVE,
+    REJECTED;
 
     val displayName: String
         get() = when (this) {
             ACTIVE -> "Activo"
             PENDING -> "Pendiente"
             INACTIVE -> "Inactivo"
+            REJECTED -> "Rechazado"
         }
 }
