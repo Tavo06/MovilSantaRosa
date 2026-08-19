@@ -17,4 +17,8 @@ interface PostRepository {
     suspend fun updatePost(
         post: Post
     ): Result<Unit>
+
+    suspend fun deletePost(
+        id: String
+    ): Result<Unit>
 }

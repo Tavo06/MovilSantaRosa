@@ -12,12 +12,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.upsjb.movilsantarosa.core.uicomponents.EmptySection
 import com.upsjb.movilsantarosa.feature.post.domain.model.Post
+import com.upsjb.movilsantarosa.feature.post.ui.post.PostActionState
 
 @Composable
 fun PostList(
     posts: List<Post>,
     onClick: (Post) -> Unit,
     onViewMapClick: (Post) -> Unit = {},
+    isAdmin: Boolean = false,
+    actionState: PostActionState = PostActionState.Idle,
+    onDeleteConfirmed: (Post) -> Unit = {},
+    onResetAction: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     if (posts.isEmpty()) {
@@ -42,7 +47,11 @@ fun PostList(
                 PostItem(
                     post = post,
                     onClick = onClick,
-                    onViewMapClick = onViewMapClick
+                    onViewMapClick = onViewMapClick,
+                    isAdmin = isAdmin,
+                    actionState = actionState,
+                    onDeleteConfirmed = { onDeleteConfirmed(post) },
+                    onResetAction = onResetAction
                 )
             }
         }

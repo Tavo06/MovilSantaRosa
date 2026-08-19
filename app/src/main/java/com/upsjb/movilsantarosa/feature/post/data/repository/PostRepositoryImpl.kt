@@ -126,4 +126,23 @@ class PostRepositoryImpl @Inject constructor(
             )
         }
     }
+
+    override suspend fun deletePost(id: String): Result<Unit> {
+        return try {
+
+            database.reference
+                .child(POST_DATABASE)
+                .child(id)
+                .removeValue()
+                .await()
+
+            Result.success(Unit)
+
+        } catch (e: Exception) {
+
+            Result.failure(
+                Exception(e.message ?: "No se pudo eliminar la publicación.")
+            )
+        }
+    }
 }

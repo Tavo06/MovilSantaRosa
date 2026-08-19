@@ -27,6 +27,7 @@ import com.upsjb.movilsantarosa.core.navigation.component.FinesDestination
 import com.upsjb.movilsantarosa.core.navigation.component.HomeDestination
 import com.upsjb.movilsantarosa.core.navigation.component.MAIN_ROUTES
 import com.upsjb.movilsantarosa.core.navigation.component.MemberPickerDestination
+import com.upsjb.movilsantarosa.core.navigation.component.MemberProfileDestination
 import com.upsjb.movilsantarosa.core.navigation.component.MembersDestination
 import com.upsjb.movilsantarosa.core.navigation.component.Navigator
 import com.upsjb.movilsantarosa.core.navigation.component.PaymentFormDestination
@@ -49,6 +50,7 @@ import com.upsjb.movilsantarosa.feature.fine.ui.fine_picker.FinePickerBottomShee
 import com.upsjb.movilsantarosa.feature.home.ui.HomeScreen
 import com.upsjb.movilsantarosa.feature.members.domain.model.Member
 import com.upsjb.movilsantarosa.feature.members.ui.member_picker.MemberPickerBottomSheet
+import com.upsjb.movilsantarosa.feature.members.ui.member_profile.MemberProfileScreen
 import com.upsjb.movilsantarosa.feature.members.ui.members.MembersScreen
 import com.upsjb.movilsantarosa.feature.members.ui.pending_registrations.PendingRegistrationsBottomSheet
 import com.upsjb.movilsantarosa.feature.payments.ui.payment.PaymentsScreen
@@ -90,7 +92,25 @@ fun MainNavHost(
             HomeScreen(
                 onOpenPendingRequests = {
                     navigator.navigate(PendingRegistrationsDestination)
+                },
+                onOpenProfile = {
+                    navigator.navigate(MemberProfileDestination)
+                },
+                onOpenMembers = {
+                    navigator.navigate(MembersDestination)
+                },
+                onOpenPosts = {
+                    navigator.navigate(PostDestination)
+                },
+                onOpenFines = {
+                    navigator.navigate(FinesDestination)
                 }
+            )
+        }
+
+        entry<MemberProfileDestination> {
+            MemberProfileScreen(
+                onBackClick = { navigator.goBack() }
             )
         }
 

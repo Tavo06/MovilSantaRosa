@@ -1,5 +1,6 @@
 package com.upsjb.movilsantarosa.feature.home.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,7 +27,8 @@ import com.upsjb.movilsantarosa.feature.home.ui.StatsUiState
 @Composable
 fun SummaryStatsSection(
     statsUiState: StatsUiState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onStatClick: (TypeStat) -> Unit = {}
 ) {
     when (statsUiState) {
         is StatsUiState.Error -> {
@@ -51,7 +53,7 @@ fun SummaryStatsSection(
                     HomeStat(
                         title = "Socios activos",
                         value = statsUiState.activeMembers.toString(),
-                        valueColor = Color(0xFF4CAF50),
+                        valueColor = MaterialTheme.colorScheme.primary,
                         type = TypeStat.ACTIVE_MEMBERS
                     ),
                     HomeStat(
@@ -63,7 +65,7 @@ fun SummaryStatsSection(
                     HomeStat(
                         title = "Socios al día",
                         value = statsUiState.totalPayments.toString(),
-                        valueColor = Color(0xFF2196F3),
+                        valueColor = Color(0xFF4CAF50),
                         type = TypeStat.PAYMENTS_ON_TIME
                     ),
                     HomeStat(
@@ -73,7 +75,7 @@ fun SummaryStatsSection(
                         type = TypeStat.PENDING_FINES
                     )
                 ),
-                onClick = {}
+                onClick = onStatClick
             )
         }
     }
@@ -98,12 +100,14 @@ fun HomeStatItem(
     stat: HomeStat,
     modifier: Modifier = Modifier,
     showDivider: Boolean = true,
+    onClick: () -> Unit = {},
 ) {
     Column(modifier = modifier) {
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable(onClick = onClick)
                 .padding(horizontal = 20.dp, vertical = 14.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -166,6 +170,7 @@ fun HomeStats(
                 HomeStatItem(
                     stat = stat,
                     showDivider = index != stats.lastIndex,
+                    onClick = { onClick(stat.type) },
                 )
             }
         }

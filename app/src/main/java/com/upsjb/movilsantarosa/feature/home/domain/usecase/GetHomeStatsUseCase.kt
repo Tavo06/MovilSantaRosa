@@ -40,7 +40,7 @@ class GetHomeStatsUseCase @Inject constructor(
             val totalPayments = totalMembers - totalFines
 
             val totalPost = posts.count { post ->
-                post.expiredAt < currentTimeMillis()
+                post.expiredAt > currentTimeMillis()
             }
 
             HomeStats(
@@ -48,7 +48,9 @@ class GetHomeStatsUseCase @Inject constructor(
                 totalFines = totalFines,
                 totalPayments = totalPayments,
                 totalPost = totalPost,
-                pendingRegistrations = pendingMembers.size
+                pendingRegistrations = pendingMembers.size,
+                totalPostCount = posts.size,
+                latestPostTitle = posts.maxByOrNull { it.createdAt }?.title
             )
         }
     }

@@ -2,15 +2,15 @@ package com.upsjb.movilsantarosa.feature.post.domain.usecase
 
 import com.upsjb.movilsantarosa.feature.auth.domain.model.UserRole
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.CurrentUserUseCase
-import com.upsjb.movilsantarosa.feature.post.domain.model.Post
 import com.upsjb.movilsantarosa.feature.post.domain.repository.PostRepository
 import javax.inject.Inject
 
-class UpdatePostUseCase @Inject constructor(
+class DeletePostUseCase @Inject constructor(
     private val repository: PostRepository,
     private val currentUserUseCase: CurrentUserUseCase
 ) {
-    suspend operator fun invoke(post: Post): Result<Unit> {
+
+    suspend operator fun invoke(id: String): Result<Unit> {
 
         val user = currentUserUseCase()
             .getOrElse {
@@ -21,10 +21,10 @@ class UpdatePostUseCase @Inject constructor(
 
         if (user.role != UserRole.ADMIN) {
             return Result.failure(
-                Exception("No tienes permisos para editar anuncios.")
+                Exception("No tienes permisos para eliminar anuncios.")
             )
         }
 
-        return repository.updatePost(post)
+        return repository.deletePost(id)
     }
 }

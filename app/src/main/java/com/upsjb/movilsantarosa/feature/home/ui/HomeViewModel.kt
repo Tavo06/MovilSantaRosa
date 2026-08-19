@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.upsjb.movilsantarosa.feature.auth.domain.usecase.CurrentUserUseCase
 import com.upsjb.movilsantarosa.feature.home.domain.usecase.GetHomeStatsUseCase
+import com.upsjb.movilsantarosa.feature.home.domain.usecase.GetMemberFinancialStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val currentUserUseCase: CurrentUserUseCase,
-    private val getHomeStatsUseCase: GetHomeStatsUseCase
+    private val getHomeStatsUseCase: GetHomeStatsUseCase,
+    private val getMemberFinancialStatusUseCase: GetMemberFinancialStatusUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -24,6 +26,7 @@ class HomeViewModel @Inject constructor(
     init {
         observeUser()
         observeStats()
+        observeFinancialStatus()
     }
 
     fun observeUser() {
@@ -64,9 +67,22 @@ class HomeViewModel @Inject constructor(
                                 totalFines = data.totalFines,
                                 totalPayments = data.totalPayments,
                                 totalPost = data.totalPost,
-                                pendingRegistrations = data.pendingRegistrations
+                                pendingRegistrations = data.pendingRegistrations,
+                                totalPostCount = data.totalPostCount,
+                                latestPostTitle = data.latestPostTitle
                             )
                         )
+                    }
+                }
+        }
+    }
+
+    private fun observeFinancialStatus() {
+        viewModelScope.launch {
+            getMemberFinancialStatusUseCase()
+                .collect { status ->
+                    _uiState.update {
+                        it.copy(financialStatus = status)
                     }
                 }
         }

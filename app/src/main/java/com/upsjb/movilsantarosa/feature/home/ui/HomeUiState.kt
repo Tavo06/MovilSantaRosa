@@ -1,10 +1,12 @@
 package com.upsjb.movilsantarosa.feature.home.ui
 
 import com.upsjb.movilsantarosa.feature.auth.domain.model.User
+import com.upsjb.movilsantarosa.feature.home.domain.model.MemberFinancialStatus
 
 data class HomeUiState(
     val userUiState: UserUiState = UserUiState.Loading,
     val statsUiState: StatsUiState = StatsUiState.Loading,
+    val financialStatus: MemberFinancialStatus? = null,
 )
 
 sealed class UserUiState {
@@ -20,7 +22,9 @@ sealed class StatsUiState {
         val totalFines: Int,
         val totalPayments: Int,
         val totalPost: Int,
-        val pendingRegistrations: Int = 0
+        val pendingRegistrations: Int = 0,
+        val totalPostCount: Int = 0,
+        val latestPostTitle: String? = null
     ) : StatsUiState()
 
     data class Error(val message: String) : StatsUiState()

@@ -5,5 +5,7 @@ data class HomeStats(
     val totalFines: Int = 0,
     val totalPayments: Int = 0,
     val totalPost: Int = 0,
-    val pendingRegistrations: Int = 0
+    val pendingRegistrations: Int = 0,
+    val totalPostCount: Int = 0,
+    val latestPostTitle: String? = null
 )

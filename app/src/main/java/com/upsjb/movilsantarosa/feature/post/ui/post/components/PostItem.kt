@@ -14,19 +14,31 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.upsjb.movilsantarosa.core.uicomponents.MessageDialog
+import com.upsjb.movilsantarosa.core.utils.currentTimeMillis
 import com.upsjb.movilsantarosa.core.utils.toDateString
 import com.upsjb.movilsantarosa.feature.post.domain.model.Post
+import com.upsjb.movilsantarosa.feature.post.ui.post.PostActionState
 import org.maplibre.compose.camera.CameraPosition
 import org.maplibre.compose.camera.rememberCameraState
 import org.maplibre.compose.map.GestureOptions
@@ -42,8 +54,20 @@ fun PostItem(
     post: Post,
     onClick: (Post) -> Unit,
     onViewMapClick: (Post) -> Unit = {},
+    isAdmin: Boolean = false,
+    actionState: PostActionState = PostActionState.Idle,
+    onDeleteConfirmed: () -> Unit = {},
+    onResetAction: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    var showDeleteConfirm by remember { mutableStateOf(false) }
+    var awaitingResult by remember { mutableStateOf(false) }
+
+    LaunchedEffect(actionState) {
+        if (awaitingResult && actionState is PostActionState.Success) {
+            awaitingResult = false
+        }
+    }
 
     Card(
         modifier = modifier
@@ -116,11 +140,27 @@ fun PostItem(
                     }
                 }
 
-                Text(
-                    text = post.createdAt.toDateString(),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                Column(horizontalAlignment = Alignment.End) {
+
+                    Text(
+                        text = post.createdAt.toDateString(),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    if (isAdmin) {
+                        IconButton(
+                            onClick = { showDeleteConfirm = true },
+                            modifier = Modifier.size(28.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Eliminar anuncio",
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }
+                }
             }
 
             Text(
@@ -190,13 +230,54 @@ fun PostItem(
             }
 
             if (post.expiredAt > 0L) {
+                val isActive = post.expiredAt > currentTimeMillis()
+
                 Text(
-                    text = "Expira: ${post.expiredAt.toDateString()}",
+                    text = if (isActive) {
+                        "Vigente hasta: ${post.expiredAt.toDateString(pattern = "dd/MM/yyyy HH:mm")}"
+                    } else {
+                        "Expiró: ${post.expiredAt.toDateString(pattern = "dd/MM/yyyy HH:mm")}"
+                    },
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.error
+                    color = if (isActive) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.error
+                    }
                 )
             }
         }
+    }
+
+    if (showDeleteConfirm) {
+        MessageDialog(
+            title = "¿Deseas eliminar este anuncio?",
+            message = "Esta acción no se puede deshacer.",
+            confirmButtonText = "Eliminar",
+            cancelButtonText = "Cancelar",
+            onConfirmClick = {
+                showDeleteConfirm = false
+                awaitingResult = true
+                onDeleteConfirmed()
+            },
+            onDismiss = { showDeleteConfirm = false }
+        )
+    }
+
+    if (awaitingResult && actionState is PostActionState.Error) {
+        MessageDialog(
+            title = "Aviso",
+            message = actionState.message,
+            confirmButtonText = "Aceptar",
+            onConfirmClick = {
+                awaitingResult = false
+                onResetAction()
+            },
+            onDismiss = {
+                awaitingResult = false
+                onResetAction()
+            }
+        )
     }
 }
 

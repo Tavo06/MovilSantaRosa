@@ -16,7 +16,7 @@ data class PostFormState(
     val createdBy: String = "",
 
     val createdAt: Long = currentTimeMillis(),
-    val expiredAt: Long = currentTimeMillis(),
+    val expiredAt: Long = createdAt + 24 * 60 * 60 * 1000L,
 
     val latitude: String = "",
     val longitude: String = "",

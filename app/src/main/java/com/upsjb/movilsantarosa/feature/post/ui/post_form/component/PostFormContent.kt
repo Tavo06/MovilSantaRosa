@@ -160,11 +160,13 @@ fun PostFormContent(
         }
 
         FormDatePicker(
-            value = form.expiredAt.toDateString(),
+            value = form.expiredAt.toDateString(pattern = "dd/MM/yyyy HH:mm"),
             enabled = !isReadOnly,
             onDateSelected = { updateForm { copy(expiredAt = it ?: 0L) } },
             label = "Fecha de expiración",
-            allowFutureDates = true
+            allowFutureDates = true,
+            minSelectableMillis = form.createdAt,
+            includeTime = true
         )
 
         Spacer(Modifier.height(12.dp))
